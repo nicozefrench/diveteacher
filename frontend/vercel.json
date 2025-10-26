@@ -1,0 +1,11 @@
+{
+  "$schema": "https://vercel.com/schema/v2",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "env": {
+    "VITE_API_URL": "@api-url",
+    "VITE_SENTRY_DSN": "@sentry-dsn-frontend"
+  }
+}
+
