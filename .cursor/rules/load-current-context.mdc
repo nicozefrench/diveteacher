@@ -1,0 +1,24 @@
+---
+description: Auto-load CURRENT-CONTEXT.md for AI Assistant continuity
+globs: []
+alwaysApply: true
+---
+
+@CURRENT-CONTEXT.md
+
+This rule ensures that `CURRENT-CONTEXT.md` is automatically loaded into the AI Assistant's context at the start of every Cursor session.
+
+**What this provides:**
+- 🧠 **Continuity:** AI Assistant remembers what we were working on last session
+- 📋 **Active Work:** Current goals and status
+- 🎯 **Next Steps:** What needs to happen next
+- ⚠️ **Critical Context:** Important decisions and gotchas
+- 📊 **System State:** Current versions and agent status
+
+**Purpose:**
+This file maintains context between Cursor AI Assistant sessions (development work), NOT for Claude Code (production agents in terminal).
+
+**Usage:**
+- Updated continuously during development sessions
+- Read automatically by Cursor AI Assistant on startup via `@CURRENT-CONTEXT.md` reference
+- Provides seamless continuity between sessions
