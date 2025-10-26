@@ -1,19 +1,27 @@
-# Application Goal - RAG Knowledge Graph System
+# Application Goal - DiveTeacher RAG Knowledge Graph System
 
-**Project Type:** Intelligent Document Analysis with RAG + Knowledge Graph  
-**Target Deployment:** Vercel (Frontend) + DigitalOcean (Backend)  
-**LLM Provider:** Ollama (local, open-source) - Agnostic architecture
+**Project Type:** SaaS Platform for Dive Training with RAG + Knowledge Graph  
+**Target Users:** Dive Instructors, Students, Dive Centers  
+**Target Deployment:** Vercel (Frontend) + DigitalOcean GPU (Backend)  
+**LLM Provider:** Mistral 7B-instruct-Q5_K_M (local on GPU) - Agnostic architecture  
+**Organizations:** FFESSM (France) + SSI (International) - V1
 
 ---
 
 ## 🎯 Primary Objective
 
-Build a production-ready web application that allows users to:
-1. **Upload** PDF and PowerPoint documents via a web interface
-2. **Process** documents automatically using Dockling (PDF → Markdown conversion)
-3. **Ingest** processed content into a Neo4j Knowledge Graph using Graphiti
-4. **Query** the knowledge base using natural language via an LLM-powered RAG system
-5. **Stream** responses in real-time through a modern chat interface
+Build a **production-ready SaaS application** that allows dive instructors, students, and dive centers to:
+1. **Access** comprehensive knowledge from official FFESSM and SSI dive training materials
+2. **Upload** dive training documents (MFT FFESSM, SSI manuals, safety procedures, theory documents)
+3. **Process** documents automatically using Dockling (PDF/PPT → Markdown conversion)
+4. **Ingest** processed content into a Neo4j Knowledge Graph using Graphiti
+5. **Query** the knowledge base in French or English using natural language via an LLM-powered RAG system
+6. **Stream** precise responses in real-time with exact citations from source documents
+7. **Manage** conversations history for continuous learning and review
+8. **Visualize** (Admin) the knowledge graph to understand relationships between certifications, procedures, and concepts
+
+### Value Proposition
+> **"Master scuba diving with AI - Instant access to FFESSM & SSI knowledge, precise answers to all your dive training questions, backed by official documentation."**
 
 ---
 
