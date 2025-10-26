@@ -741,25 +741,27 @@ docker exec rag-ollama ollama pull mistral:7b-instruct-q5_K_M
 
 #### 9.2 Vercel Deployment
 - [x] Compte Vercel payant avec API key ✅
-- [x] Domaines: diverteacher.app et diverteacher.io ✅
-- [ ] Connect GitHub repo (diveteacher)
+- [x] Domaines: **diveteacher.io** (principal) + diveteacher.app (redirect) ✅
+- [ ] Connect GitHub repo (diveteacher - privé)
 - [ ] Configure environment variables
   ```
-  VITE_API_URL=https://api.diverteacher.app
+  VITE_API_URL=https://api.diveteacher.io
   VITE_SUPABASE_URL=...
   VITE_SUPABASE_ANON_KEY=...
   VITE_SENTRY_DSN=...
   ```
 - [ ] Deploy production
-- [ ] Tester domaine: https://diverteacher.app (ou .io)
+- [ ] Tester domaine principal: https://diveteacher.io
+- [ ] Configurer redirect: diveteacher.app → diveteacher.io
 
 #### 9.3 DNS & Domaines
-- [x] Domaines déjà achetés: **diverteacher.app** et **diverteacher.io** (Vercel)
-- [ ] Configurer DNS (choix: .app ou .io)
-  - diverteacher.app → Vercel (frontend)
-  - api.diverteacher.app → DigitalOcean GPU IP (backend)
-  - www.diverteacher.app → Redirect to diverteacher.app
-- [ ] Alternative: utiliser .io si préféré
+- [x] Domaines déjà achetés: **diveteacher.io** (principal) et **diveteacher.app** (Vercel)
+- [ ] Configurer DNS
+  - **diveteacher.io** → Vercel (frontend principal)
+  - **api.diveteacher.io** → DigitalOcean GPU IP (backend)
+  - **www.diveteacher.io** → Redirect to diveteacher.io
+  - **diveteacher.app** → Redirect to diveteacher.io (rerouting)
+  - **www.diveteacher.app** → Redirect to diveteacher.io
 
 #### 9.4 Monitoring Production
 - [ ] Sentry alerts configurées

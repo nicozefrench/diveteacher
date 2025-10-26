@@ -2,8 +2,8 @@
 
 **Last Updated:** October 26, 2025 - Session 1 Complete  
 **Project:** DiveTeacher - Assistant IA pour Formation Plongée  
-**Repository:** https://github.com/nicozefrench/diveteacher.git  
-**Domaines:** diverteacher.app, diverteacher.io (Vercel)
+**Repository:** https://github.com/nicozefrench/diveteacher (PRIVÉ)  
+**Domaine Principal:** diveteacher.io (+ diveteacher.app en redirect)
 
 ---
 
@@ -90,11 +90,14 @@
 ### Repository State
 - **Branch:** main
 - **Status:** Clean working tree, synced with remote
-- **Remote:** https://github.com/nicozefrench/diveteacher.git
+- **Remote:** https://github.com/nicozefrench/diveteacher (PRIVÉ ✅)
 - **Tracking:** origin/main
+- **License:** Proprietary/Commercial (All Rights Reserved)
 
 ### Domaines & Hosting
-- **Domaines:** diverteacher.app, diverteacher.io (achetés sur Vercel)
+- **Domaine Principal:** diveteacher.io (Vercel)
+- **Domaine Secondaire:** diveteacher.app (redirect vers .io)
+- **API Backend:** api.diveteacher.io (DigitalOcean GPU)
 - **Vercel:** Compte payant avec API key ✅
 - **DigitalOcean:** À configurer (GPU Droplet $100-150/mois)
 
@@ -341,11 +344,13 @@ PDF/PPT → Dockling (Markdown) → Graphiti (Entities/Relations) → Neo4j (Gra
     - Cost estimates ($121/mois)
   - **Updated GOAL.md:** DiveTeacher context, value proposition, users
   - **Key Decisions Documented:**
-    - Domaines: diverteacher.app et diverteacher.io (Vercel)
+    - Domaine principal: **diveteacher.io** (+ .app en redirect)
     - LLM: Mistral 7B-instruct-Q5_K_M
     - Dev local: Mac M1 Max (32GB RAM, Metal GPU)
     - Auth: Supabase (Phase 1)
     - Monitoring: Sentry
+    - License: Proprietary (commercial)
+    - Repository: Privé sur GitHub
 - **Deliverables:**
   - ✅ DIVETEACHER-V1-PLAN.md (plan complet 800+ lignes)
   - ✅ CURRENT-CONTEXT.md (mémoire persistante)
