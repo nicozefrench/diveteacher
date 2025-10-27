@@ -224,7 +224,22 @@ CREATE POLICY admin_documents ON documents
 
 ## 📐 PHASES DE DÉVELOPPEMENT
 
-### **PHASE 0: Setup Environnement (2-3 jours)**
+**🎯 STRATÉGIE : Dev 100% Local → Production quand prêt**
+
+### 💰 Coûts par Phase
+
+| Phase | Durée | Environnement | Coût |
+|-------|-------|---------------|------|
+| **Phase 0-8** | 4-5 semaines | 100% Local (Mac M1 Max) | **0€** |
+| **Phase 9** | 2-3 jours | Production (DigitalOcean + Vercel) | **~$120/mois** |
+
+**Important :** On ne paie RIEN avant que tout fonctionne en local ! ✅
+
+---
+
+### **PHASE 0: Setup Environnement LOCAL (1-2 jours)**
+
+**Environnement : Mac M1 Max (Docker local) - Coût : 0€**
 
 #### 0.1 Configuration Locale (Mac M1 Max - 32GB RAM)
 
@@ -234,38 +249,47 @@ CREATE POLICY admin_documents ON documents
 - Docker + Docker Compose (installé et fonctionnel)
 
 **Configuration rapide:**
-- [ ] Créer `.env` depuis `env.template`
-- [ ] Configurer Supabase project (gratuit) **→ À faire lors de Phase 1**
+- [ ] Créer `.env.local` depuis `env.template`
+- [ ] Configurer Supabase Cloud project (gratuit - Phase 1)
+  - **Note:** Supabase Cloud (gratuit < 50k users)
   - Créer projet sur supabase.com
+  - Utilisation via MCP tools (pas de serveur à gérer)
   - Noter `SUPABASE_URL` et `SUPABASE_ANON_KEY`
-  - Créer tables (users, conversations, messages, documents)
-  - Activer Email Auth
-- [ ] Configurer Sentry projects (gratuit)
+  - Tables créées via MCP tools lors Phase 1
+- [ ] Configurer Sentry projects (gratuit < 5k events/mois)
   - Backend project
   - Frontend project
   - Noter DSNs
-- [ ] Démarrer stack Docker **sur Mac M1 Max (déjà fonctionnel)**
+- [ ] Démarrer stack Docker **sur Mac M1 Max (local)**
   - `docker-compose -f docker/docker-compose.dev.yml up -d`
   - Vérifier Neo4j: http://localhost:7474
   - Vérifier Backend API: http://localhost:8000/docs
   - Vérifier Frontend: http://localhost:5173
   - **Tester Mistral 7B en local** (GPU Metal, 32GB RAM unifié)
 
-**Note:** Phase 0 sera **plus rapide** (1-2 jours au lieu de 2-3) car environnement de dev déjà opérationnel ✅
+**Note:** Phase 0 sera **plus rapide** (1-2 jours) car environnement de dev déjà opérationnel ✅  
+**Coût Phase 0 : 0€** (tout local + Supabase gratuit)
 
-#### 0.2 Configuration DigitalOcean
-- [ ] Créer GPU Droplet (16GB RAM, 100GB SSD)
+#### 0.2 Configuration DigitalOcean (SKIP pour Phase 0-8)
+
+**⚠️ NE PAS FAIRE MAINTENANT - Uniquement Phase 9 (Production)**
+
+Cette étape sera faite UNIQUEMENT quand tout fonctionne en local (après Phase 8).
+
+- [ ] **Phase 9 seulement:** Créer GPU Droplet (16GB RAM, 100GB SSD)
   - Ubuntu 22.04
   - Installer Docker + Docker Compose
   - Installer NVIDIA drivers + CUDA
-- [ ] Configuration réseau
+- [ ] **Phase 9 seulement:** Configuration réseau
   - Firewall: ports 80, 443, 22
-  - Domaine: api.diveteacher.com → Droplet IP
+  - Domaine: api.diveteacher.io → Droplet IP
   - SSL: Certbot Let's Encrypt
-- [ ] Volumes persistants
+- [ ] **Phase 9 seulement:** Volumes persistants
   - `/data/uploads` (documents)
   - `/data/neo4j` (graphe)
   - `/data/ollama` (modèles)
+
+**Coût DigitalOcean : ~$120/mois (activé en Phase 9 seulement)**
 
 #### 0.3 Pull Mistral Model
 ```bash
@@ -289,7 +313,26 @@ docker exec rag-ollama ollama pull mistral:7b-instruct-q5_K_M
 
 ### **PHASE 1: Authentification Multi-Utilisateurs (3-4 jours)**
 
-#### 1.1 Backend: Supabase Integration
+**Environnement : Local + Supabase Cloud (gratuit) - Coût : 0€**
+
+#### 1.1 Supabase Cloud Setup (via MCP tools)
+- [ ] Créer projet Supabase Cloud (gratuit)
+  - Se connecter sur supabase.com
+  - Créer nouveau projet "diveteacher"
+  - Noter credentials (URL, anon key, service key)
+- [ ] Créer tables via **MCP Supabase tools** (direct depuis Cursor!)
+  ```sql
+  -- Tables créées via mcp_supabase_execute_postgresql
+  - users (id, email, role, subscription_tier, etc.)
+  - conversations (id, user_id, title, created_at)
+  - messages (id, conversation_id, role, content, sources)
+  - documents (id, filename, organization, status, etc.)
+  - admin_actions (id, admin_id, action, details)
+  ```
+- [ ] Activer Email Auth (dashboard Supabase)
+- [ ] Configurer Row Level Security (RLS)
+
+#### 1.2 Backend: Supabase Integration
 - [ ] Installer dépendances Python
   ```bash
   # backend/requirements.txt
@@ -336,6 +379,8 @@ docker exec rag-ollama ollama pull mistral:7b-instruct-q5_K_M
 ---
 
 ### **PHASE 2: Interface Admin - Gestion Documents (4-5 jours)**
+
+**Environnement : 100% Local (Mac M1 Max) - Coût : 0€**
 
 #### 2.1 Backend: Admin API Endpoints
 - [ ] `POST /api/admin/upload`
@@ -724,6 +769,18 @@ docker exec rag-ollama ollama pull mistral:7b-instruct-q5_K_M
 
 ### **PHASE 9: Déploiement Production (2-3 jours)**
 
+**⚠️ UNIQUEMENT QUAND PHASES 0-8 COMPLÈTES ET TESTÉES**
+
+**Environnement : DigitalOcean GPU + Vercel - Coût : ~$120/mois**
+
+**Prérequis avant Phase 9:**
+- ✅ Application V1 complète et testée en local
+- ✅ Documents FFESSM/SSI testés avec succès
+- ✅ RAG pipeline validé
+- ✅ Auth multi-users fonctionne
+- ✅ Admin UI opérationnelle
+- ✅ Tous les tests passés
+
 #### 9.1 DigitalOcean Production Setup
 - [ ] Configuration docker-compose.prod.yml
   - Production environment variables
@@ -903,22 +960,34 @@ docker exec rag-ollama ollama pull mistral:7b-instruct-q5_K_M
 
 ---
 
-## 💰 ESTIMATION COÛTS MENSUELS V1
+## 💰 ESTIMATION COÛTS
 
-### Infrastructure
+### Phase Développement (Phases 0-8)
 | Service | Coût |
 |---------|------|
-| DigitalOcean GPU Droplet | $120 |
-| Vercel (Frontend) | $0 (gratuit) |
-| Supabase | $0 (gratuit < 50k users) |
+| Mac M1 Max (local) | $0 (déjà possédé) |
+| Docker local | $0 (gratuit) |
+| Supabase Cloud | $0 (gratuit < 50k users) |
 | Sentry | $0 (gratuit < 5k events/mois) |
-| Domaine (.com) | $12/an = $1/mois |
-| **TOTAL** | **~$121/mois** |
+| **TOTAL DEV** | **$0/mois** ✅ |
 
-### Post-Lancement (avec revenue)
+**Durée : 4-5 semaines sans aucun coût**
+
+### Phase Production (Phase 9 - quand prêt)
+| Service | Coût |
+|---------|------|
+| DigitalOcean GPU Droplet | $120/mois |
+| Vercel (Frontend) | $0 (compte existant) |
+| Supabase Cloud | $0 (toujours gratuit) |
+| Sentry | $0 (gratuit < 5k events/mois) |
+| Domaine (.io + .app) | $0 (déjà acheté) |
+| **TOTAL PROD** | **~$120/mois** |
+
+### Post-Lancement (avec revenue V2 Stripe)
 - Revenue estimé: 10 instructeurs × 29€ = **290€/mois**
-- Marge brute: 290€ - 121$ (~110€) = **~180€/mois**
-- Break-even: ~5 utilisateurs payants
+- Coûts infra: **$120** (~110€)
+- **Marge brute: ~180€/mois**
+- **Break-even: 5 utilisateurs payants**
 
 ---
 
