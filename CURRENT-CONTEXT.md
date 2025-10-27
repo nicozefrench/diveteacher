@@ -1,6 +1,6 @@
 # CURRENT CONTEXT - RAG Knowledge Graph Project
 
-**Last Updated:** October 26, 2025 - Session 1 Complete  
+**Last Updated:** October 27, 2025 - Session 2 Starting  
 **Project:** DiveTeacher - Assistant IA pour Formation Plongée  
 **Repository:** https://github.com/nicozefrench/diveteacher (PRIVÉ)  
 **Domaine Principal:** diveteacher.io (+ diveteacher.app en redirect)
@@ -9,9 +9,14 @@
 
 ## 📍 Current Status
 
-**Phase:** Planning Complete - Ready for Development  
-**Session:** 1 (Complete)  
+**Phase:** Planning Complete - Starting Phase 0  
+**Session:** 2 (Starting)  
 **Environment:** macOS (darwin 24.6.0) - Mac M1 Max, 32GB RAM
+
+**Development Strategy:**
+- ✅ **Phases 0-8:** 100% Local sur Mac M1 Max (Docker) → **Coût: 0€**
+- ⏸️ **Phase 9:** Production (DigitalOcean GPU + Vercel) → **Coût: ~$120/mois**  
+  (Activé UNIQUEMENT quand tout fonctionne en local)
 
 ---
 
@@ -232,16 +237,27 @@ diveteacher/
 ### Technology Choices
 - **LLM:** Mistral 7B-instruct-Q5_K_M (local sur GPU DigitalOcean, Metal sur Mac dev)
 - **Frontend Deployment:** Vercel (compte payant, domaines .app et .io)
-- **Backend Deployment:** DigitalOcean GPU Droplet ($100-150/mois)
+- **Backend Deployment:** DigitalOcean GPU Droplet (~$120/mois) ⏸️ **Phase 9 seulement**
 - **Database Graph:** Neo4j pour knowledge graph (entités plongée)
 - **Database Users:** Supabase PostgreSQL (auth + conversations)
-- **Auth:** Supabase (multi-users: admin, instructor, student)
-- **Monitoring:** Sentry (backend + frontend)
+- **Auth:** Supabase **Cloud** (gratuit < 50k users) 💚
+- **Monitoring:** Sentry (backend + frontend, gratuit < 5k events)
+
+### Supabase Strategy (NEW Decision) ✅
+- **✅ Supabase Cloud (gratuit)**
+  - Jusqu'à 50,000 users gratuits
+  - Pas de maintenance serveur
+  - Dashboard intégré pour gestion
+  - MCP tools disponibles pour création tables/auth
+  - Même instance dev → production
+- **❌ PAS self-hosted** (complexité, maintenance, coûts)
 
 ### Development Strategy
 - **Local Dev:** Mac M1 Max (32GB RAM) avec Docker + Metal GPU pour Mistral
+- **Phases 0-8:** 100% local (0€) - Aucun service cloud payant activé
+- **Phase 9:** Production (DigitalOcean ~$120/mois) - Activé QUE quand tout fonctionne
 - **Test local** complet avant push production
-- **Supabase:** Configuration lors Phase 1 (pas maintenant)
+- **Supabase:** Cloud (gratuit) - Configuration lors Phase 1
 - **Priority:** Setup environnement d'abord, puis auth, puis features
 
 ### DiveTeacher Specific Features
@@ -329,6 +345,7 @@ PDF/PPT → Dockling (Markdown) → Graphiti (Entities/Relations) → Neo4j (Gra
   - Created new GitHub repository "diveteacher"
   - Migrated entire project to new repository
   - Updated all documentation references
+  - Changed LICENSE to proprietary/commercial
   - **Strategic Planning Session:**
     - Asked 40+ questions stratégiques pour DiveTeacher
     - Analyzed complete boilerplate code (backend, frontend, Docker)
@@ -341,24 +358,48 @@ PDF/PPT → Dockling (Markdown) → Graphiti (Entities/Relations) → Neo4j (Gra
     - UI/UX specifications (admin + users)
     - Testing strategy
     - Deployment procedures
-    - Cost estimates ($121/mois)
+    - Cost estimates
   - **Updated GOAL.md:** DiveTeacher context, value proposition, users
   - **Key Decisions Documented:**
     - Domaine principal: **diveteacher.io** (+ .app en redirect)
     - LLM: Mistral 7B-instruct-Q5_K_M
     - Dev local: Mac M1 Max (32GB RAM, Metal GPU)
-    - Auth: Supabase (Phase 1)
+    - Auth: Supabase Cloud (gratuit)
     - Monitoring: Sentry
     - License: Proprietary (commercial)
     - Repository: Privé sur GitHub
 - **Deliverables:**
-  - ✅ DIVETEACHER-V1-PLAN.md (plan complet 800+ lignes)
+  - ✅ DIVETEACHER-V1-PLAN.md (plan complet 900+ lignes)
   - ✅ CURRENT-CONTEXT.md (mémoire persistante)
   - ✅ GOAL.md updated
   - ✅ .cursor/rules configured
   - ✅ Git repository migrated
+  - ✅ LICENSE proprietary
   - ✅ TODO list with 9 phases
 - **Next Session Goal:** PHASE 0 - Setup environnement local (Docker, Mistral, tests)
+
+### Session 2 (October 27, 2025) 🔄 IN PROGRESS
+- **Duration:** Starting now
+- **Focus:** Clarifications + préparation Phase 0
+- **Key Actions:**
+  - ✅ **CLARIFIED:** Supabase Strategy → **Cloud (gratuit)** vs self-hosted
+    - Décision: Supabase Cloud (gratuit < 50k users)
+    - MCP tools disponibles pour gestion
+    - Pas de serveur à gérer
+  - ✅ **CLARIFIED:** Dev 100% Local Strategy
+    - Phases 0-8: 100% local (0€)
+    - Phase 9 seulement: Production (DigitalOcean ~$120/mois)
+    - Aucun coût avant que tout fonctionne
+  - ✅ **UPDATED:** DIVETEACHER-V1-PLAN.md
+    - Ajout tableau coûts par phase
+    - Clarification Supabase Cloud usage
+    - Section 0.2 DigitalOcean marquée "SKIP pour Phase 0-8"
+    - Coûts production mis à jour
+  - ✅ **UPDATED:** CURRENT-CONTEXT.md
+    - Stratégie Supabase Cloud documentée
+    - Dev strategy 0€ phases 0-8
+    - Session 2 history added
+- **Next:** Démarrer Phase 0 - Setup environnement local
 
 ---
 
