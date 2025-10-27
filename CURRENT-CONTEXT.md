@@ -1,9 +1,42 @@
-# CURRENT CONTEXT - RAG Knowledge Graph Project
+# CURRENT CONTEXT - DiveTeacher RAG Knowledge Graph
 
-**Last Updated:** October 27, 2025 - Session 2 Starting  
+> **🤖 AI Agent Notice:** This file is the persistent memory for Claude Sonnet 4.5 agents working on DiveTeacher.  
+> **Purpose:** Maintain continuity across sessions, track progress, document decisions.  
+> **Usage:** Read at start of EVERY session, update at end of EVERY session.
+
+**Last Updated:** October 27, 2025 - Session 2 In Progress  
 **Project:** DiveTeacher - Assistant IA pour Formation Plongée  
 **Repository:** https://github.com/nicozefrench/diveteacher (PRIVÉ)  
 **Domaine Principal:** diveteacher.io (+ diveteacher.app en redirect)
+
+---
+
+## 🤖 Documentation Strategy for AI Agents
+
+### Critical Files for AI Understanding
+All documentation in this project is **optimized for Claude Sonnet 4.5 agents**:
+
+| File | Purpose | When to Read |
+|------|---------|--------------|
+| **CURRENT-CONTEXT.md** | Persistent memory, session history | START of every session |
+| **docs/SETUP.md** | Local dev setup (Phases 0-8) | Phase 0, or when debugging local env |
+| **docs/DEPLOYMENT.md** | Production deployment (Phase 9) | Phase 9 ONLY, after all local testing |
+| **GOAL.md** | Project vision, architecture | When user asks "what is DiveTeacher" |
+| **DIVETEACHER-V1-PLAN.md** | Complete 9-phase plan | When planning next steps or phases |
+| **docs/API.md** | Backend API reference | When implementing API endpoints |
+| **docs/ARCHITECTURE.md** | System design deep-dive | When implementing complex features |
+
+### Documentation Standards for AI
+- ✅ **Unambiguous:** No vague instructions, exact commands provided
+- ✅ **Context-Rich:** Why decisions were made, not just what to do
+- ✅ **Testable:** Expected outputs for every command
+- ✅ **Decision Trees:** IF/THEN logic for AI to follow
+- ✅ **Checklists:** Clear success criteria for each phase
+- ✅ **Error Recovery:** Exact solutions for common issues
+
+### Why This Matters
+**Human documentation** uses implicit knowledge and assumes context.  
+**AI documentation** must be explicit, complete, and actionable without human interpretation.
 
 ---
 
@@ -379,8 +412,8 @@ PDF/PPT → Dockling (Markdown) → Graphiti (Entities/Relations) → Neo4j (Gra
 - **Next Session Goal:** PHASE 0 - Setup environnement local (Docker, Mistral, tests)
 
 ### Session 2 (October 27, 2025) 🔄 IN PROGRESS
-- **Duration:** Starting now
-- **Focus:** Clarifications + préparation Phase 0
+- **Duration:** In progress
+- **Focus:** Phase 0 completion + Documentation update for AI agents
 - **Key Actions:**
   - ✅ **CLARIFIED:** Supabase Strategy → **Cloud (gratuit)** vs self-hosted
     - Décision: Supabase Cloud (gratuit < 50k users)
@@ -395,11 +428,43 @@ PDF/PPT → Dockling (Markdown) → Graphiti (Entities/Relations) → Neo4j (Gra
     - Clarification Supabase Cloud usage
     - Section 0.2 DigitalOcean marquée "SKIP pour Phase 0-8"
     - Coûts production mis à jour
-  - ✅ **UPDATED:** CURRENT-CONTEXT.md
-    - Stratégie Supabase Cloud documentée
-    - Dev strategy 0€ phases 0-8
-    - Session 2 history added
-- **Next:** Démarrer Phase 0 - Setup environnement local
+  - ✅ **PHASE 0: Environment Setup COMPLETE**
+    - Created `.env` with local dev config
+    - Fixed Python dependencies (docling, tenacity versions)
+    - Fixed env var names (DOCKLING → DOCLING)
+    - Resolved Neo4j port conflict with aria-neo4j
+      - Changed DiveTeacher Neo4j: 7474→7475, 7687→7688
+      - Kept aria-neo4j running (autre app)
+    - Started all Docker services (neo4j, ollama, backend, frontend)
+    - Pulled Mistral 7B-instruct-Q5_K_M (5.2GB)
+    - Tested all services (Neo4j, Backend API, Frontend, Mistral inference)
+    - All services healthy and running
+  - ✅ **DOCUMENTATION OVERHAUL for AI Agents**
+    - Rewrote `docs/SETUP.md` (100% optimized for Claude Sonnet 4.5)
+      - Added AI agent context at top
+      - Documented Neo4j port changes (7475/7688)
+      - Added Mac M1 Max specific instructions
+      - Included exact expected outputs for every command
+      - Added decision trees and troubleshooting
+      - 300+ lines, complete local dev guide
+    - Rewrote `docs/DEPLOYMENT.md` (100% optimized for Claude Sonnet 4.5)
+      - Phase 9 ONLY warning at top
+      - Complete DigitalOcean GPU setup
+      - Vercel deployment with custom domains
+      - Security, monitoring, backup procedures
+      - 600+ lines, production-ready guide
+    - Updated `CURRENT-CONTEXT.md`
+      - Added "Documentation Strategy for AI Agents" section
+      - Documented all critical files for AI understanding
+      - Explained why AI documentation differs from human docs
+      - Session 2 history updated
+- **Deliverables:**
+  - ✅ Phase 0 complete (local env working)
+  - ✅ docs/SETUP.md (AI-optimized, 300+ lines)
+  - ✅ docs/DEPLOYMENT.md (AI-optimized, 600+ lines)
+  - ✅ CURRENT-CONTEXT.md (AI context documented)
+  - ✅ All changes committed to GitHub
+- **Next:** User to test app locally, then proceed to Phase 1 (Auth) or configure Sentry
 
 ---
 
