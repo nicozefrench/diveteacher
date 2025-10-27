@@ -1,14 +1,9 @@
 """
-Graphiti Integration avec Claude Haiku 4.5 (Production-Validated)
+Graphiti Integration avec OpenAI GPT-5-nano
 
 Architecture:
-- Graphiti: Anthropic Claude Haiku 4.5 (entity extraction) + OpenAI text-embedding-3-small (embeddings)
+- Graphiti: OpenAI GPT-5-nano (entity extraction) + text-embedding-3-small (embeddings)
 - RAG/User: Mistral 7b sur Ollama (séparé, pas de mélange!)
-
-Based on: ARIA Knowledge System v1.6.0
-- 5 jours production, 100% uptime
-- 100% ingestion success rate
-- Zero custom code LLM client
 """
 import logging
 import asyncio
@@ -16,14 +11,17 @@ import time
 from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 
+from openai import AsyncOpenAI
 from graphiti_core import Graphiti
 from graphiti_core.nodes import EpisodeType
 from graphiti_core.llm_client import LLMConfig
-from graphiti_core.llm_client.anthropic_client import AnthropicClient
+from graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
+from graphiti_core.cross_encoder.openai_reranker_client import OpenAIRerankerClient
 from graphiti_core.search.search_config_recipes import EDGE_HYBRID_SEARCH_RRF
 from graphiti_core.search.search_config import SearchConfig
 
 from app.core.config import settings
+from app.integrations.custom_llm_client import Gpt5NanoClient
 
 logger = logging.getLogger('diveteacher.graphiti')
 
@@ -35,7 +33,7 @@ _indices_built: bool = False
 
 async def get_graphiti_client() -> Graphiti:
     """
-    Get or create Graphiti client singleton avec Claude Haiku 4.5
+    Get or create Graphiti client singleton avec OpenAI GPT-5-nano explicite
     
     Returns:
         Initialized Graphiti client
@@ -43,10 +41,11 @@ async def get_graphiti_client() -> Graphiti:
     Note:
         - Build indices only once on first call
         - Reuse same client for all operations
-        - Uses Anthropic Claude Haiku 4.5 for LLM operations (entity extraction, relation detection)
-        - Uses OpenAI text-embedding-3-small for embeddings (default, 1536 dims)
-        - Requires ANTHROPIC_API_KEY and OPENAI_API_KEY in environment
-        - Production-validated architecture (ARIA Knowledge System v1.6.0)
+        - Uses explicit OpenAI config:
+          * LLM: gpt-5-nano (entity extraction, 2M TPM)
+          * Embedder: text-embedding-3-small (vectorization)
+          * CrossEncoder: gpt-5-nano (reranking)
+        - Requires OPENAI_API_KEY in environment
     """
     global _graphiti_client, _indices_built
     
@@ -54,46 +53,69 @@ async def get_graphiti_client() -> Graphiti:
         if not settings.GRAPHITI_ENABLED:
             raise RuntimeError("Graphiti is disabled in settings")
         
-        if not settings.ANTHROPIC_API_KEY:
-            raise RuntimeError("ANTHROPIC_API_KEY required for Graphiti (not found in settings)")
-        
         if not settings.OPENAI_API_KEY:
-            raise RuntimeError("OPENAI_API_KEY required for embeddings (not found in settings)")
+            raise RuntimeError("OPENAI_API_KEY required for Graphiti (not found in settings)")
         
-        logger.info("🔧 Initializing Graphiti client with Claude Haiku 4.5...")
-        logger.info(f"   LLM: Claude Haiku 4.5 (Anthropic)")
-        logger.info(f"   Embedder: text-embedding-3-small (OpenAI)")
+        logger.info("🔧 Initializing Graphiti client with explicit OpenAI configuration...")
+        logger.info(f"   LLM Model: {settings.OPENAI_MODEL}")
+        logger.info(f"   Embedder: text-embedding-3-small")
         
         # ════════════════════════════════════════════════════════
-        # Configuration Claude Haiku 4.5 (Native Anthropic Client)
+        # Configuration OpenAI explicite pour Graphiti
         # ════════════════════════════════════════════════════════
         
-        # LLM Config pour Claude Haiku 4.5 (entity extraction + relation detection)
+        # Client OpenAI async (partagé entre LLM et Embedder)
+        openai_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+        
+        # LLM Config pour gpt-5-nano (entity extraction + relation detection)
         llm_config = LLMConfig(
-            api_key=settings.ANTHROPIC_API_KEY,
-            model='claude-haiku-4-5-20251001'  # Haiku 4.5 official model ID
+            api_key=settings.OPENAI_API_KEY,
+            model=settings.OPENAI_MODEL,        # gpt-5-nano
+            small_model=settings.OPENAI_MODEL,  # gpt-5-nano aussi
+            max_tokens=4096  # ✅ Limite explicite pour éviter overflow (8K max)
         )
         
-        # LLM Client NATIVE (zero custom code)
-        llm_client = AnthropicClient(config=llm_config, cache=False)
+        # LLM Client CUSTOM pour gpt-5-nano (utilise max_completion_tokens)
+        llm_client = Gpt5NanoClient(
+            config=llm_config,
+            client=openai_client
+        )
+        
+        # Embedder Config pour text-embedding-3-small (vectorization)
+        embedder_config = OpenAIEmbedderConfig(
+            api_key=settings.OPENAI_API_KEY,
+            embedding_model="text-embedding-3-small",
+            embedding_dim=1536  # Dimension de text-embedding-3-small
+        )
+        
+        embedder = OpenAIEmbedder(
+            config=embedder_config,
+            client=openai_client
+        )
+        
+        # CrossEncoder pour reranking (utilise aussi gpt-5-nano)
+        cross_encoder = OpenAIRerankerClient(
+            config=llm_config,
+            client=openai_client
+        )
         
         # ════════════════════════════════════════════════════════
-        # Initialisation Graphiti avec config Claude Haiku 4.5
+        # Initialisation Graphiti avec config explicite
         # ════════════════════════════════════════════════════════
         
         _graphiti_client = Graphiti(
             uri=settings.NEO4J_URI,
             user=settings.NEO4J_USER,
             password=settings.NEO4J_PASSWORD,
-            llm_client=llm_client  # ✅ Native Anthropic client
-            # embedder reste default (OpenAI text-embedding-3-small, 1536 dims)
-            # Pas de custom embedder = pas de bugs dimension mismatch
+            llm_client=llm_client,
+            embedder=embedder,
+            cross_encoder=cross_encoder
         )
         
         logger.info(f"✅ Graphiti client initialized:")
-        logger.info(f"   • LLM: Claude Haiku 4.5 (native AnthropicClient)")
-        logger.info(f"   • Embedder: text-embedding-3-small (default OpenAI, dim: 1536)")
-        logger.info(f"   • Architecture: ARIA-validated (5 days production, 100% uptime)")
+        logger.info(f"   • LLM: {settings.OPENAI_MODEL} (Gpt5NanoClient with max_completion_tokens: 4096)")
+        logger.info(f"   • Embedder: text-embedding-3-small (dim: 1536)")
+        logger.info(f"   • CrossEncoder: {settings.OPENAI_MODEL}")
     
     # Build indices and constraints (only once)
     if not _indices_built:
@@ -133,11 +155,10 @@ async def ingest_chunks_to_graph(
         
     Note:
         - Each chunk is ingested as an "episode" in Graphiti
-        - Graphiti automatically extracts entities and relationships using Claude Haiku 4.5
+        - Graphiti automatically extracts entities and relationships
         - Failed chunks are logged but don't block the pipeline
         - Timeout: 120s per chunk (configurable)
         - Community building is NOT called here (too expensive, call periodically)
-        - Expected success rate: 100% (ARIA-validated)
     """
     if not settings.GRAPHITI_ENABLED:
         logger.warning("⚠️  Graphiti disabled - skipping ingestion")

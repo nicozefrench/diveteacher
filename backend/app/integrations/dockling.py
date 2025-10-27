@@ -8,6 +8,7 @@ import asyncio
 import logging
 from pathlib import Path
 from typing import Optional, Dict, Any
+from concurrent.futures import ThreadPoolExecutor
 from docling.document_converter import DocumentConverter, PdfFormatOption
 from docling.datamodel.base_models import InputFormat
 from docling.datamodel.pipeline_options import PdfPipelineOptions, TableFormerMode
@@ -17,6 +18,11 @@ from app.core.config import settings
 from app.services.document_validator import DocumentValidator
 
 logger = logging.getLogger('diveteacher.docling')
+
+# ═══════════════════════════════════════════════════════════
+# ✅ NEW: Dedicated executor for Docling (module-level)
+# ═══════════════════════════════════════════════════════════
+_docling_executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="docling_")
 
 
 class DoclingSingleton:
@@ -65,6 +71,9 @@ async def convert_document_to_docling(
     Cette fonction retourne un DoclingDocument pour permettre le chunking
     sémantique ultérieur avec HybridChunker.
     
+    ✅ Uses dedicated executor (not default)
+    ✅ Works with any event loop (single or multi)
+    
     Args:
         file_path: Path to document file
         timeout: Optional timeout in seconds (default: from settings)
@@ -96,9 +105,15 @@ async def convert_document_to_docling(
     try:
         loop = asyncio.get_event_loop()
         
-        # Exécuter conversion en thread pool avec timeout
+        # ═══════════════════════════════════════════════════════════
+        # ✅ FIXED: Use dedicated executor (not None!)
+        # ═══════════════════════════════════════════════════════════
         result = await asyncio.wait_for(
-            loop.run_in_executor(None, _convert_sync, file_path),
+            loop.run_in_executor(
+                _docling_executor,  # ← Dedicated executor (module-level)
+                _convert_sync,
+                file_path
+            ),
             timeout=timeout_seconds
         )
         
@@ -123,7 +138,7 @@ async def convert_document_to_docling(
 
 def _convert_sync(file_path: str) -> DoclingDocument:
     """
-    Synchronous Docling conversion (runs in thread pool)
+    Synchronous Docling conversion (runs in dedicated thread pool)
     
     Args:
         file_path: Path to document

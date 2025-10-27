@@ -52,21 +52,30 @@ async def process_document(
         metadata: Optional document metadata
     """
     
-    logger.info(f"[{upload_id}] ═══════════════════════════════════════")
-    logger.info(f"[{upload_id}] Starting document processing")
-    logger.info(f"[{upload_id}] File: {Path(file_path).name}")
+    # ═══════════════════════════════════════════════════════════
+    # CRITICAL: Initialize status dict FIRST (before any exception)
+    # ═══════════════════════════════════════════════════════════
+    processing_status[upload_id] = {
+        "status": "processing",
+        "stage": "initialization",
+        "progress": 0,
+        "error": None,
+        "started_at": datetime.now().isoformat(),
+    }
+    
+    # Log AFTER status init (so status endpoint works even if logging fails)
+    try:
+        logger.info(f"[{upload_id}] ═══════════════════════════════════════")
+        logger.info(f"[{upload_id}] Starting document processing")
+        logger.info(f"[{upload_id}] File: {Path(file_path).name}")
+    except Exception as log_error:
+        # If logging fails, print to stdout (will appear in Docker logs)
+        print(f"[{upload_id}] WARNING: Logger failed: {log_error}")
+        print(f"[{upload_id}] Starting document processing: {Path(file_path).name}")
+    
     start_time = datetime.now()
     
     try:
-        # Initialize status
-        processing_status[upload_id] = {
-            "status": "processing",
-            "stage": "validation",
-            "progress": 0,
-            "error": None,
-            "started_at": datetime.now().isoformat(),
-        }
-        
         # ═══════════════════════════════════════════════════════════
         # STEP 1: Convert to DoclingDocument
         # ═══════════════════════════════════════════════════════════
@@ -186,15 +195,35 @@ async def process_document(
         
     except Exception as e:
         # Unexpected error
-        logger.error(f"[{upload_id}] ❌ Unexpected error: {str(e)}", exc_info=True)
+        error_msg = f"Unexpected error: {str(e)}"
+        logger.error(f"[{upload_id}] ❌ {error_msg}", exc_info=True)
+        
+        # Also print to stdout for Docker logs
+        print(f"[{upload_id}] ❌ EXCEPTION: {error_msg}")
+        print(f"[{upload_id}] Exception type: {type(e).__name__}")
+        import traceback
+        print(f"[{upload_id}] Traceback:\n{traceback.format_exc()}")
+        
         sentry_sdk.capture_exception(e)
-        processing_status[upload_id].update({
-            "status": "failed",
-            "stage": "unknown_error",
-            "error": str(e),
-            "failed_at": datetime.now().isoformat(),
-        })
-        raise
+        
+        # Update status if dict exists
+        if upload_id in processing_status:
+            processing_status[upload_id].update({
+                "status": "failed",
+                "stage": "unknown_error",
+                "error": error_msg,
+                "error_type": type(e).__name__,
+                "failed_at": datetime.now().isoformat(),
+            })
+        
+        # Don't re-raise - let background task complete gracefully
+        # (FastAPI background tasks don't propagate exceptions to main app)
+    
+    finally:
+        # Always log completion (success or failure)
+        status = processing_status.get(upload_id, {}).get("status", "unknown")
+        logger.info(f"[{upload_id}] Processing finished with status: {status}")
+        print(f"[{upload_id}] Processing finished with status: {status}")
 
 
 def get_processing_status(upload_id: str) -> Optional[Dict[str, Any]]:
