@@ -16,8 +16,8 @@ neo4j==5.25.0
 # Graphiti (Knowledge Graph)
 graphiti-core==0.3.7
 
-# Dockling (PDF/PPT Processing)
-dockling==2.5.1
+# Docling (PDF/PPT Processing)
+docling==2.5.1
 docling-core==2.3.0
 
 # LLM Providers
@@ -32,7 +32,7 @@ sentry-sdk[fastapi]==2.15.0
 python-dotenv==1.0.1
 python-jose[cryptography]==3.3.0  # JWT for authentication
 passlib[bcrypt]==1.7.4            # Password hashing
-tenacity==9.0.0                   # Retry logic
+tenacity==8.5.0                   # Retry logic (compatible with graphiti-core)
 
 # Development
 pytest==8.3.3

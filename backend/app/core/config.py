@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     SENTRY_TRACES_SAMPLE_RATE: float = 1.0
     
     # Processing
-    DOCKLING_TIMEOUT: int = 300  # 5 minutes
+    DOCLING_TIMEOUT: int = 300  # 5 minutes
     PROCESSING_WORKERS: int = 2
     
     # RAG Configuration
