@@ -49,7 +49,12 @@ async def upload_document(
     total_size = 0
     chunks = []
     
-    async for chunk in file.file:
+    # Read file synchronously (SpooledTemporaryFile is not async)
+    chunk_size = 8192
+    while True:
+        chunk = await file.read(chunk_size)
+        if not chunk:
+            break
         total_size += len(chunk)
         if total_size > max_size:
             raise HTTPException(

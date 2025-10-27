@@ -1,0 +1,503 @@
+# 🔗 Graphiti Knowledge Graph Integration
+
+> **Status:** ⚠️ BLOCKED - Vector Dimension Mismatch  
+> **Version:** graphiti-core 0.17.0  
+> **OpenAI Model:** gpt-5-nano (attempted)  
+> **Last Updated:** October 27, 2025
+
+---
+
+## 📋 Table of Contents
+
+- [Overview](#overview)
+- [Current Status](#current-status)
+- [Architecture](#architecture)
+- [OpenAI Configuration](#openai-configuration)
+- [Custom LLM Client](#custom-llm-client)
+- [Known Issues](#known-issues)
+- [Troubleshooting](#troubleshooting)
+- [Next Steps](#next-steps)
+
+---
+
+## Overview
+
+**Graphiti** est une bibliothèque Python pour créer des knowledge graphs temporels à partir de texte non structuré. Elle utilise des LLMs pour extraire automatiquement des entités, relations, et construire un graphe évolutif dans Neo4j.
+
+### Key Features
+
+- ✅ **Entity Extraction:** Automatic via LLM prompts
+- ✅ **Relation Detection:** Semantic relationships between entities
+- ✅ **Temporal Awareness:** `valid_at`, `invalid_at` for contradiction resolution
+- ✅ **Hybrid Search:** Semantic + BM25 + RRF (Reciprocal Rank Fusion)
+- ✅ **Community Detection:** Louvain algorithm for entity clustering
+- ✅ **Multi-tenant:** `group_id` for data isolation
+
+### Integration avec DiveTeacher
+
+```
+PDF Upload
+    ↓
+Docling Conversion (72 chunks)
+    ↓
+Graphiti.add_episode() ← ❌ BLOQUÉ ICI
+    ↓
+Neo4j (Episodes, Entities, Relations)
+    ↓
+RAG Query via graphiti.search()
+```
+
+---
+
+## Current Status
+
+### 🟡 Phase 0.9 - Partially Complete (~30%)
+
+| Component | Status | Details |
+|-----------|--------|---------|
+| **Graphiti Installation** | ✅ DONE | graphiti-core 0.17.0 installed |
+| **Neo4j Connection** | ✅ WORKING | Graphiti connects to Neo4j |
+| **Indexes Creation** | ✅ DONE | `build_indices_and_constraints()` OK |
+| **OpenAI Config** | ❌ BLOCKED | gpt-5-nano incompatible with default API |
+| **Custom LLM Client** | ⚠️ BUGGY | `Gpt5NanoClient` créé mais vector mismatch |
+| **Ingestion Pipeline** | ❌ FAILING | 0/72 chunks ingested successfully |
+| **Search Integration** | ❌ UNTESTED | Blocked by ingestion failure |
+
+### Blocker Critique
+
+```
+Neo.ClientError.Statement.ArgumentError: 
+Invalid input for 'vector.similarity.cosine()': 
+The supplied vectors do not have the same number of dimensions.
+```
+
+**Impact:** 100% des chunks échouent à l'ingestion.
+
+---
+
+## Architecture
+
+### Graphiti Data Model (Neo4j)
+
+```
+┌────────────────────────────────────────────────────────┐
+│                    Neo4j Graph                          │
+├────────────────────────────────────────────────────────┤
+│                                                          │
+│  ┌──────────┐       ┌──────────┐       ┌──────────┐   │
+│  │ Episode  │───────│  Entity  │───────│ Community│   │
+│  │          │       │          │       │          │   │
+│  │ • name   │       │ • name   │       │ • name   │   │
+│  │ • body   │  HAS  │ • summary│  IN   │ • level  │   │
+│  │ • source │───────│ • type   │───────│          │   │
+│  │ • time   │       │ • embed  │       └──────────┘   │
+│  └──────────┘       └────┬─────┘                      │
+│                          │                              │
+│                          │ RELATES_TO                   │
+│                          │                              │
+│                          ▼                              │
+│                     ┌──────────┐                       │
+│                     │EdgeNode  │                       │
+│                     │          │                       │
+│                     │ • fact   │                       │
+│                     │ • type   │                       │
+│                     └──────────┘                       │
+│                                                          │
+└────────────────────────────────────────────────────────┘
+```
+
+### Data Flow
+
+```python
+# 1. Upload PDF
+file = open("manual_niveau4.pdf", "rb")
+
+# 2. Docling Conversion
+chunks = docling_processor.convert(file)
+# → 72 chunks de 256 tokens max
+
+# 3. Graphiti Ingestion (forEach chunk)
+for chunk in chunks:
+    await graphiti.add_episode(
+        name="Manual Niveau 4 - Chunk 0",
+        episode_body=chunk.text,
+        source=EpisodeType.text,
+        reference_time=datetime.now(timezone.utc),
+        group_id="user_123"
+    )
+    # ❌ ÉCHOUE: Vector dimension mismatch
+
+# 4. Search (if ingestion worked)
+results = await graphiti.search(
+    query="Quelles sont les procédures de décompression?",
+    group_ids=["user_123"]
+)
+```
+
+---
+
+## OpenAI Configuration
+
+### Objectif Initial: gpt-5-nano
+
+**Rationale:**
+- **Performance:** 2M tokens/min (rate limit maximal OpenAI)
+- **Coût:** Le moins cher pour extraction massive
+- **Qualité:** Excellent pour entity extraction
+
+### Configuration Tentée
+
+```python
+# backend/app/integrations/graphiti.py
+
+from openai import AsyncOpenAI
+from graphiti_core import Graphiti
+from graphiti_core.llm_client import LLMConfig
+from graphiti_core.embedder.openai import OpenAIEmbedder, OpenAIEmbedderConfig
+
+# OpenAI Client
+openai_client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
+
+# LLM Config (pour gpt-5-nano)
+llm_config = LLMConfig(
+    api_key=settings.OPENAI_API_KEY,
+    model="gpt-5-nano",          # ⚠️ Problématique
+    small_model="gpt-5-nano",
+    max_tokens=4096              # ❌ Pas supporté par gpt-5-nano
+)
+
+# Embedder Config
+embedder_config = OpenAIEmbedderConfig(
+    api_key=settings.OPENAI_API_KEY,
+    embedding_model="text-embedding-3-small",
+    embedding_dim=1536           # ⚠️ Dimension mismatch
+)
+```
+
+### Problème: max_tokens vs max_completion_tokens
+
+**Erreur Initiale:**
+```
+openai.BadRequestError: Error code: 400
+Unsupported parameter: 'max_tokens' is not supported with this model. 
+Use 'max_completion_tokens' instead.
+```
+
+**Cause:** `gpt-5-nano` utilise une API différente (Responses/Assistants API) qui nécessite `max_completion_tokens` au lieu de `max_tokens`.
+
+**Solution Tentée:** Custom LLM Client (voir section suivante)
+
+---
+
+## Custom LLM Client
+
+### Fichier: `backend/app/integrations/custom_llm_client.py`
+
+Un client custom a été créé pour adapter les appels OpenAI:
+
+```python
+from graphiti_core.llm_client import OpenAIClient, LLMConfig
+
+class Gpt5NanoClient(OpenAIClient):
+    """
+    Custom OpenAI Client pour gpt-5-nano
+    
+    Différences avec OpenAIClient standard:
+    - Utilise max_completion_tokens au lieu de max_tokens
+    - Compatible avec l'API gpt-5-nano (Responses/Assistants API)
+    """
+    
+    async def _generate_response(
+        self,
+        messages: list[dict[str, str]],
+        response_model: Optional[Type[BaseModel]] = None,
+        max_tokens: Optional[int] = None,
+        model_size: str = 'large'
+    ) -> Any:
+        # Conversion max_tokens → max_completion_tokens
+        tokens_limit = max_tokens or getattr(self.config, 'max_tokens', None)
+        model = self.config.model if model_size == 'large' else self.config.small_model
+        
+        api_params = {
+            'model': model,
+            'messages': messages
+        }
+        
+        # ✅ Utiliser max_completion_tokens
+        if tokens_limit:
+            api_params['max_completion_tokens'] = tokens_limit
+        
+        # Appel API avec structured output
+        if response_model:
+            response = await self.client.beta.chat.completions.parse(
+                response_format=response_model,
+                **api_params
+            )
+            parsed_obj = response.choices[0].message.parsed
+            
+            # ✅ Convertir Pydantic → dict pour Graphiti
+            if hasattr(parsed_obj, 'model_dump'):
+                return parsed_obj.model_dump()
+            elif hasattr(parsed_obj, 'dict'):
+                return parsed_obj.dict()
+            else:
+                return parsed_obj
+        else:
+            response = await self.client.chat.completions.create(**api_params)
+            return response.choices[0].message.content
+```
+
+### Utilisation
+
+```python
+# backend/app/integrations/graphiti.py
+
+from app.integrations.custom_llm_client import Gpt5NanoClient
+
+async def get_graphiti_client() -> Graphiti:
+    llm_config = LLMConfig(...)
+    
+    # ✅ Utiliser custom client
+    llm_client = Gpt5NanoClient(
+        config=llm_config,
+        client=openai_client
+    )
+    
+    _graphiti_client = Graphiti(
+        uri=settings.NEO4J_URI,
+        user=settings.NEO4J_USER,
+        password=settings.NEO4J_PASSWORD,
+        llm_client=llm_client,
+        embedder=embedder,
+        cross_encoder=cross_encoder
+    )
+```
+
+### Bugs Rencontrés
+
+**Bug 1: Signature Incorrecte** (FIXED)
+```
+TypeError: Gpt5NanoClient._generate_response() takes from 2 to 3 positional 
+arguments but 5 were given
+```
+**Fix:** Corriger signature pour matcher `OpenAIClient._generate_response(self, messages, response_model, max_tokens, model_size)`
+
+**Bug 2: Pydantic Serialization** (FIXED)
+```
+AttributeError: 'ExtractedEntities' object has no attribute 'get'
+```
+**Fix:** Convertir objet Pydantic en dict avec `model_dump()` avant retour
+
+**Bug 3: Vector Dimension Mismatch** (CURRENT)
+```
+Neo.ClientError.Statement.ArgumentError: 
+The supplied vectors do not have the same number of dimensions.
+```
+**Status:** ❌ NON RÉSOLU (bloque l'ingestion)
+
+---
+
+## Known Issues
+
+### Issue #1: Vector Dimension Mismatch (BLOCKING)
+
+**Symptôme:**
+```
+[48/72] ❌ Failed chunk 47 after 35.38s: 
+Invalid input for 'vector.similarity.cosine()': 
+The supplied vectors do not have the same number of dimensions.
+```
+
+**Hypothèses:**
+
+**H1: Neo4j Indexes Dimension Incorrecte**
+- Graphiti crée indexes Neo4j avec dimension spécifique
+- Si indexes existants ont dimension différente → crash
+- **Vérification:** Query `SHOW INDEXES` dans Neo4j Browser
+
+**H2: OpenAI Embeddings Dimension**
+- text-embedding-3-small = 1536 dimensions (standard)
+- Graphiti attend peut-être dimension différente?
+- **Vérification:** Logs embeddings OpenAI response
+
+**H3: Custom Client Side Effect**
+- Custom client modifie flow embedder?
+- Embeddings générés avec mauvaise dimension?
+- **Vérification:** Comparer avec gpt-4o-mini (baseline)
+
+**Workaround Recommandé:**
+→ Utiliser **gpt-4o-mini** (modèle officiellement supporté) au lieu de gpt-5-nano
+
+### Issue #2: Docling tqdm Thread Lock (INTERMITTENT)
+
+**Symptôme:**
+```
+❌ Docling conversion error: type object 'tqdm' has no attribute '_lock'
+```
+
+**Occurrence:** ~20% des uploads
+
+**Impact:** Non bloquant (retry works)
+
+**Status:** Connu depuis Phase 0.7, defer à Phase 1+
+
+---
+
+## Troubleshooting
+
+### Diagnostic: Vérifier État Graphiti
+
+```bash
+# 1. Check Neo4j connection
+curl http://localhost:7475
+# → Login: neo4j / PASSWORD (from .env)
+
+# 2. Check Graphiti indexes
+# Neo4j Browser: http://localhost:7475
+SHOW INDEXES;
+# → Devrait afficher indexes Graphiti (Entity, Episode, etc.)
+
+# 3. Check ingestion logs
+docker logs rag-backend -f | grep "Graphiti\|Chunk"
+# → Observer succès/échecs par chunk
+
+# 4. Check graph stats
+curl -s http://localhost:8000/api/graph/stats | python3 -m json.tool
+# → {"episodes": 0, "entities": 144, "relationships": 185}
+```
+
+### Diagnostic: OpenAI API Key
+
+```bash
+# Test OpenAI connection
+docker exec rag-backend python3 -c "
+from openai import AsyncOpenAI
+import asyncio
+
+client = AsyncOpenAI(api_key='$OPENAI_API_KEY')
+
+async def test():
+    response = await client.chat.completions.create(
+        model='gpt-5-nano',
+        messages=[{'role': 'user', 'content': 'Hello'}],
+        max_completion_tokens=100
+    )
+    print(response.choices[0].message.content)
+
+asyncio.run(test())
+"
+```
+
+### Solution de Contournement: gpt-4o-mini
+
+**Recommandé pour déblocage rapide:**
+
+```bash
+# 1. Revert custom client
+git checkout backend/app/integrations/graphiti.py
+rm backend/app/integrations/custom_llm_client.py
+
+# 2. Update .env
+echo "OPENAI_MODEL=gpt-4o-mini" >> .env
+
+# 3. Clear Neo4j Graphiti data
+# Neo4j Browser: http://localhost:7475
+MATCH (n:Entity) DETACH DELETE n;
+MATCH (n:Episode) DETACH DELETE n;
+MATCH (n:Community) DETACH DELETE n;
+
+# 4. Rebuild backend
+docker compose -f docker/docker-compose.dev.yml build backend
+docker compose -f docker/docker-compose.dev.yml up -d backend
+
+# 5. Test upload
+curl -X POST http://localhost:8000/api/upload \
+  -F "file=@TestPDF/Nitrox.pdf" \
+  -F "metadata={\"user_id\":\"test_gpt4o\"}"
+
+# 6. Monitor logs
+docker logs rag-backend -f | grep "✅ Chunk\|❌ Failed"
+```
+
+---
+
+## Next Steps
+
+### Option A: Quick Win - gpt-4o-mini (RECOMMENDED)
+
+**Time:** <1h  
+**Risk:** Faible
+
+1. Revert custom client
+2. Use gpt-4o-mini (officially supported)
+3. Clear Neo4j Graphiti data
+4. Test E2E ingestion
+5. Complete Phase 0.9 validation
+
+**Trade-off:** Perd 2M TPM de gpt-5-nano, mais gagne stabilité
+
+### Option B: Debug Vector Dimension (THOROUGH)
+
+**Time:** 2-3h  
+**Risk:** Moyen
+
+1. Inspect Neo4j vector indexes dimension
+2. Log OpenAI embeddings actual dimension
+3. Drop + recreate Graphiti indexes avec bonne dimension
+4. Adjust embedder_config si nécessaire
+5. Re-test avec gpt-5-nano
+
+**Trade-off:** Comprendre root cause, potentiellement fix gpt-5-nano
+
+### Option C: Pivot to Ollama (LONG TERM)
+
+**Time:** 3-4h  
+**Risk:** Élevé
+
+1. Fix Ollama container (currently unhealthy)
+2. Configure Graphiti avec `OllamaClient`
+3. Test extraction quality avec Mistral 7b
+4. Itérer sur prompts si nécessaire
+
+**Trade-off:** 0€ cost, privacy, mais qualité extraction potentiellement moindre
+
+---
+
+## References
+
+### Code Files
+
+- **Graphiti Client:** `backend/app/integrations/graphiti.py` (127 lignes)
+- **Custom LLM Client:** `backend/app/integrations/custom_llm_client.py` (108 lignes)
+- **Config:** `backend/app/core/config.py` (OPENAI_API_KEY, OPENAI_MODEL)
+- **Requirements:** `backend/requirements.txt` (graphiti-core 0.17.0)
+
+### Documentation
+
+- **Technical Guide:** `resources/251020-graphiti-technical-guide.md`
+- **Status Report:** `Devplan/STATUS-REPORT-2025-10-27.md`
+- **Implementation Plan:** `Devplan/PHASE-0.9-GRAPHITI-IMPLEMENTATION.md`
+- **OpenAI Docs:** https://platform.openai.com/docs
+
+### Neo4j Queries
+
+```cypher
+-- Check episodes
+MATCH (e:Episode) RETURN count(e), collect(e.name)[0..5];
+
+-- Check entities
+MATCH (ent:Entity) RETURN count(ent), collect(ent.name)[0..10];
+
+-- Check relationships
+MATCH ()-[r]->() RETURN type(r), count(r);
+
+-- Check vector indexes
+SHOW INDEXES WHERE type CONTAINS 'VECTOR';
+```
+
+---
+
+**Status:** 🟡 BLOCKED - Awaiting decision on Option A/B/C  
+**Owner:** Development Team  
+**Priority:** CRITICAL (blocks Phase 1)
+

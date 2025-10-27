@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir --force-reinstall tqdm==4.66.0
 
 # Copy application code
 COPY app/ ./app/

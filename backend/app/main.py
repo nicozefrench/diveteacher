@@ -20,7 +20,9 @@ from sentry_sdk.integrations.starlette import StarletteIntegration
 from app.core.config import settings
 from app.api import upload, query, health, graph
 from app.integrations.neo4j import neo4j_client
+from app.integrations.graphiti import close_graphiti_client
 from app.integrations.sentry import init_sentry
+from app.integrations.neo4j_indexes import create_rag_indexes, verify_indexes
 
 # Initialize Sentry (if configured)
 if settings.SENTRY_DSN_BACKEND:
@@ -58,8 +60,22 @@ async def startup_event():
     
     # Test Neo4j connection
     try:
-        await neo4j_client.verify_connection()
+        neo4j_client.verify_connection()
         print("✅ Neo4j connection established")
+        
+        # Create RAG-optimized indexes (after Graphiti indices)
+        try:
+            indexes = create_rag_indexes(neo4j_client.driver)
+            print(f"✅ Created {len(indexes)} RAG indexes: {', '.join(indexes)}")
+            
+            # Verify all indexes
+            index_info = verify_indexes(neo4j_client.driver)
+            print(f"📊 Total indexes: {index_info['total']} "
+                  f"(RAG: {index_info['rag_indexes']}, Graphiti: {index_info['graphiti_indexes']})")
+        except Exception as e:
+            print(f"⚠️  Index creation/verification failed: {e}")
+            # Don't crash - RAG will work but slower
+            
     except Exception as e:
         print(f"⚠️  Neo4j connection failed: {e}")
         # Don't crash - let health check report the issue
@@ -71,7 +87,13 @@ async def startup_event():
 async def shutdown_event():
     """Cleanup on shutdown"""
     print("🛑 Shutting down RAG Knowledge Graph API...")
-    await neo4j_client.close()
+    
+    # Close Neo4j connection
+    neo4j_client.close()
+    
+    # Close Graphiti connection
+    await close_graphiti_client()
+    
     print("✅ Cleanup complete")
 
 

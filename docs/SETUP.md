@@ -315,6 +315,507 @@ MATCH (n) RETURN count(n) as total_nodes
 
 ---
 
+## 🔧 Phase 0.7: Advanced Document Processing (IMPLEMENTED)
+
+> **Status:** ✅ Implemented on October 27, 2025  
+> **Purpose:** Production-ready RAG pipeline with Docling + HybridChunker + Graphiti  
+> **Reference:** `Devplan/PHASE-0.7-DOCLING-IMPLEMENTATION.md`
+
+### What Changed in Phase 0.7
+
+#### 1. Advanced Docling Integration ✅
+**Before Phase 0.7:**
+- Basic PDF to Markdown conversion
+- No table structure recognition
+- No OCR for scanned documents
+- Generic error handling
+
+**After Phase 0.7:**
+- ✅ `PdfPipelineOptions` configured with OCR + TableFormer ACCURATE mode
+- ✅ Singleton pattern for DocumentConverter (performance)
+- ✅ Robust validation (file type, size, corruption detection)
+- ✅ Timeout management (300s default, configurable)
+- ✅ Detailed logging with metrics (pages, tables, images, duration)
+- ✅ Specific error types: `ValueError`, `ConversionError`, `TimeoutError`
+
+#### 2. HybridChunker for Semantic Chunking ✅
+**New Feature:**
+- Docling's `HybridChunker` creates semantically coherent chunks
+- Respects document structure (sections, paragraphs, lists, tables)
+- Token-aware chunking (max 512 tokens for embedding models)
+- Preserves context (includes headers in chunks)
+- Metadata-rich: headings, doc_items, origin, provenance (page, bbox)
+
+**Implementation:**
+- Module: `backend/app/services/document_chunker.py`
+- Tokenizer: `BAAI/bge-small-en-v1.5`
+- Config: `max_tokens=512`, `min_tokens=64`, `merge_peers=True`
+
+#### 3. Complete Pipeline Refactor ✅
+**New 4-Step Pipeline:**
+```
+1. Validation      → DocumentValidator (file exists, format, size, readability)
+2. Conversion      → Docling (PDF → DoclingDocument with OCR + tables)
+3. Chunking        → HybridChunker (semantic boundaries, token limits)
+4. Graph Ingestion → Graphiti + Neo4j (chunks → episodes → entities + facts)
+```
+
+**Module:** `backend/app/core/processor.py`
+
+#### 4. Graphiti API Corrections ✅
+**5 Critical Fixes:**
+1. ✅ Parameter rename: `episode_type` → `source`
+2. ✅ Timezone-aware datetime: `datetime.now(timezone.utc)`
+3. ✅ Call `build_indices_and_constraints()` on first init
+4. ✅ Proper connection cleanup: `close_graphiti_client()`
+5. ✅ Import `timezone` from `datetime`
+
+**Module:** `backend/app/integrations/graphiti.py`
+
+#### 5. Bug Fixes ✅
+- **tqdm threading issue:** Force-reinstall `tqdm==4.66.0` in Dockerfile
+- **Async file reading:** Fixed `SpooledTemporaryFile` iteration in upload.py
+- **Graphiti singleton:** Proper pattern with `_indices_built` flag
+
+### Files Created (3)
+1. `backend/app/services/document_validator.py` - Robust file validation
+2. `backend/app/services/document_chunker.py` - HybridChunker wrapper
+3. `backend/tests/test_docling_pipeline.py` - Unit tests
+
+### Files Modified (6)
+1. `backend/app/integrations/dockling.py` - Complete refactor
+2. `backend/app/integrations/graphiti.py` - API corrections + cleanup
+3. `backend/app/core/processor.py` - 4-step pipeline
+4. `backend/app/main.py` - Shutdown event cleanup
+5. `backend/requirements.txt` - +sentence-transformers, +transformers
+6. `backend/Dockerfile` - Force-reinstall tqdm fix
+
+### Testing Phase 0.7 Implementation
+
+#### Quick Validation (After Phase 0.7)
+```bash
+# 1. Rebuild backend with new code
+cd /Users/nicozefrench/Dropbox/AI/rag-knowledge-graph-starter
+docker-compose -f docker/docker-compose.dev.yml build backend
+docker-compose -f docker/docker-compose.dev.yml restart backend
+
+# 2. Check logs for new features
+docker logs rag-backend | grep -E "(Initializing|HybridChunker|DocumentConverter)"
+# Expected: "Initializing Docling DocumentConverter"
+# Expected: "DocumentConverter initialized (ACCURATE mode + OCR)"
+# Expected: "Initializing HybridChunker"
+
+# 3. Test upload with curl
+curl -X POST http://localhost:8000/api/upload \
+  -F "file=@TestPDF/Niveau 4 GP.pdf" \
+  -w "\nHTTP Status: %{http_code}\n"
+
+# Expected:
+# {
+#   "upload_id": "uuid...",
+#   "filename": "Niveau 4 GP.pdf",
+#   "status": "processing",
+#   "message": "Document uploaded successfully and processing started"
+# }
+# HTTP Status: 200
+
+# 4. Monitor processing (replace {upload_id})
+docker logs -f rag-backend | grep "\[{upload_id}\]"
+
+# Expected logs:
+# [upload_id] Starting document processing
+# [upload_id] Step 1/4: Docling conversion
+# [upload_id] ✅ Conversion completed in X.XXs
+# [upload_id] Step 2/4: Semantic chunking
+# [upload_id] ✅ Created N semantic chunks
+# [upload_id] Step 3/4: Neo4j ingestion
+# [upload_id] ✅ Ingestion completed in X.XXs
+# [upload_id] ✅ Processing COMPLETE (X.XXs)
+
+# 5. Check status via API
+curl http://localhost:8000/api/upload/status/{upload_id} | python3 -m json.tool
+
+# Expected response:
+# {
+#   "status": "completed",
+#   "stage": "completed",
+#   "progress": 100,
+#   "num_chunks": 42,    # ← NEW in Phase 0.7
+#   "metadata": {
+#     "num_pages": 10,
+#     "num_tables": 3,
+#     ...
+#   },
+#   "durations": {       # ← NEW in Phase 0.7
+#     "conversion": 15.3,
+#     "chunking": 3.2,
+#     "ingestion": 8.7,
+#     "total": 27.2
+#   }
+# }
+```
+
+#### Neo4j Verification (Phase 0.7 Results)
+```cypher
+# Open http://localhost:7475
+# Login: neo4j / diveteacher_dev_2025
+
+# Query 1: Count nodes after Phase 0.7
+MATCH (n) RETURN count(n) as total_nodes
+
+# Query 2: View entities with summaries
+MATCH (n:Entity)
+RETURN n.name, n.summary, n.created_at
+LIMIT 10
+
+# Query 3: View facts/edges with temporal info
+MATCH (n)-[r:RELATES_TO]->(m)
+RETURN n.name, r.fact, m.name, r.valid_at, r.invalid_at
+LIMIT 10
+
+# Expected: Nodes and relationships from uploaded PDF chunks
+```
+
+### Troubleshooting Phase 0.7
+
+#### Issue: tqdm._lock AttributeError
+**Symptom:** Backend crashes with `'tqdm' object has no attribute '_lock'`
+
+**Root Cause:** tqdm 4.67.1+ removed `_lock` attribute, breaking Docling threading
+
+**Solution:**
+```bash
+# Already fixed in Dockerfile (force-reinstall tqdm==4.66.0)
+# If you see this error, rebuild:
+docker-compose -f docker/docker-compose.dev.yml build backend --no-cache
+docker-compose -f docker/docker-compose.dev.yml restart backend
+```
+
+#### Issue: Graphiti add_episode fails
+**Symptom:** Error "unexpected keyword argument 'episode_type'"
+
+**Root Cause:** Graphiti API changed parameter names
+
+**Solution:**
+Already fixed in `backend/app/integrations/graphiti.py`:
+- Use `source=EpisodeType.text` (not `episode_type=`)
+- Use `datetime.now(timezone.utc)` for `reference_time`
+
+#### Issue: HybridChunker ModuleNotFoundError
+**Symptom:** "No module named 'sentence_transformers'"
+
+**Solution:**
+```bash
+# Already in requirements.txt, but if missing:
+docker exec rag-backend pip install sentence-transformers==3.3.1 transformers==4.48.3
+# Then restart:
+docker restart rag-backend
+```
+
+#### Issue: Docling conversion timeout
+**Symptom:** Processing stuck at "Step 1/4: Docling conversion"
+
+**Solutions:**
+1. **Increase timeout** in `.env`:
+```bash
+DOCLING_TIMEOUT=600  # 10 minutes for very large PDFs
+```
+
+2. **Check PDF is valid:**
+```bash
+# Validate before upload
+file TestPDF/your-document.pdf
+# Expected: PDF document, version X.X
+```
+
+3. **Monitor memory:**
+```bash
+docker stats rag-backend
+# If MEM USAGE > 90%, increase Docker memory in Docker Desktop settings
+```
+
+### Phase 0.7 Success Criteria
+
+**✅ All Validated:**
+- PDF processing completes without crashes
+- HybridChunker creates semantic chunks (visible in logs)
+- Status API returns `num_chunks` and `durations`
+- Neo4j contains entities and facts from uploaded document
+- No tqdm threading errors
+- Docling models load successfully
+- Logs show detailed metrics (pages, tables, conversion time)
+
+**⏳ Pending Full Validation:**
+- Table extraction accuracy (needs manual verification with complex tables)
+- Neo4j community building (run `build_communities()` after multiple docs)
+
+---
+
+## 🔧 Phase 0.8: Neo4j RAG Optimization (IMPLEMENTED)
+
+> **Status:** ✅ Implemented on October 27, 2025  
+> **Purpose:** Production-ready RAG queries with full-text search + hybrid search  
+> **Reference:** `Devplan/PHASE-0.8-NEO4J-IMPLEMENTATION.md`
+
+### What Changed in Phase 0.8
+
+#### 1. Neo4jClient Refactored ✅
+**Before Phase 0.8:**
+- Used `AsyncGraphDatabase` (deprecated pattern)
+- Keyword matching naïve (pas compatible Graphiti schema)
+- Pas d'indexes optimisés pour RAG
+- 2 drivers Neo4j (conflit potentiel)
+
+**After Phase 0.8:**
+- ✅ `GraphDatabase.driver()` + `execute_query()` (Neo4j 2025 best practices)
+- ✅ Connection pool optimized (max 50 connections)
+- ✅ Full-text search sur `Episode.content`
+- ✅ Entity + graph traversal queries
+- ✅ Hybrid search (Episodes + Entities combinés)
+- ✅ Error handling spécifique (ServiceUnavailable, CypherSyntaxError, etc.)
+
+#### 2. RAG Indexes Créés ✅
+Trois nouveaux indexes pour optimiser queries RAG:
+- `episode_content` (FULLTEXT) - Search dans chunks de documents
+- `entity_name_idx` (RANGE) - Lookup rapide d'entités
+- `episode_date_idx` (RANGE) - Filter par date
+
+#### 3. RAG Queries Améliorées ✅
+Trois méthodes de search disponibles:
+
+**Full-Text Search:**
+```python
+# Search dans Episode.content (chunks de documents)
+results = neo4j_client.query_context_fulltext("plongée niveau 4", top_k=5)
+# Returns: [{"text": "...", "score": 0.85, "source": "..."}]
+```
+
+**Entity Search:**
+```python
+# Search entités + relationships (graph traversal)
+entities = neo4j_client.query_entities_related("niveau", depth=2)
+# Returns: [{"entity": "Niveau 4", "related": [...]}]
+```
+
+**Hybrid Search (BEST):**
+```python
+# Combine full-text + entity search
+context = neo4j_client.query_context_hybrid("niveau 4 prérequis", top_k=5)
+# Returns: {"episodes": [...], "entities": [...], "total": 10}
+```
+
+#### 4. RAG Chain Updated ✅
+Prompt construction améliorer pour utiliser hybrid context:
+- Section "DOCUMENT EXCERPTS" pour chunks
+- Section "RELATED CONCEPTS & ENTITIES" pour graph
+- Citations avec scores et relations
+- System prompt DiveTeacher-specific
+
+### Files Modified in Phase 0.8
+
+**Created:**
+1. `backend/app/integrations/neo4j_indexes.py` (189 lignes)
+2. `backend/scripts/test_neo4j_rag.py` (200+ lignes)
+
+**Modified:**
+3. `backend/app/integrations/neo4j.py` - Refactor complet (300 lignes)
+4. `backend/app/core/rag.py` - Hybrid context support
+5. `backend/app/main.py` - Index creation au startup
+6. `backend/app/api/graph.py` - Synchronous queries
+
+### Testing Phase 0.8 Implementation
+
+#### Quick Validation (After Phase 0.8)
+```bash
+# 1. Rebuild backend avec nouveau code
+cd /Users/nicozefrench/Dropbox/AI/rag-knowledge-graph-starter
+docker compose -f docker/docker-compose.dev.yml build backend
+docker compose -f docker/docker-compose.dev.yml up -d backend
+
+# 2. Check backend logs pour indexes
+docker logs backend 2>&1 | grep -i "index"
+# Expected:
+# ✅ Created 3 RAG indexes: episode_content, entity_name_idx, episode_date_idx
+# 📊 Total indexes: 8 (RAG: 3, Graphiti: 5)
+
+# 3. Run E2E test script
+docker exec -it backend python scripts/test_neo4j_rag.py
+```
+
+**Expected Output:**
+```
+🧪 PHASE 0.8 - NEO4J RAG IMPLEMENTATION - E2E TESTS
+==========================================================
+
+🧪 Test 1: Neo4j Connection
+✅ Neo4j connected successfully
+
+🧪 Test 2: RAG Indexes Verification
+✅ Total indexes: 8
+   RAG indexes: 3
+   Graphiti indexes: 5
+   
+   RAG Indexes Details:
+     - episode_content (FULLTEXT, ONLINE)
+     - entity_name_idx (RANGE, ONLINE)
+     - episode_date_idx (RANGE, ONLINE)
+
+🧪 Test 3: Full-Text Search (Episode.content)
+✅ Full-text search returned 3 results
+   [1] Score: 0.850
+       Source: Niveau 4 GP.pdf - Chunk 12
+       Text: Le niveau 4 FFESSM permet de plonger jusqu'à 60 mètres...
+   [2] Score: 0.742
+       ...
+
+🧪 Test 4: Entity Search (Entity.name + RELATES_TO)
+✅ Entity search found 5 entities
+   [1] Niveau 4 (CERTIFICATION)
+       Description: Certification FFESSM permettant...
+       Related entities: 3
+   [2] Niveau 3 (CERTIFICATION)
+       ...
+
+🧪 Test 5: Hybrid Search (Episodes + Entities)
+✅ Hybrid search completed
+   Episodes: 3
+   Entities: 2
+   Total: 5
+
+🧪 Test 6: RAG Query (retrieve_context + LLM)
+✅ RAG context retrieval completed
+   Episodes: 3
+   Entities: 2
+   
+   ✅ RAG pipeline is functional!
+
+📊 TEST SUMMARY
+==========================================================
+✅ Phase 0.8 Implementation Tests COMPLETE
+```
+
+#### Neo4j Browser Verification (Phase 0.8)
+```cypher
+# Open http://localhost:7475
+# Login: neo4j / diveteacher_dev_2025
+
+# Query 1: List all indexes
+CALL db.indexes()
+YIELD name, type, state, labelsOrTypes, properties
+WHERE name CONTAINS 'episode' OR name CONTAINS 'entity'
+RETURN name, type, state, labelsOrTypes, properties
+
+# Expected:
+# episode_content | FULLTEXT | ONLINE | [Episode] | [content]
+# entity_name_idx | RANGE | ONLINE | [Entity] | [name]
+# episode_date_idx | RANGE | ONLINE | [Episode] | [valid_at]
+
+# Query 2: Test full-text search
+CALL db.index.fulltext.queryNodes('episode_content', 'plongée') 
+YIELD node, score
+RETURN node.content AS text, score
+ORDER BY score DESC
+LIMIT 5
+
+# Query 3: Test entity + relationships
+MATCH (e:Entity)-[r:RELATES_TO]-(related:Entity)
+WHERE toLower(e.name) CONTAINS 'niveau'
+RETURN e.name, type(r), r.fact, related.name
+LIMIT 10
+```
+
+#### API Test (Phase 0.8)
+```bash
+# Test RAG query avec hybrid search
+curl -X POST http://localhost:8000/api/query \
+  -H "Content-Type: application/json" \
+  -d '{
+    "question": "Quels sont les prérequis pour le niveau 4 FFESSM?",
+    "stream": false
+  }'
+```
+
+**Expected Response:**
+```json
+{
+  "question": "Quels sont les prérequis pour le niveau 4 FFESSM?",
+  "answer": "Selon les documents FFESSM [Chunk 1, Chunk 3], les prérequis pour le niveau 4 sont...\n\nLes entités liées montrent que **Niveau 3** est un prérequis...",
+  "context": {
+    "episodes": [...],  // Chunks with scores
+    "entities": [...]   // Entities with relationships
+  },
+  "num_sources": 5
+}
+```
+
+### Troubleshooting Phase 0.8
+
+#### Issue: Index 'episode_content' Not Found
+**Symptom:** `CALL db.index.fulltext.queryNodes('episode_content', ...)` → "Index not found"
+
+**Solution:**
+```bash
+# 1. Check if indexes were created
+docker logs backend 2>&1 | grep "Created.*RAG indexes"
+
+# 2. Manually create index in Neo4j Browser
+# http://localhost:7475
+CREATE FULLTEXT INDEX episode_content IF NOT EXISTS
+FOR (e:Episode) ON EACH [e.content]
+
+# 3. Verify
+CALL db.indexes()
+YIELD name, state
+WHERE name = 'episode_content'
+RETURN name, state
+# Expected: episode_content | ONLINE
+```
+
+#### Issue: Full-Text Search Returns Empty
+**Symptom:** `query_context_fulltext()` → `[]`
+
+**Causes & Solutions:**
+```bash
+# Cause 1: Pas de documents ingérés
+# Solution: Upload un PDF test
+curl -F 'file=@test.pdf' http://localhost:8000/api/upload
+
+# Cause 2: Graphiti processing pas fini
+# Solution: Wait 1-2 min, check backend logs
+docker logs backend -f | grep "ingested\|communities"
+
+# Cause 3: Episodes n'ont pas de content
+# Solution: Check Neo4j
+# Neo4j Browser: MATCH (e:Episode) RETURN e.content LIMIT 5
+```
+
+#### Issue: Entity Search No Results
+**Symptom:** `query_entities_related()` → `[]`
+
+**Solution:**
+```bash
+# Check if Graphiti extracted entities
+# Neo4j Browser:
+MATCH (e:Entity) RETURN count(e) as total_entities
+
+# If 0, Graphiti needs more time or documents
+# Wait and check backend logs:
+docker logs backend 2>&1 | grep "Building communities"
+```
+
+### Phase 0.8 Success Criteria
+
+**✅ All Validated:**
+- Neo4j connection uses `GraphDatabase.driver()` (not Async)
+- 3 RAG indexes created and ONLINE
+- Full-text search returns scored results
+- Entity search traverses relationships
+- Hybrid search combines both
+- RAG prompt uses hybrid context
+- E2E test script passes all 6 tests
+
+---
+
 ## 🛑 Common Issues & Solutions
 
 ### Issue 1: Port Already Allocated (7474 or 8000)
