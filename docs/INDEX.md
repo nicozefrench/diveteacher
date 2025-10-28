@@ -1,9 +1,9 @@
 # 📚 DiveTeacher - Documentation Index
 
-> **Version:** Phase 0.9 In Progress (Graphiti Integration - BLOCKED)  
-> **Last Updated:** October 27, 2025, 19:00  
+> **Version:** Phase 1.0 COMPLETE (RAG Query Implementation)  
+> **Last Updated:** October 28, 2025, 16:15 CET  
 > **Environment:** Local Development (Mac M1 Max)  
-> **Status:** 🟡 Partially Working (~30% Phase 0.9 complete)
+> **Status:** 🟢 Fully Operational (Phase 0-1.0 complete)
 
 ---
 
@@ -35,12 +35,12 @@
   - Common issues & solutions
 
 ### 🔗 Knowledge Graph & RAG
-- **[GRAPHITI.md](GRAPHITI.md)** - Graphiti knowledge graph integration ⚠️ **NEW**
-  - OpenAI GPT-5-nano configuration (blocked)
-  - Custom LLM client implementation
+- **[GRAPHITI.md](GRAPHITI.md)** - Graphiti knowledge graph integration ✅ **COMPLETE**
+  - Claude Haiku 4.5 configuration (production-validated)
+  - AnthropicClient integration
   - Entity extraction & relation detection
   - Vector embeddings (text-embedding-3-small)
-  - Known issues & troubleshooting
+  - AsyncIO threading architecture
 - **[NEO4J.md](NEO4J.md)** - Neo4j database + RAG queries
   - Neo4j setup & authentication
   - RAG indexes (fulltext, entity, hybrid)
@@ -48,11 +48,12 @@
   - Performance tuning
 
 ### 🔌 API Reference
-- **[API.md](API.md)** - Backend endpoints documentation
-  - Upload endpoints
-  - RAG query endpoints
+- **[API.md](API.md)** - Backend endpoints documentation ✅ **UPDATED**
+  - Upload endpoints (multipart/form-data)
+  - **RAG query endpoints** (streaming + non-streaming) ✅ **NEW**
   - Health & monitoring
-  - Authentication (future)
+  - Status tracking
+  - Authentication (future Phase 1.1)
   - Rate limiting (future)
 
 ### 🔧 Troubleshooting
@@ -65,11 +66,18 @@
 
 ### ☁️ Deployment
 - **[DEPLOYMENT.md](DEPLOYMENT.md)** - Production deployment (Phase 9)
-  - DigitalOcean GPU setup
+  - DigitalOcean GPU setup (RTX 4000 Ada)
+  - **Qwen 2.5 7B Q8_0** deployment guide ✅ **NEW**
+  - Ollama GPU configuration
   - Vercel frontend deployment
   - Supabase Cloud integration
-  - Environment variables
+  - Environment variables & secrets management
   - Monitoring & backups
+- **[251028-rag-gpu-deployment-guide.md](../resources/251028-rag-gpu-deployment-guide.md)** - Complete GPU deployment reference ✅ **NEW**
+  - From Local Docker (Mac M1) → DigitalOcean GPU → Modal.com
+  - Qwen 2.5 7B Q8_0 setup & benchmarking
+  - Cost optimization strategies
+  - Performance tuning
 
 ---
 
@@ -80,8 +88,8 @@
 | Component | Status | Documentation |
 |-----------|--------|---------------|
 | **Docker Compose** | ✅ Operational | [SETUP.md](SETUP.md#docker-setup) |
-| **Neo4j 5.25.1** | ✅ Healthy | [NEO4J.md](NEO4J.md) |
-| **Ollama (Mistral)** | ✅ Running | [SETUP.md](SETUP.md#ollama-setup) |
+| **Neo4j 5.26.0** | ✅ Healthy | [NEO4J.md](NEO4J.md) |
+| **Ollama (Qwen 2.5 7B Q8_0)** | ✅ Running | [SETUP.md](SETUP.md#ollama-setup) |
 | **Backend (FastAPI)** | ✅ Running | [API.md](API.md) |
 | **Frontend (React)** | ✅ Running | [SETUP.md](SETUP.md#frontend-setup) |
 
@@ -90,7 +98,7 @@
 | Feature | Status | Documentation |
 |---------|--------|---------------|
 | **Docling 2.5.1** | ✅ Operational | [DOCLING.md](DOCLING.md#installation) |
-| **HierarchicalChunker** | ✅ 436 chunks | [DOCLING.md](DOCLING.md#hierarchical-chunker) |
+| **HierarchicalChunker** | ✅ Production-ready | [DOCLING.md](DOCLING.md#hierarchical-chunker) |
 | **OCR + TableFormer** | ✅ ACCURATE mode | [DOCLING.md](DOCLING.md#pipeline-options) |
 | **Metadata Extraction** | ✅ Fixed | [DOCLING.md](DOCLING.md#metadata) |
 | **Singleton Pattern** | ✅ Implemented | [DOCLING.md](DOCLING.md#performance) |
@@ -104,16 +112,28 @@
 | **Hybrid Search** | ✅ Episodes + Entities | [NEO4J.md](NEO4J.md#hybrid-search) |
 | **Graphiti Integration** | ✅ API calls working | [GRAPHITI.md](GRAPHITI.md) |
 
-### ⚠️ Phase 0.9 - Graphiti OpenAI Integration (BLOCKED - 30%)
+### ✅ Phase 0.9 - Graphiti Claude Integration (COMPLETE)
 
 | Task | Status | Documentation |
 |------|--------|---------------|
-| **OpenAI GPT-5-nano Config** | ❌ BLOCKED | [GRAPHITI.md](GRAPHITI.md#openai-config) |
-| **Custom LLM Client** | ⚠️ BUGGY | [GRAPHITI.md](GRAPHITI.md#custom-client) |
-| **Vector Dimension Mismatch** | ❌ BLOCKING | [STATUS-REPORT-2025-10-27.md](../Devplan/STATUS-REPORT-2025-10-27.md#root-cause) |
-| **Test E2E: PDF → Neo4j** | ❌ 0/72 chunks | [STATUS-REPORT-2025-10-27.md](../Devplan/STATUS-REPORT-2025-10-27.md#tests) |
+| **Claude Haiku 4.5 Config** | ✅ WORKING | [GRAPHITI.md](GRAPHITI.md#claude-config) |
+| **AnthropicClient** | ✅ Production-validated | [GRAPHITI.md](GRAPHITI.md#client) |
+| **AsyncIO Threading Fix** | ✅ Resolved | [Devplan/251027-ASYNC-THREADING-FIX-IMPLEMENTATION-PLAN.md](../Devplan/251027-ASYNC-THREADING-FIX-IMPLEMENTATION-PLAN.md) |
+| **Test E2E: PDF → Neo4j** | ✅ Functional | [CURRENT-CONTEXT.md](../CURRENT-CONTEXT.md#session-3) |
 
-**Current Blocker:** Vector dimension mismatch between OpenAI embeddings (1536) and Neo4j config. See [Status Report](../Devplan/STATUS-REPORT-2025-10-27.md) for detailed analysis.
+### ✅ Phase 1.0 - RAG Query Implementation (COMPLETE) 🎉
+
+| Task | Status | Documentation |
+|------|--------|---------------|
+| **Ollama Docker Config** | ✅ Optimized | [Docker Compose](../docker/docker-compose.dev.yml) |
+| **Qwen 2.5 7B Q8_0** | ✅ Loaded (8.1GB) | [ENV_CONFIGURATION_QWEN.md](../ENV_CONFIGURATION_QWEN.md) |
+| **RAG Query API** | ✅ 3 endpoints | [API.md](API.md#rag-query-endpoints) |
+| **Streaming (SSE)** | ✅ Working | [API.md](API.md#streaming) |
+| **Test Scripts** | ✅ 4/4 passing | [scripts/test_rag_query.sh](../scripts/test_rag_query.sh) |
+| **Monitoring** | ✅ Scripts ready | [scripts/monitor_ollama.sh](../scripts/monitor_ollama.sh) |
+| **Documentation** | ✅ Complete | [Devplan/STATUS-PHASE-1.0-COMPLETION-REPORT.md](../Devplan/STATUS-PHASE-1.0-COMPLETION-REPORT.md) |
+
+**Phase 1.0 Achievement:** Full RAG pipeline operational (upload → process → query) with Qwen 2.5 7B Q8_0 for optimal RAG quality (98/100).
 
 ---
 
@@ -149,7 +169,9 @@
    - Docling: `@docs/DOCLING.md` + `@resources/251027-docling-guide-ai-agent.md`
    - Neo4j: `@docs/NEO4J.md`
    - Graphiti: `@docs/GRAPHITI.md` + `@resources/251020-graphiti-technical-guide.md`
-   - **Status Report:** `@Devplan/STATUS-REPORT-2025-10-27.md` (current blockers)
+   - **RAG Query:** `@Devplan/PHASE-1.0-RAG-QUERY-IMPLEMENTATION.md` (complete plan)
+   - **GPU Deployment:** `@resources/251028-rag-gpu-deployment-guide.md`
+   - **Status Reports:** `@Devplan/STATUS-PHASE-1.0-COMPLETION-REPORT.md`
 
 3. **Troubleshooting:**
    - `@docs/TROUBLESHOOTING.md` first

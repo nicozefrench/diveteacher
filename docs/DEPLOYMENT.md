@@ -2,7 +2,8 @@
 
 > **🤖 AI Agent Notice:** This documentation is optimized for Claude Sonnet 4.5 agents.  
 > **⚠️ CRITICAL:** This is PHASE 9 ONLY - Do NOT execute until Phases 0-8 are complete and tested locally.  
-> **Cost Impact:** ~$120/month (DigitalOcean GPU + Vercel Pro)
+> **Cost Impact:** ~$120/month (DigitalOcean GPU + Vercel Pro)  
+> **📚 Complete GPU Guide:** See `resources/251028-rag-gpu-deployment-guide.md` for detailed Qwen 2.5 7B Q8_0 deployment
 
 ---
 
@@ -44,10 +45,12 @@ User Browser
 | **Frontend** | Vercel Pro | Global CDN | Included in account |
 | **Backend API** | DigitalOcean GPU | SFO3/NYC3 | $100-150/month |
 | **Neo4j Graph** | Docker on DO GPU | Same droplet | Included |
-| **Ollama + Mistral** | Docker on DO GPU | Same droplet | Included |
+| **Ollama + Qwen 2.5 7B Q8_0** | Docker on DO GPU | Same droplet | Included ✅ |
 | **PostgreSQL** | Supabase Cloud | AWS us-east-1 | Free (< 500MB) |
 | **Auth** | Supabase Cloud | AWS us-east-1 | Free (< 50k users) |
 | **Monitoring** | Sentry Cloud | Global | Free (< 5k events) |
+
+**Note:** For complete Qwen 2.5 7B Q8_0 GPU deployment instructions, performance tuning, and cost optimization strategies, see: **`resources/251028-rag-gpu-deployment-guide.md`**
 
 **Total Monthly Cost:** ~$120 (only DigitalOcean GPU droplet)
 

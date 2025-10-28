@@ -14,7 +14,7 @@ from app.core.rag import rag_stream_response, rag_query
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/query", tags=["query"])
+router = APIRouter(prefix="/query", tags=["query"])
 
 
 class QueryRequest(BaseModel):
