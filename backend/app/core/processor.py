@@ -151,12 +151,23 @@ async def process_document(
         
         total_duration = (datetime.now() - start_time).total_seconds()
         
+        # Ensure all metadata is JSON-serializable (convert datetime, etc.)
+        safe_metadata = {}
+        for key, value in doc_metadata.items():
+            if isinstance(value, datetime):
+                safe_metadata[key] = value.isoformat()
+            elif callable(value):
+                # Skip methods/functions
+                continue
+            else:
+                safe_metadata[key] = value
+        
         processing_status[upload_id].update({
             "status": "completed",
             "stage": "completed",
             "progress": 100,
             "num_chunks": len(chunks),
-            "metadata": doc_metadata,
+            "metadata": safe_metadata,
             "durations": {
                 "conversion": round(conversion_duration, 2),
                 "chunking": round(chunking_duration, 2),
@@ -165,6 +176,17 @@ async def process_document(
             },
             "completed_at": datetime.now().isoformat(),
         })
+        
+        # DEBUG: Check for non-serializable fields
+        print(f"\n[{upload_id}] 🔍 DEBUG: Status dict after completion update:", flush=True)
+        for key, value in processing_status[upload_id].items():
+            is_callable = callable(value)
+            value_type = type(value).__name__
+            if is_callable:
+                print(f"  ❌ {key}: <{value_type} - CALLABLE!>", flush=True)
+            else:
+                print(f"  ✅ {key}: {value_type}", flush=True)
+        print(flush=True)
         
         logger.info(f"[{upload_id}] ✅ Processing COMPLETE ({total_duration:.2f}s)")
         logger.info(f"[{upload_id}] ═══════════════════════════════════════")

@@ -169,6 +169,52 @@ async def process_document_wrapper(file_path: str, upload_id: str, metadata: dic
         # No need to re-raise (background task completes gracefully)
 
 
+def _sanitize_for_json(obj):
+    """
+    Recursively sanitize object for JSON serialization.
+    
+    Handles:
+    - datetime objects → isoformat()
+    - method/function objects → string representation
+    - custom objects → string representation
+    - nested dicts and lists
+    
+    Args:
+        obj: Object to sanitize
+        
+    Returns:
+        JSON-serializable version of obj
+    """
+    from datetime import datetime, date
+    
+    if obj is None or isinstance(obj, (str, int, float, bool)):
+        # Primitive types are already JSON-serializable
+        return obj
+    
+    elif isinstance(obj, (datetime, date)):
+        # Convert datetime to ISO format string
+        return obj.isoformat()
+    
+    elif isinstance(obj, dict):
+        # Recursively sanitize dict values
+        return {key: _sanitize_for_json(value) for key, value in obj.items()}
+    
+    elif isinstance(obj, (list, tuple)):
+        # Recursively sanitize list/tuple items
+        return [_sanitize_for_json(item) for item in obj]
+    
+    elif callable(obj):
+        # Methods, functions, lambdas → string representation
+        return f"<{obj.__class__.__name__}: {obj.__name__ if hasattr(obj, '__name__') else 'anonymous'}>"
+    
+    else:
+        # For any other object type, try str() or repr()
+        try:
+            return str(obj)
+        except Exception:
+            return f"<{obj.__class__.__name__}>"
+
+
 @router.get("/upload/status/{upload_id}")
 async def get_upload_status(upload_id: str):
     """
@@ -189,4 +235,53 @@ async def get_upload_status(upload_id: str):
             detail=f"Upload ID not found: {upload_id}"
         )
     
-    return JSONResponse(content=status)
+    # DEBUG: Log problematic fields before sanitization
+    import json
+    try:
+        # Try raw JSON dump to see exact error
+        json.dumps(status)
+        logger.info(f"[{upload_id}] Status is JSON-serializable (no sanitization needed)")
+    except Exception as e:
+        logger.error(f"[{upload_id}] ❌ Status has non-serializable fields: {e}")
+        logger.error(f"[{upload_id}] Status keys: {list(status.keys())}")
+        
+        # Check each field
+        for key, value in status.items():
+            try:
+                json.dumps({key: value})
+            except Exception as field_error:
+                logger.error(f"[{upload_id}] ❌ Field '{key}' is not serializable: {type(value).__name__} - {field_error}")
+                if callable(value):
+                    logger.error(f"[{upload_id}]   → Field is a {type(value).__name__}: {getattr(value, '__name__', 'anonymous')}")
+    
+    # DEBUG: Print raw status dict to logs
+    print(f"\n{'='*60}", flush=True)
+    print(f"[{upload_id}] RAW STATUS DICT:", flush=True)
+    print(f"Keys: {list(status.keys())}", flush=True)
+    for key, value in status.items():
+        value_type = type(value).__name__
+        if callable(value):
+            print(f"  ❌ {key}: <{value_type} - CALLABLE>", flush=True)
+        else:
+            print(f"  ✅ {key}: {value_type}", flush=True)
+    print(f"{'='*60}\n", flush=True)
+    
+    # Sanitize status dict to ensure JSON serializability
+    sanitized_status = _sanitize_for_json(status)
+    
+    # Pre-serialize to JSON to ensure no errors
+    # Then return as Response with application/json content-type
+    import json as json_module
+    from starlette.responses import Response
+    
+    try:
+        json_str = json_module.dumps(sanitized_status, indent=2)
+        return Response(content=json_str, media_type="application/json")
+    except Exception as e:
+        logger.error(f"[{upload_id}] ❌ FATAL: Even sanitized status is not JSON-serializable: {e}")
+        # Return error as plain dict
+        return JSONResponse(content={
+            "error": "Status serialization failed",
+            "upload_id": upload_id,
+            "details": str(e)
+        }, status_code=500)
