@@ -20,11 +20,24 @@ class Settings(BaseSettings):
     # LLM Configuration
     LLM_PROVIDER: str = "ollama"  # ollama, claude, openai
     OLLAMA_BASE_URL: str = "http://ollama:11434"
-    OLLAMA_MODEL: str = "llama3:8b"
+    OLLAMA_MODEL: str = "qwen2.5:7b-instruct-q8_0"  # Qwen 2.5 7B Q8_0 for optimal RAG quality
     ANTHROPIC_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
     OPENAI_MODEL: str = "gpt-4o"
     CLAUDE_MODEL: str = "claude-sonnet-4-20250514"
+    
+    # RAG Configuration
+    RAG_TOP_K: int = 5  # Number of facts to retrieve from knowledge graph
+    RAG_TEMPERATURE: float = 0.7  # Balanced creativity/factuality
+    RAG_MAX_TOKENS: int = 2000  # Max response length
+    RAG_STREAM: bool = True  # Enable streaming by default
+    RAG_MAX_CONTEXT_LENGTH: int = 4000  # Max context tokens
+    
+    # Qwen-Specific Configuration
+    QWEN_TEMPERATURE: float = 0.7  # Optimal for RAG synthesis
+    QWEN_TOP_P: float = 0.9  # Nucleus sampling
+    QWEN_TOP_K: int = 40  # Top-k sampling
+    QWEN_NUM_CTX: int = 4096  # Context window (supports up to 32k)
     
     # Neo4j Configuration
     NEO4J_URI: str = "bolt://neo4j:7687"
@@ -48,10 +61,6 @@ class Settings(BaseSettings):
     # Processing
     DOCLING_TIMEOUT: int = 300  # 5 minutes
     PROCESSING_WORKERS: int = 2
-    
-    # RAG Configuration
-    RAG_TOP_K: int = 5  # Number of context chunks to retrieve
-    RAG_MAX_CONTEXT_LENGTH: int = 4000  # Max context tokens
     
     class Config:
         env_file = ".env"

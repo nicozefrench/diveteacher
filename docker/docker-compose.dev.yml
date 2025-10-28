@@ -29,8 +29,21 @@ services:
       - "11434:11434"
     volumes:
       - ollama-models:/root/.ollama
+    environment:
+      # Best practices from Ollama deployment guides
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_ORIGINS=*
+      - OLLAMA_KEEP_ALIVE=5m
+      - OLLAMA_MAX_LOADED_MODELS=1
+      - OLLAMA_NUM_PARALLEL=4
+      - OLLAMA_MAX_QUEUE=128
+    deploy:
+      resources:
+        limits:
+          memory: 16G  # Mac M1 Max has 32GB, leave 16GB for system
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      # FIX: Check API version instead of tags (works without models)
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/version"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -52,7 +65,7 @@ services:
       - CORS_ORIGINS=http://localhost:5173
       - LLM_PROVIDER=${LLM_PROVIDER:-ollama}
       - OLLAMA_BASE_URL=http://ollama:11434
-      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3:8b}
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5:7b-instruct-q8_0}
       - NEO4J_URI=bolt://neo4j:7687
       - NEO4J_USER=neo4j
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:-change_me_in_production}
