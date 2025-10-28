@@ -18,12 +18,19 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 # Copy application code
 COPY app/ ./app/
 
+# Copy warm-up script and entrypoint
+COPY warmup_docling.py ./
+COPY docker-entrypoint.sh ./
+
+# Make entrypoint executable
+RUN chmod +x /app/docker-entrypoint.sh
+
 # Create uploads directory
 RUN mkdir -p /uploads
 
 # Expose port
 EXPOSE 8000
 
-# Run with uvicorn
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Use custom entrypoint with warm-up
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 

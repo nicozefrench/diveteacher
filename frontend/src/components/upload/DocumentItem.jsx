@@ -54,6 +54,16 @@ const DocumentItem = ({ document, onRetry }) => {
           {status === 'processing' && (
             <div className="mt-4">
               <StageProgress currentStage={current_stage} />
+              
+              {/* First-time conversion hint */}
+              {current_stage === 'conversion' && (
+                <div className="mt-3 rounded-md bg-info-50 border border-info-200 p-3">
+                  <p className="text-xs text-info-700">
+                    <strong>First upload may take 5-15 minutes</strong> while AI models are downloaded. 
+                    Subsequent uploads will be much faster! ⚡
+                  </p>
+                </div>
+              )}
             </div>
           )}
 

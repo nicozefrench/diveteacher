@@ -59,7 +59,7 @@ class Settings(BaseSettings):
     SENTRY_TRACES_SAMPLE_RATE: float = 1.0
     
     # Processing
-    DOCLING_TIMEOUT: int = 300  # 5 minutes
+    DOCLING_TIMEOUT: int = 900  # 15 minutes (allows for model download on first run)
     PROCESSING_WORKERS: int = 2
     
     class Config:

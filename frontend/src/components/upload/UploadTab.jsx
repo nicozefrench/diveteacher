@@ -9,6 +9,7 @@ const UploadTab = () => {
   const [documents, setDocuments] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(null);
+  const [retryAttempts, setRetryAttempts] = useState({}); // Track retry attempts per document
 
   const handleFileUpload = async (file) => {
     setIsUploading(true);
@@ -56,7 +57,46 @@ const UploadTab = () => {
           )
         );
 
-        // Stop polling if complete or failed
+        // Handle timeout errors with auto-retry (max 2 attempts)
+        if (status.status === 'failed' && status.error && status.error.includes('timeout')) {
+          const attempts = retryAttempts[uploadId] || 0;
+          
+          if (attempts < 2) {
+            console.log(`Timeout detected for ${uploadId}, auto-retry attempt ${attempts + 1}/2`);
+            
+            // Update retry count
+            setRetryAttempts(prev => ({
+              ...prev,
+              [uploadId]: attempts + 1
+            }));
+            
+            // Wait 5 seconds before retry
+            setTimeout(() => {
+              setDocuments(prev =>
+                prev.map(d =>
+                  d.id === uploadId
+                    ? { 
+                        ...d, 
+                        status: 'processing', 
+                        current_stage: 'validation', 
+                        error: `Retrying (attempt ${attempts + 2}/3)...` 
+                      }
+                    : d
+                )
+              );
+              
+              // Don't clear interval, keep polling
+            }, 5000);
+            
+            return; // Don't clear interval yet
+          } else {
+            console.log(`Max retry attempts reached for ${uploadId}`);
+            // Clear interval after max retries
+            clearInterval(interval);
+          }
+        }
+
+        // Stop polling if complete or failed (and not retrying)
         if (status.status === 'completed' || status.status === 'failed') {
           clearInterval(interval);
         }
