@@ -2,8 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import DiveTeacher theme */
-@import './styles/diveteacher-theme.css';
+/**
+ * DiveTeacher Ocean Theme
+ * Semantic CSS classes for components
+ */
+
+:root {
+  /* DiveTeacher Ocean Theme Colors */
+  --dive-primary: #0077BE;
+  --dive-secondary: #00A8E8;
+  --dive-accent: #00C9FF;
+  --dive-dark: #003D5B;
+  
+  /* Backgrounds */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f0f9ff;
+  --bg-card: #ffffff;
+  --bg-hover: #f8fafc;
+  
+  /* Text Colors */
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  
+  /* Borders */
+  --border-color: #e2e8f0;
+  --border-active: #0077BE;
+  --border-hover: #cbd5e1;
+  
+  /* Status Colors */
+  --status-success: #10b981;
+  --status-warning: #f59e0b;
+  --status-error: #ef4444;
+  --status-info: #3b82f6;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 119, 190, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 119, 190, 0.2);
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+}
 
 * {
   box-sizing: border-box;
@@ -32,3 +76,364 @@ code {
   flex-direction: column;
 }
 
+/* === CARD COMPONENTS === */
+
+.dive-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.dive-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-hover);
+}
+
+.dive-card-active {
+  border-color: var(--border-active);
+  box-shadow: var(--shadow-md);
+}
+
+/* === BUTTON COMPONENTS === */
+
+.dive-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.dive-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dive-button-primary {
+  background: var(--dive-primary);
+  color: white;
+}
+
+.dive-button-primary:hover:not(:disabled) {
+  background: var(--dive-dark);
+}
+
+.dive-button-secondary {
+  background: var(--bg-secondary);
+  color: var(--dive-primary);
+  border: 1px solid var(--border-color);
+}
+
+.dive-button-secondary:hover:not(:disabled) {
+  background: var(--bg-hover);
+  border-color: var(--dive-primary);
+}
+
+.dive-button-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.dive-button-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+}
+
+/* === BADGE COMPONENTS === */
+
+.dive-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  gap: 0.25rem;
+}
+
+.dive-badge-success {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.dive-badge-warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.dive-badge-error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.dive-badge-info {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.dive-badge-pending {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+/* === PROGRESS BAR === */
+
+.dive-progress-bar {
+  width: 100%;
+  height: 0.5rem;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.dive-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--dive-primary), var(--dive-secondary));
+  transition: width 0.3s ease;
+}
+
+/* === TAB NAVIGATION === */
+
+.dive-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dive-tab {
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.dive-tab:hover {
+  color: var(--dive-primary);
+  background: var(--bg-hover);
+}
+
+.dive-tab-active {
+  color: var(--dive-primary);
+  border-bottom-color: var(--dive-primary);
+}
+
+/* === STAGE PROGRESS === */
+
+.dive-stage-progress {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.stage.active,
+.stage.complete {
+  opacity: 1;
+}
+
+.stage-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e2e8f0;
+  color: #64748b;
+  transition: all 0.3s ease;
+}
+
+.stage.active .stage-icon {
+  background: var(--dive-primary);
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+.stage.complete .stage-icon {
+  background: var(--status-success);
+  color: white;
+}
+
+.stage.failed .stage-icon {
+  background: var(--status-error);
+  color: white;
+}
+
+.stage-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.stage.active .stage-label,
+.stage.complete .stage-label {
+  color: var(--text-primary);
+}
+
+.stage-progress {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--dive-primary);
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* === MESSAGE COMPONENTS === */
+
+.message-item {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.message-item.user {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.message-item.user .message-avatar {
+  background: var(--dive-primary);
+  color: white;
+}
+
+.message-item.assistant .message-avatar {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.message-content {
+  flex: 1;
+  background: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color);
+}
+
+.message-item.user .message-content {
+  background: var(--dive-primary);
+  color: white;
+  border-color: var(--dive-primary);
+}
+
+.message-context {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.message-stats {
+  margin-top: 0.5rem;
+  opacity: 0.7;
+  font-size: 0.75rem;
+}
+
+/* === HEADER === */
+
+.dive-header {
+  background: linear-gradient(135deg, var(--dive-primary), var(--dive-secondary));
+  color: white;
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-md);
+}
+
+.dive-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dive-header-subtitle {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* === FOOTER === */
+
+.dive-footer {
+  background: var(--bg-secondary);
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* === UTILITY CLASSES === */
+
+.dive-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.dive-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* === MOBILE RESPONSIVE === */
+
+@media (max-width: 768px) {
+  .dive-stage-progress {
+    flex-wrap: wrap;
+  }
+  
+  .stage {
+    flex-basis: 50%;
+    margin-bottom: 1rem;
+  }
+  
+  .dive-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .message-item {
+    gap: 0.5rem;
+  }
+  
+  .message-avatar {
+    width: 32px;
+    height: 32px;
+  }
+}
