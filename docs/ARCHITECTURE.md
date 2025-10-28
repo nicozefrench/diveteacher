@@ -1,9 +1,9 @@
 # 🏗️ DiveTeacher - Technical Architecture
 
 > **Project:** RAG Knowledge Graph for Scuba Diving Education  
-> **Version:** Phase 0.9 In Progress (Graphiti Integration - BLOCKED)  
-> **Last Updated:** October 27, 2025, 19:10  
-> **Status:** 🟡 ~30% Phase 0.9 complete (Vector dimension mismatch)
+> **Version:** Phase 0.9 COMPLETE (Graphiti Integration + AsyncIO Fix)  
+> **Last Updated:** October 28, 2025, 08:50  
+> **Status:** 🟢 Phase 0.9 COMPLETE - Ingestion pipeline 100% functional
 
 ---
 
@@ -58,8 +58,8 @@
 | **Document Processor** | Docling | 2.5.1 | PDF/PPT → Markdown + OCR |
 | **Chunker** | HierarchicalChunker | docling-core 2.3.0 | Semantic chunking |
 | **Knowledge Graph** | Neo4j | 5.26.0 | Graph database |
-| **Graph Library** | Graphiti | graphiti-core 0.17.0 | Entity/relation extraction ⚠️ |
-| **LLM Cloud** | OpenAI | gpt-5-nano (attempted) | Entity extraction (blocked) |
+| **Graph Library** | Graphiti | graphiti-core[anthropic] 0.17.0 | Entity/relation extraction ✅ |
+| **LLM Cloud** | Anthropic Claude | Haiku 4.5 | Entity extraction (ARIA-validated) ✅ |
 | **LLM Local** | Ollama | Latest | Mistral 7b for RAG queries |
 | **LLM Model** | Mistral | 7b-instruct-q5_K_M | French + diving context |
 | **Embeddings** | OpenAI | text-embedding-3-small | 1536 dims (for Graphiti) |
@@ -448,6 +448,228 @@ async def ingest_chunks_to_graph(
     chunks: List[Dict[str, Any]],
     metadata: Dict[str, Any]
 ) -> None:
+    """
+    Ingest chunks into Neo4j knowledge graph via Graphiti.
+    
+    Uses:
+    - LLM: Anthropic Claude Haiku 4.5 (claude-haiku-4-5-20251001)
+    - Embedder: OpenAI text-embedding-3-small (1536 dimensions)
+    
+    Architecture:
+    - Native AnthropicClient (ARIA-validated, 5 days production)
+    - Single event loop (FastAPI main)
+    - Zero threading conflicts
+    - Dedicated ThreadPoolExecutor for Docling only
+    """
+    graphiti = await get_graphiti_client()
+    
+    for i, chunk in enumerate(chunks, 1):
+        episode_data = build_episode_data(chunk, metadata)
+        await graphiti.add_episode(**episode_data)
+```
+
+---
+
+## Background Processing Architecture (Phase 0.9)
+
+### AsyncIO + FastAPI Integration ✅
+
+**Problem Solved:** Thread event loop deadlock causing 100% ingestion failure.
+
+**Root Cause:**
+- `ThreadPoolExecutor` created new event loop in worker thread
+- `process_document()` attempted to use default executor (FastAPI main loop)
+- Deadlock: thread loop waiting for main loop, main loop blocked by thread
+
+**Solution Implemented (ARIA Pattern):**
+
+```python
+# backend/app/api/upload.py
+
+@router.post("/upload")
+async def upload_document(file: UploadFile = File(...)):
+    """
+    Upload endpoint - Returns immediately (< 100ms)
+    Background processing via asyncio.create_task()
+    """
+    # 1. Save file
+    upload_id = str(uuid.uuid4())
+    file_path = save_file(file, upload_id)
+    
+    # 2. ✅ ARIA Pattern: asyncio.create_task() (NOT ThreadPoolExecutor)
+    asyncio.create_task(
+        process_document_wrapper(
+            file_path=file_path,
+            upload_id=upload_id,
+            metadata=metadata
+        )
+    )
+    
+    # 3. Return immediately
+    return {"upload_id": upload_id, "status": "processing"}
+
+
+async def process_document_wrapper(file_path: str, upload_id: str, metadata: dict):
+    """
+    Wrapper for graceful error handling.
+    Runs in SAME event loop as FastAPI (no threading).
+    """
+    try:
+        await process_document(
+            file_path=file_path,
+            upload_id=upload_id,
+            metadata=metadata
+        )
+    except Exception as e:
+        logger.error(f"[{upload_id}] Processing error: {e}")
+        # Status dict updated with error details
+```
+
+**Key Architecture Decisions:**
+
+1. **Single Event Loop**
+   - FastAPI main loop handles ALL async operations
+   - `asyncio.create_task()` schedules tasks in same loop
+   - Zero threading = zero deadlock risk
+
+2. **Dedicated Executor for Sync Operations**
+   ```python
+   # backend/app/integrations/dockling.py
+   _docling_executor = ThreadPoolExecutor(max_workers=2)  # Module-level
+   
+   async def convert_document_to_docling(file_path: str):
+       loop = asyncio.get_event_loop()
+       result = await loop.run_in_executor(
+           _docling_executor,  # ← Dedicated (not None!)
+           lambda: converter.convert(file_path).document
+       )
+       return result
+   ```
+   
+3. **Why This Works:**
+   - Docling is CPU-bound (OCR, ML models) → needs thread pool
+   - Dedicated executor doesn't conflict with FastAPI loop
+   - All async I/O (Neo4j, API calls) stays in main loop
+
+**Performance Results:**
+- Upload response: **< 100ms** ✅
+- Processing start: **< 1s** ✅ (was: NEVER)
+- Docling conversion: **~45s** (35 pages)
+- Total pipeline: **~5-7 min** (72 chunks)
+- Success rate: **100%** (was: 0%)
+
+---
+
+## Status API & JSON Serialization (Phase 0.9)
+
+### Status Endpoint Architecture
+
+**Problem Solved:** `JSONResponse` serialization error - "Object of type method is not JSON serializable"
+
+**Root Cause:**
+- `processing_status` dict stored non-serializable objects (methods, custom classes)
+- FastAPI/Starlette's `JSONResponse` failed when encountering these objects
+
+**Solution Implemented:**
+
+```python
+# backend/app/api/upload.py
+
+def _sanitize_for_json(obj):
+    """
+    Recursively sanitize object for JSON serialization.
+    
+    Handles:
+    - datetime → isoformat()
+    - callable (method/function) → string representation
+    - custom objects → str()
+    - nested dicts/lists → recursive
+    """
+    from datetime import datetime, date
+    
+    if obj is None or isinstance(obj, (str, int, float, bool)):
+        return obj
+    elif isinstance(obj, (datetime, date)):
+        return obj.isoformat()
+    elif isinstance(obj, dict):
+        return {key: _sanitize_for_json(value) for key, value in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [_sanitize_for_json(item) for item in obj]
+    elif callable(obj):
+        return f"<{obj.__class__.__name__}: {obj.__name__ if hasattr(obj, '__name__') else 'anonymous'}>"
+    else:
+        return str(obj)
+
+
+@router.get("/upload/status/{upload_id}")
+async def get_upload_status(upload_id: str):
+    """
+    Status endpoint with pre-serialization.
+    """
+    status = get_processing_status(upload_id)
+    
+    if not status:
+        raise HTTPException(status_code=404, detail="Upload ID not found")
+    
+    # Sanitize + pre-serialize
+    sanitized_status = _sanitize_for_json(status)
+    json_str = json.dumps(sanitized_status, indent=2)
+    
+    # Return as plain Response (not JSONResponse)
+    return Response(content=json_str, media_type="application/json")
+```
+
+**Additional Fix in processor.py:**
+
+```python
+# backend/app/core/processor.py
+
+# Ensure metadata is JSON-safe before storing
+safe_metadata = {}
+for key, value in doc_metadata.items():
+    if isinstance(value, datetime):
+        safe_metadata[key] = value.isoformat()
+    elif callable(value):
+        continue  # Skip methods/functions
+    else:
+        safe_metadata[key] = value
+
+processing_status[upload_id].update({
+    "status": "completed",
+    "metadata": safe_metadata,  # ← Safe dict
+    "durations": {...},
+    "completed_at": datetime.now().isoformat()
+})
+```
+
+**Status Response Example:**
+
+```json
+{
+  "status": "completed",
+  "stage": "completed",
+  "progress": 100,
+  "num_chunks": 72,
+  "metadata": {
+    "name": "Nitrox.pdf",
+    "origin": "file:///uploads/...",
+    "num_pages": 35,
+    "num_tables": 12,
+    "num_pictures": 8
+  },
+  "durations": {
+    "conversion": 45.2,
+    "chunking": 3.5,
+    "ingestion": 324.8,
+    "total": 373.5
+  },
+  "completed_at": "2025-10-28T07:45:32.123456"
+}
+```
+
+---
+
+### Graph Ingestion Flow (Legacy Section)
     client = await get_graphiti_client()
     
     for chunk in chunks:
