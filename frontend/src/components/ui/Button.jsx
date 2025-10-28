@@ -1,41 +1,35 @@
-/**
- * Button Component
- * Reusable button with variants
- */
+import { forwardRef } from 'react';
+import { cn } from '../../lib/utils';
 
-import { cn } from '@/lib/utils';
-
-export function Button({ 
-  children, 
+const Button = forwardRef(({ 
   className, 
-  variant = 'primary', 
-  size = 'md',
+  variant = 'primary',
+  size = 'default',
   disabled,
+  children,
   ...props 
-}) {
-  const variantClass = variant === 'primary' 
-    ? 'dive-button-primary' 
-    : 'dive-button-secondary';
-  
-  const sizeClass = size === 'sm' 
-    ? 'dive-button-sm' 
-    : size === 'lg' 
-    ? 'dive-button-lg' 
-    : '';
-  
+}, ref) => {
   return (
-    <button 
+    <button
+      ref={ref}
+      disabled={disabled}
       className={cn(
-        'dive-button',
-        variantClass,
-        sizeClass,
+        "btn",
+        {
+          "btn-primary": variant === 'primary',
+          "btn-secondary": variant === 'secondary',
+          "btn-sm": size === 'sm',
+          "btn-lg": size === 'lg',
+        },
         className
       )}
-      disabled={disabled}
       {...props}
     >
       {children}
     </button>
   );
-}
+});
 
+Button.displayName = 'Button';
+
+export { Button };

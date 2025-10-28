@@ -13,9 +13,9 @@ export function cn(...inputs) {
 }
 
 /**
- * Format file size
+ * Format file size (bytes to human-readable)
  */
-export function formatFileSize(bytes) {
+export function formatBytes(bytes) {
   if (bytes === 0) return '0 Bytes';
   
   const k = 1024;
@@ -24,6 +24,9 @@ export function formatFileSize(bytes) {
   
   return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
 }
+
+// Alias for backward compatibility
+export const formatFileSize = formatBytes;
 
 /**
  * Format timestamp to relative time

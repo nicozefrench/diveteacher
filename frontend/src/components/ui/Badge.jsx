@@ -1,31 +1,40 @@
-/**
- * Badge Component
- * Status badges with semantic colors
- */
+import { cn } from '../../lib/utils';
+import { CheckCircle2, Clock, AlertCircle, Info } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
-import { getStatusBadgeClass } from '@/lib/utils';
+const statusConfig = {
+  success: {
+    className: 'badge-success',
+    icon: CheckCircle2,
+  },
+  warning: {
+    className: 'badge-warning',
+    icon: AlertCircle,
+  },
+  error: {
+    className: 'badge-error',
+    icon: AlertCircle,
+  },
+  info: {
+    className: 'badge-info',
+    icon: Info,
+  },
+  pending: {
+    className: 'badge-gray',
+    icon: Clock,
+  },
+};
 
-export function Badge({ children, className, status, variant, ...props }) {
-  const badgeClass = status 
-    ? getStatusBadgeClass(status)
-    : variant === 'success' ? 'dive-badge-success'
-    : variant === 'warning' ? 'dive-badge-warning'
-    : variant === 'error' ? 'dive-badge-error'
-    : variant === 'info' ? 'dive-badge-info'
-    : 'dive-badge-pending';
-  
+export const Badge = ({ className, variant = 'info', showIcon = true, children, ...props }) => {
+  const config = statusConfig[variant] || statusConfig.info;
+  const Icon = config.icon;
+
   return (
-    <span 
-      className={cn(
-        'dive-badge',
-        badgeClass,
-        className
-      )}
+    <span
+      className={cn("badge", config.className, className)}
       {...props}
     >
+      {showIcon && <Icon className="h-3 w-3" />}
       {children}
     </span>
   );
-}
-
+};
