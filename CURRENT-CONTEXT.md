@@ -4,7 +4,7 @@
 > **Purpose:** Maintain continuity across sessions, track progress, document decisions.  
 > **Usage:** Read at start of EVERY session, update at end of EVERY session.
 
-**Last Updated:** October 28, 2025 16:45 CET - Session 5 COMPLETE - Documentation Updated ✅ 🟢  
+**Last Updated:** October 28, 2025 17:30 CET - Session 6 COMPLETE - Roadmap Updated ✅ 🟢  
 **Project:** DiveTeacher - Assistant IA pour Formation Plongée  
 **Repository:** https://github.com/nicozefrench/diveteacher (PRIVÉ)  
 **Domaine Principal:** diveteacher.io (+ diveteacher.app en redirect)
@@ -201,49 +201,145 @@ diveteacher/
 
 ## 🎯 Next Steps (Prioritized)
 
-### Prochaine Session: PHASE 0 - Setup Environnement (2-3 jours)
+### ✅ Phases Complètes
+- ✅ **Phase 0:** Setup environnement (Docker, Neo4j, Ollama, Backend)
+- ✅ **Phase 0.7:** Advanced Document Processing (Docling + HybridChunker)
+- ✅ **Phase 0.8:** Neo4j RAG Optimization (Full-text + Hybrid Search)
+- ✅ **Phase 0.9:** Graphiti Integration (Claude Haiku 4.5 + AsyncIO Fix)
+- ✅ **Phase 1.0:** RAG Query Implementation (Qwen 2.5 7B Q8_0 + SSE Streaming)
 
-#### Immediate Tasks - Session 2
-1. [ ] Créer `.env` depuis `env.template`
-2. [ ] Configurer Sentry (backend + frontend projects)
-3. [ ] Démarrer stack Docker locale sur Mac M1 Max
-   ```bash
-   docker-compose -f docker/docker-compose.dev.yml up -d
-   ```
-4. [ ] Pull Mistral 7B model
-   ```bash
-   docker exec rag-ollama ollama pull mistral:7b-instruct-q5_K_M
-   ```
-5. [ ] Tester services locaux
-   - Neo4j: http://localhost:7474
-   - Backend API: http://localhost:8000/docs
-   - Frontend: http://localhost:5173
-   - Test Mistral inference
-6. [ ] Vérifier que tout fonctionne sur Mac M1 Max
+### 🎯 Prochaine Session: PHASE 1.2 - Frontend Admin UI (2-3 jours)
 
-#### Setup Tasks - Session 2-3
-1. [ ] Configurer DigitalOcean GPU Droplet (à faire quand prêt pour prod)
-2. [ ] Décider domaine principal (.app vs .io)
-3. [ ] (Phase 1) Créer projet Supabase + tables
+**Status:** 📋 PLANNING COMPLETE - Ready for implementation  
+**Plan:** `Devplan/PHASE-1.2-FRONTEND-ADMIN-UI.md` (v1.1)
 
-### Development Phases (V1 - 28-36 jours)
-- **Phase 0:** Setup environnement ← **PROCHAINE ÉTAPE**
-- **Phase 1:** Auth multi-users (Supabase)
-- **Phase 2:** Interface admin (gestion documents)
-- **Phase 3:** Chat multi-conversations
-- **Phase 4:** Graphe prérequis + visualisation
-- **Phase 5:** i18n FR/EN
-- **Phase 6:** Branding plongée (UI/UX océan)
-- **Phase 7:** Monitoring (Sentry dashboards)
-- **Phase 8:** Testing (documents FFESSM/SSI réels)
-- **Phase 9:** Déploiement production
+**Objectif:**
+Redévelopper l'UI frontend avec 2 onglets fonctionnels:
+1. **Upload Tab** - Upload documents + monitoring 4 étapes (validation, conversion, chunking, ingestion)
+2. **Query Tab** - Chat RAG avec streaming SSE
 
-### Future Tasks (Post-Setup)
-1. [ ] Uploader premiers documents FFESSM de test
-2. [ ] Tester pipeline RAG complet
-3. [ ] Optimiser prompts système pour plongée
-4. [ ] Créer schéma Neo4j entités plongée
-5. [ ] Implémenter extraction images/schémas
+**Scope:**
+- ✅ Local development only (`npm run dev`)
+- ✅ In-memory storage (React state)
+- ⏸️ NO Supabase integration (Phase 1.3)
+- ⏸️ NO Vercel deployment (Phase 9)
+
+**Timeline:** 18-20h (2-3 jours)
+- Jour 1: Setup + Upload Tab (7h)
+- Jour 2: Query Tab + Navigation (7h)
+- Jour 3: Testing + Polish (4-6h)
+
+**Key Deliverables:**
+- [ ] Ocean theme CSS system (semantic classes)
+- [ ] Document upload dropzone (PDF/PPT/PPTX)
+- [ ] Real-time 4-stage progress monitoring
+- [ ] SSE streaming chat interface
+- [ ] Tab navigation (Upload | Query)
+- [ ] Mobile-responsive UI
+
+---
+
+### 🗺️ Development Roadmap (Post Phase 1.2)
+
+**Phase 1.3: Supabase Auth + Conversation Persistence (3-4 jours)**
+- [ ] Supabase Cloud setup (free tier)
+- [ ] Auth UI (login/signup)
+- [ ] User roles (admin, instructor, student)
+- [ ] Conversation persistence (PostgreSQL)
+- [ ] RLS policies (Row-Level Security)
+- [ ] Tables: `chat_sessions`, `chat_messages`
+
+**Phase 1.4: Multi-Conversation Management (2-3 jours)**
+- [ ] Conversation sidebar (list all sessions)
+- [ ] Create/rename/delete conversations
+- [ ] Load conversation history
+- [ ] Active conversation indicator
+- [ ] Search in conversations
+
+**Phase 1.5: Document Management UI (2-3 jours)**
+- [ ] Document list with metadata
+- [ ] Document preview
+- [ ] Delete documents
+- [ ] Filter/search documents
+- [ ] Document statistics
+
+**Phase 1.6: Admin Dashboard (2 jours)**
+- [ ] System health monitoring
+- [ ] User statistics
+- [ ] Document processing stats
+- [ ] Knowledge graph metrics
+- [ ] Ollama performance dashboard
+
+**Phase 1.7: Knowledge Graph Visualization (2-3 jours)**
+- [ ] Neo4j graph visualization
+- [ ] Interactive node exploration
+- [ ] Filter by entity type
+- [ ] Search entities
+- [ ] Export graph data
+
+**Phase 1.8: i18n FR/EN (1-2 jours)**
+- [ ] react-i18next setup
+- [ ] FR translations (default)
+- [ ] EN translations
+- [ ] Language toggle
+- [ ] Detect browser language
+
+**Phase 1.9: DiveTeacher Branding (1-2 jours)**
+- [ ] Ocean theme refinement
+- [ ] Custom logo
+- [ ] Favicon + PWA icons
+- [ ] Plongée-specific terminology
+- [ ] Color scheme finalization
+
+**Phase 1.10: Testing with Real Documents (2-3 jours)**
+- [ ] Upload FFESSM MFT (tous niveaux)
+- [ ] Upload SSI documentation
+- [ ] Test RAG quality
+- [ ] Optimize prompts
+- [ ] Test entity extraction
+- [ ] Validate citations
+
+**Phase 9: Production Deployment (3-5 jours)**
+- [ ] Backend → DigitalOcean GPU Droplet
+- [ ] Frontend → Vercel (`diveteacher.io`)
+- [ ] Configure DNS (Cloudflare/Vercel)
+- [ ] HTTPS certificates
+- [ ] Environment variables (production)
+- [ ] Sentry monitoring setup
+- [ ] Backup strategy
+- [ ] Load testing
+- [ ] Security audit
+
+---
+
+### 📊 Timeline Estimate (Post Phase 1.2)
+
+| Phase | Description | Duration | Cumul |
+|-------|-------------|----------|-------|
+| 1.2 | Frontend Admin UI | 2-3 days | ← **NEXT** |
+| 1.3 | Supabase Auth | 3-4 days | +6 days |
+| 1.4 | Multi-Conversations | 2-3 days | +9 days |
+| 1.5 | Document Management | 2-3 days | +12 days |
+| 1.6 | Admin Dashboard | 2 days | +14 days |
+| 1.7 | Graph Visualization | 2-3 days | +17 days |
+| 1.8 | i18n FR/EN | 1-2 days | +19 days |
+| 1.9 | Branding | 1-2 days | +21 days |
+| 1.10 | Real Docs Testing | 2-3 days | +24 days |
+| 9 | Production Deploy | 3-5 days | +29 days |
+
+**Total:** ~29 jours (~6 semaines) pour MVP production-ready
+
+---
+
+### ⚡ Quick Wins (Can Do Anytime)
+
+1. [ ] Upload 1-2 PDFs FFESSM pour peupler le knowledge graph
+2. [ ] Tester RAG query avec contexte réel
+3. [ ] Créer custom system prompt pour plongée
+4. [ ] Ajouter badges école (FFESSM/SSI) dans citations
+5. [ ] Optimiser Neo4j indexes
+6. [ ] Performance profiling (backend API)
+7. [ ] Health check dashboard
 
 ---
 
