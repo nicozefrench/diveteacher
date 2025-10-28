@@ -149,6 +149,11 @@ async def process_document_wrapper(file_path: str, upload_id: str, metadata: dic
         print(f"[{upload_id}] 🚀 Starting background processing (async wrapper)...", flush=True)
         logger.info(f"[{upload_id}] Background processing wrapper started")
         
+        print(f"[{upload_id}] 🔍 DEBUG: About to call process_document()...", flush=True)
+        print(f"[{upload_id}] 🔍 DEBUG: file_path={file_path}", flush=True)
+        print(f"[{upload_id}] 🔍 DEBUG: upload_id={upload_id}", flush=True)
+        print(f"[{upload_id}] 🔍 DEBUG: metadata={metadata}", flush=True)
+        
         # Call process_document (already async)
         await process_document(
             file_path=file_path,

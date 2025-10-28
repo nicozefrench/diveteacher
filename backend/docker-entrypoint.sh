@@ -13,8 +13,9 @@ if [ "${SKIP_WARMUP}" != "true" ]; then
     echo "🔥 Step 1: Warming up Docling models..."
     echo "--------------------------------------------------"
     
-    # Run warm-up script (non-blocking, failures won't stop startup)
-    python3 /app/warmup_docling.py || {
+    # Run warm-up script AS A MODULE (ensures correct PYTHONPATH)
+    # Using -m flag adds current directory to sys.path automatically
+    python3 -m app.warmup || {
         echo "⚠️  Warm-up failed or skipped"
         echo "⚠️  Models will download on first document upload"
     }

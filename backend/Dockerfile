@@ -15,11 +15,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt && \
     pip install --no-cache-dir --force-reinstall tqdm==4.66.0
 
-# Copy application code
+# Copy application code (includes app/warmup.py)
 COPY app/ ./app/
 
-# Copy warm-up script and entrypoint
-COPY warmup_docling.py ./
+# Copy entrypoint
 COPY docker-entrypoint.sh ./
 
 # Make entrypoint executable

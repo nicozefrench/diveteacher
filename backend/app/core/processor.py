@@ -53,6 +53,13 @@ async def process_document(
     """
     
     # ═══════════════════════════════════════════════════════════
+    # CRITICAL DEBUG - CONFIRM FUNCTION IS CALLED
+    # ═══════════════════════════════════════════════════════════
+    print(f"[{upload_id}] 🎯 ENTERED process_document()", flush=True)
+    print(f"[{upload_id}] 🎯 file_path={file_path}", flush=True)
+    print(f"[{upload_id}] 🎯 Initializing status dict...", flush=True)
+    
+    # ═══════════════════════════════════════════════════════════
     # CRITICAL: Initialize status dict FIRST (before any exception)
     # ═══════════════════════════════════════════════════════════
     processing_status[upload_id] = {
@@ -62,6 +69,8 @@ async def process_document(
         "error": None,
         "started_at": datetime.now().isoformat(),
     }
+    
+    print(f"[{upload_id}] ✅ Status dict initialized", flush=True)
     
     # Log AFTER status init (so status endpoint works even if logging fails)
     try:

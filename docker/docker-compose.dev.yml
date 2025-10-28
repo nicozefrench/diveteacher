@@ -46,7 +46,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/version"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10        # Increased from 5 to 10 (100s total wait)
+      start_period: 60s  # Grace period before counting failures
 
   # FastAPI Backend
   backend:
@@ -70,6 +71,7 @@ services:
       - NEO4J_USER=neo4j
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:-change_me_in_production}
       - GRAPHITI_ENABLED=true
+      - DOCLING_TIMEOUT=900
       - SENTRY_DSN_BACKEND=${SENTRY_DSN_BACKEND:-}
       - SENTRY_ENVIRONMENT=development
     volumes:
@@ -78,7 +80,7 @@ services:
       neo4j:
         condition: service_healthy
       ollama:
-        condition: service_healthy
+        condition: service_started  # Changed from service_healthy - Ollama optional for ingestion
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
       interval: 10s

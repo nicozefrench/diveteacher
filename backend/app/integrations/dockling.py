@@ -59,6 +59,64 @@ class DoclingSingleton:
             logger.info("✅ DocumentConverter initialized (ACCURATE mode + OCR)")
         
         return cls._instance
+    
+    @classmethod
+    def warmup(cls) -> bool:
+        """
+        Warm-up: Initialize singleton and download models if needed.
+        
+        This method should be called during container startup to:
+        1. Pre-download Docling models from HuggingFace
+        2. Initialize the singleton instance
+        3. Validate the setup
+        
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            logger.info("=" * 60)
+            logger.info("🔥 WARMING UP DOCLING MODELS")
+            logger.info("=" * 60)
+            logger.info("")
+            
+            logger.info("📦 Initializing DoclingSingleton...")
+            logger.info("📝 Config: OCR=True, Tables=True, Mode=ACCURATE")
+            logger.info("⏳ This may take 10-15 minutes on first run...")
+            logger.info("")
+            
+            # Initialize singleton (will download models if first time)
+            converter = cls.get_converter()
+            
+            logger.info("✅ DoclingSingleton initialized successfully!")
+            logger.info("=" * 60)
+            logger.info("🎉 DOCLING WARM-UP COMPLETE!")
+            logger.info("=" * 60)
+            logger.info("")
+            logger.info("ℹ️  Singleton initialized with ACCURATE + OCR + Tables config")
+            logger.info("ℹ️  Models are now cached and ready for use")
+            logger.info("ℹ️  Subsequent document processing will be FAST")
+            logger.info("")
+            
+            # Validation: Check singleton is properly initialized
+            if cls._instance is None:
+                logger.error("❌ Warm-up validation FAILED: _instance is None")
+                return False
+            
+            logger.info("✅ VALIDATION: Singleton instance confirmed")
+            logger.info(f"✅ VALIDATION: Instance type = {type(cls._instance).__name__}")
+            logger.info("")
+            
+            return True
+            
+        except Exception as e:
+            logger.error("=" * 60)
+            logger.error(f"❌ WARM-UP FAILED: {e}")
+            logger.error("=" * 60)
+            logger.error("")
+            logger.error("⚠️  Document processing may be slower on first upload")
+            logger.error("⚠️  Models will be downloaded on-demand")
+            logger.error("")
+            return False
 
 
 async def convert_document_to_docling(
@@ -146,8 +204,16 @@ def _convert_sync(file_path: str) -> DoclingDocument:
     Returns:
         DoclingDocument (NOT markdown string)
     """
+    filename = Path(file_path).name
+    print(f"[_convert_sync] 🔄 START conversion: {filename}", flush=True)
+    
+    print(f"[_convert_sync] 📦 Getting converter singleton...", flush=True)
     converter = DoclingSingleton.get_converter()
+    print(f"[_convert_sync] ✅ Converter obtained (should be instant if warm-up worked)", flush=True)
+    
+    print(f"[_convert_sync] 🚀 Starting conversion...", flush=True)
     result = converter.convert(file_path)
+    print(f"[_convert_sync] ✅ Conversion complete", flush=True)
     
     # Return DoclingDocument object pour chunking
     return result.document

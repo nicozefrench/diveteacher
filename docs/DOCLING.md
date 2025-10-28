@@ -661,6 +661,96 @@ else:
 
 ---
 
+## Warm-up System (Production Pattern) ✅
+
+### Overview
+
+Pour éviter les timeouts lors du premier upload (téléchargement modèles ~10-15 min), un système de warm-up est implémenté.
+
+### Architecture
+
+**1. `DoclingSingleton.warmup()` Method**
+
+```python
+# backend/app/integrations/dockling.py
+class DoclingSingleton:
+    @classmethod
+    def warmup(cls) -> bool:
+        """
+        Warm-up: Initialize singleton and download models if needed.
+        Returns True if successful, False otherwise.
+        """
+        try:
+            logger.info("🔥 WARMING UP DOCLING MODELS")
+            converter = cls.get_converter()
+            # Validation
+            if cls._instance is None:
+                return False
+            logger.info("✅ VALIDATION: Singleton instance confirmed")
+            return True
+        except Exception as e:
+            logger.error(f"❌ WARM-UP FAILED: {e}")
+            return False
+```
+
+**2. `app/warmup.py` Module**
+
+```python
+# backend/app/warmup.py (inside package)
+from app.integrations.dockling import DoclingSingleton
+
+def main() -> int:
+    """Warm-up entry point"""
+    success = DoclingSingleton.warmup()
+    return 0 if success else 1
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+**3. Docker Entrypoint**
+
+```bash
+# backend/docker-entrypoint.sh
+if [ "${SKIP_WARMUP}" != "true" ]; then
+    echo "🔥 Step 1: Warming up Docling models..."
+    python3 -m app.warmup || {
+        echo "⚠️  Warm-up failed or skipped"
+    }
+fi
+
+# Start FastAPI
+exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+### Benefits
+
+✅ **Models ready before any upload**  
+✅ **First upload as fast as subsequent ones**  
+✅ **Reusable method** (can test with `docker exec rag-backend python3 -m app.warmup`)  
+✅ **Validation built-in**  
+✅ **Production-ready architecture**
+
+### Expected Logs
+
+```
+🔥 Step 1: Warming up Docling models...
+🚀 Starting Docling Model Warm-up...
+🔥 WARMING UP DOCLING MODELS
+📦 Initializing DoclingSingleton...
+✅ DocumentConverter initialized (ACCURATE mode + OCR)
+✅ DoclingSingleton initialized successfully!
+🎉 DOCLING WARM-UP COMPLETE!
+✅ VALIDATION: Singleton instance confirmed
+✅ VALIDATION: Instance type = DocumentConverter
+🎯 Warm-up completed successfully!
+✅ Warm-up phase complete
+```
+
+**Reference:** See [TIMEOUT-FIX-GUIDE.md](TIMEOUT-FIX-GUIDE.md) for complete implementation details.
+
+---
+
 ## Best Practices
 
 ### ✅ DO
