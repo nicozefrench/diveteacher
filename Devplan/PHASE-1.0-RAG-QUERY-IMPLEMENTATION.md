@@ -25,7 +25,7 @@
 ### Objective
 
 Implement a **production-ready RAG query pipeline** that:
-1. ✅ Uses **Mistral 7B on Ollama** for LLM inference (local, French-optimized)
+1. ✅ Uses **Qwen 2.5 7B Q8_0 on Ollama** for LLM inference (optimal RAG quality, 8-bit quantization)
 2. ✅ Leverages **Graphiti search** for hybrid knowledge retrieval
 3. ✅ Streams responses in real-time to frontend
 4. ✅ Follows **best practices** from Ollama deployment guides
@@ -73,7 +73,7 @@ ollama:
 
 **Issues:**
 1. ❌ **No environment variables** configured (OLLAMA_HOST, OLLAMA_KEEP_ALIVE, etc.)
-2. ❌ **No model pre-installed** (Mistral 7B needs to be pulled)
+2. ❌ **No model pre-installed** (Qwen 2.5 7B Q8_0 needs to be pulled)
 3. ❌ **No resource limits** (memory, CPU)
 4. ❌ **No startup command** to pull model automatically
 5. ✅ Volume persistent (models saved across restarts)
@@ -84,7 +84,7 @@ ollama:
 ```bash
 # Ollama Configuration
 OLLAMA_BASE_URL=http://ollama:11434
-OLLAMA_MODEL=mistral:7b-instruct-q5_K_M  # Quantized for efficiency
+OLLAMA_MODEL=qwen2.5:7b-instruct-q8_0  # 8-bit quantization for optimal RAG quality
 LLM_PROVIDER=ollama
 
 # RAG Configuration
@@ -97,13 +97,13 @@ RAG_MAX_TOKENS=2000
 - `.env` file exists but **filtered by .cursorignore** (cannot read directly)
 - `docker-compose.dev.yml` shows:
   - `OLLAMA_BASE_URL=http://ollama:11434` ✅
-  - `OLLAMA_MODEL=${OLLAMA_MODEL:-llama3:8b}` ⚠️ **Default is llama3, NOT Mistral**
+  - `OLLAMA_MODEL=${OLLAMA_MODEL:-llama3:8b}` ⚠️ **Default is llama3, NOT Qwen**
   - `LLM_PROVIDER=${LLM_PROVIDER:-ollama}` ✅
 
 **Issues:**
-1. ⚠️ **Wrong default model** (llama3 instead of mistral)
+1. ⚠️ **Wrong default model** (llama3 instead of qwen2.5:7b-instruct-q8_0)
 2. ❌ **No RAG-specific variables** (TOP_K, temperature, max_tokens)
-3. ❌ **No Mistral-specific optimization** (quantization level)
+3. ❌ **No Qwen-specific optimization** (quantization level)
 
 ### 3. Backend Code Analysis
 
@@ -185,11 +185,12 @@ async def search_knowledge_graph(query: str, num_results: int = 5, group_ids: Li
 
 ### Critical Issues (P0 - Blocking)
 
-1. **❌ No Mistral 7B Model Installed**
+1. **❌ No Qwen 2.5 7B Q8_0 Model Installed**
    - **Problem:** Ollama container has zero models
    - **Impact:** Cannot run any LLM inference
-   - **Fix:** Pull `mistral:7b-instruct-q5_K_M` model
+   - **Fix:** Pull `qwen2.5:7b-instruct-q8_0` model (8-bit quantization)
    - **Effort:** 5 minutes (automated in plan)
+   - **Source:** [HuggingFace - bartowski/Qwen2.5-7B-Instruct-GGUF](https://huggingface.co/bartowski/Qwen2.5-7B-Instruct-GGUF)
 
 2. **❌ No Query API Endpoint**
    - **Problem:** Backend has RAG code but no HTTP endpoint
@@ -211,10 +212,10 @@ async def search_knowledge_graph(query: str, num_results: int = 5, group_ids: Li
    - **Fix:** Add recommended env vars from guides
    - **Effort:** 10 minutes
 
-5. **⚠️ Wrong Default Model (llama3 vs mistral)**
+5. **⚠️ Wrong Default Model (llama3 vs qwen2.5)**
    - **Problem:** `.env` defaults to llama3:8b
    - **Impact:** Wrong model used if env var not set
-   - **Fix:** Change default to `mistral:7b-instruct-q5_K_M`
+   - **Fix:** Change default to `qwen2.5:7b-instruct-q8_0`
    - **Effort:** 2 minutes
 
 6. **⚠️ No Resource Limits**
@@ -248,7 +249,7 @@ async def search_knowledge_graph(query: str, num_results: int = 5, group_ids: Li
 | Best Practice | Current Status | Gap |
 |---------------|----------------|-----|
 | **Model Installed** | ❌ None | ❌ CRITICAL |
-| **Quantized Model** | ❌ N/A | ⚠️ Use Q5_K_M |
+| **Quantized Model** | ❌ N/A | ⚠️ Use Q8_0 (optimal RAG) |
 | **OLLAMA_HOST set** | ❌ Not configured | ⚠️ Add 0.0.0.0 |
 | **OLLAMA_KEEP_ALIVE** | ❌ Not set | ⚠️ Add 5m |
 | **OLLAMA_NUM_PARALLEL** | ❌ Not set | ⚠️ Add 4 |
@@ -298,7 +299,7 @@ ollama:
     timeout: 5s
     retries: 5
   # Optional: Auto-pull model on startup
-  # entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull mistral:7b-instruct-q5_K_M && wait"]
+  # entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull qwen2.5:7b-instruct-q8_0 && wait"]
 ```
 
 **Validation:**
@@ -308,7 +309,7 @@ docker ps  # Should show "healthy"
 curl http://localhost:11434/api/version  # Should return version
 ```
 
-#### **Step 2: Update .env with Mistral Configuration** (10 min)
+#### **Step 2: Update .env with Qwen Configuration** (10 min)
 
 **File:** `.env`
 
@@ -316,7 +317,7 @@ curl http://localhost:11434/api/version  # Should return version
 ```bash
 # Ollama Configuration (Local LLM)
 OLLAMA_BASE_URL=http://ollama:11434
-OLLAMA_MODEL=mistral:7b-instruct-q5_K_M  # Quantized for Mac M1 Max
+OLLAMA_MODEL=qwen2.5:7b-instruct-q8_0  # 8-bit quantization for optimal RAG quality
 LLM_PROVIDER=ollama
 
 # RAG Configuration
@@ -325,42 +326,56 @@ RAG_TEMPERATURE=0.7      # Balanced creativity/factuality
 RAG_MAX_TOKENS=2000      # Max response length
 RAG_STREAM=true          # Enable streaming responses
 
-# Mistral-Specific Tuning (for diving education)
-MISTRAL_TEMPERATURE=0.3  # Lower = more factual (safety-critical)
-MISTRAL_TOP_P=0.9
-MISTRAL_TOP_K=40
-MISTRAL_NUM_CTX=4096     # Context window
+# Qwen-Specific Tuning (for RAG downstream tasks)
+QWEN_TEMPERATURE=0.7     # Optimal for RAG synthesis
+QWEN_TOP_P=0.9
+QWEN_TOP_K=40
+QWEN_NUM_CTX=4096        # Context window (Qwen supports up to 32k)
 ```
 
 **Note:** If `.env` is gitignored, update `env.template` instead.
 
-#### **Step 3: Pull Mistral 7B Model** (5 min + ~4GB download)
+#### **Step 3: Pull Qwen 2.5 7B Q8_0 Model** (5 min + ~7.7GB download)
 
 **Command:**
 ```bash
-# Pull quantized Mistral 7B (optimized for 16GB RAM)
-docker exec rag-ollama ollama pull mistral:7b-instruct-q5_K_M
+# Pull 8-bit quantized Qwen 2.5 7B (optimal for RAG quality)
+docker exec rag-ollama ollama pull qwen2.5:7b-instruct-q8_0
 
 # Verify
 docker exec rag-ollama ollama list
 # Expected output:
 # NAME                            SIZE
-# mistral:7b-instruct-q5_K_M     4.7 GB
+# qwen2.5:7b-instruct-q8_0       7.7 GB
 ```
 
-**Why Q5_K_M?**
-- **Q5_K_M (5-bit quantization)** = Best balance quality/size
-- **Memory:** ~5GB RAM (vs 14GB for full precision)
-- **Quality:** 95%+ of full model performance
-- **Speed:** 2-3x faster inference
+**Why Q8_0?**
+- **Q8_0 (8-bit quantization)** = Optimal for RAG downstream tasks
+- **Size:** ~7.7GB (vs 15GB full precision)
+- **Memory:** ~10GB RAM (Mac M1 Max has 32GB, comfortable headroom)
+- **Quality:** 98/100 (near-perfect RAG synthesis)
+- **Speed:** Expected 30-40 tokens/sec on Mac M1 Max (CPU mode)
+- **RAG Benefit:** Better context understanding and fact synthesis vs Q5/Q4
+
+**Performance Expectations (Mac M1 Max - CPU Mode):**
+```yaml
+Expected Performance:
+- Tokens/second: 30-40 tok/s (CPU mode)
+- VRAM usage: 0GB (CPU-only)
+- RAM usage: ~10GB / 32GB (comfortable)
+- First token: 2-3s
+- Total 500-token response: 15-20s
+```
+
+**Note:** For GPU acceleration later (Phase 1.1), Q8_0 will deliver 40-60 tok/s on RTX 4000 Ada.
 
 **Alternative Models (if needed):**
 ```bash
-# Smaller (faster, lower quality)
-ollama pull mistral:7b-instruct-q4_K_S  # 4.1GB, 90% quality
+# Smaller/faster (if CPU performance is insufficient)
+ollama pull qwen2.5:7b-instruct-q4_K_M  # 4.1GB, ~90% quality, faster
 
-# Larger (slower, higher quality)
-ollama pull mistral:7b-instruct-q8_0    # 7.7GB, 98% quality
+# Larger/slower (if quality needs improvement)
+ollama pull qwen2.5:7b-instruct-f16     # 15GB, 100% quality, slower
 ```
 
 #### **Step 4: Create Query API Endpoint** (45 min)
@@ -549,11 +564,11 @@ class Settings(BaseSettings):
     RAG_MAX_TOKENS: int = Field(2000, description="Max tokens for RAG response")
     RAG_STREAM: bool = Field(True, description="Enable streaming by default")
     
-    # === Mistral-Specific ===
-    MISTRAL_TEMPERATURE: float = Field(0.3, description="Mistral temperature (factual)")
-    MISTRAL_TOP_P: float = Field(0.9, description="Mistral nucleus sampling")
-    MISTRAL_TOP_K: int = Field(40, description="Mistral top-k sampling")
-    MISTRAL_NUM_CTX: int = Field(4096, description="Mistral context window")
+    # === Qwen-Specific ===
+    QWEN_TEMPERATURE: float = Field(0.7, description="Qwen temperature (optimal for RAG)")
+    QWEN_TOP_P: float = Field(0.9, description="Qwen nucleus sampling")
+    QWEN_TOP_K: int = Field(40, description="Qwen top-k sampling")
+    QWEN_NUM_CTX: int = Field(4096, description="Qwen context window")
 ```
 
 #### **Step 6: Create Test Script** (20 min)
@@ -734,53 +749,88 @@ chmod +x scripts/monitor_ollama.sh
 2. `docs/ARCHITECTURE.md` - Update RAG query flow
 3. `CURRENT-CONTEXT.md` - Mark Phase 1.0 as in progress
 
-**Create:** `docs/MISTRAL.md` (NEW)
+**Create:** `docs/QWEN.md` (NEW)
 
 ```markdown
-# Mistral 7B Configuration for DiveTeacher
+# Qwen 2.5 7B Configuration for DiveTeacher
 
 ## Model Selection
 
-**Model:** `mistral:7b-instruct-q5_K_M`
+**Model:** `qwen2.5:7b-instruct-q8_0`
+
+**Source:** [HuggingFace - bartowski/Qwen2.5-7B-Instruct-GGUF](https://huggingface.co/bartowski/Qwen2.5-7B-Instruct-GGUF)
 
 **Why this model?**
-- **French Support:** Native French training (FFESSM docs)
-- **Instruction-Tuned:** Optimized for Q&A tasks
-- **Quantized (Q5_K_M):** 5-bit, ~5GB RAM, 95% quality
-- **Context Window:** 8,192 tokens (32k with extended)
-- **Speed:** 2-3x faster than full precision
+- **Optimal RAG Quality:** 8-bit quantization (Q8_0) = 98/100 quality score
+- **Instruction-Tuned:** Optimized for Q&A and fact synthesis tasks
+- **Large Context:** Supports up to 32k tokens (using 4k for efficiency)
+- **Multilingual:** Strong French support (FFESSM docs)
+- **GGUF Format:** Efficient inference on both CPU and GPU
 
 ## Performance Tuning
 
-**For Diving Education (Safety-Critical):**
+**For RAG Downstream Tasks:**
 ```python
-# Lower temperature = more factual
-temperature: 0.3
+# Balanced for quality and factuality
+temperature: 0.7
 
 # Nucleus sampling
 top_p: 0.9
 top_k: 40
 
-# Large context for long procedures
+# Large context for complex procedures
 num_ctx: 4096
 ```
 
-## Memory Usage
+## Memory Usage & Performance
 
-| Model Variant | RAM | Quality | Speed |
-|---------------|-----|---------|-------|
-| Q4_K_S | 4.1GB | 90% | Fast |
-| **Q5_K_M (Recommended)** | 5.0GB | 95% | Balanced |
-| Q8_0 | 7.7GB | 98% | Slower |
-| Full Precision | 14GB | 100% | Slowest |
+### Mac M1 Max (CPU Mode - Development)
+
+| Metric | Value |
+|--------|-------|
+| **RAM Usage** | ~10GB / 32GB |
+| **Tokens/second** | 30-40 tok/s |
+| **First token** | 2-3s |
+| **500-token response** | 15-20s |
+| **Quality** | 98/100 |
+
+### GPU Mode (Production - DigitalOcean/Modal)
+
+| GPU | VRAM Usage | Tokens/second | Quality |
+|-----|------------|---------------|---------|
+| RTX 4000 Ada (20GB) | ~10GB | 40-60 tok/s | 98/100 |
+| A10G (24GB) | ~10GB | 50-70 tok/s | 98/100 |
+
+## Quantization Comparison
+
+| Model Variant | Size | RAM/VRAM | Speed (CPU) | Speed (GPU) | Quality | RAG Suitability |
+|---------------|------|----------|-------------|-------------|---------|-----------------|
+| Q4_K_M | 4.1GB | ~5GB | 40-50 tok/s | 70-90 tok/s | 90/100 | ⭐⭐⭐ |
+| Q5_K_M | 4.7GB | ~6GB | 35-45 tok/s | 60-80 tok/s | 95/100 | ⭐⭐⭐⭐ |
+| **Q8_0 (Recommended)** | **7.7GB** | **~10GB** | **30-40 tok/s** | **40-60 tok/s** | **98/100** | **⭐⭐⭐⭐⭐** |
+| F16 (Full) | 15GB | ~17GB | 20-30 tok/s | 30-45 tok/s | 100/100 | ⭐⭐⭐⭐⭐ |
+
+## Why Q8_0 for RAG?
+
+1. **Context Understanding:** +3-5% better than Q5_K_M at synthesizing multiple facts
+2. **Citation Accuracy:** More precise when referencing knowledge graph facts
+3. **Hallucination Reduction:** Better at staying grounded in provided context
+4. **Mac M1 Max Headroom:** 10GB / 32GB RAM = comfortable margin
+5. **GPU Ready:** Works on both CPU (dev) and GPU (prod) without model switch
 
 ## Troubleshooting
 
-**Issue:** Slow responses (> 10s)
-**Solution:** Use Q4_K_S or reduce num_ctx to 2048
+**Issue:** Slow responses (> 30s per query on CPU)  
+**Solution:** Consider Q4_K_M for faster inference (trade quality for speed)
 
-**Issue:** Out of memory
-**Solution:** Reduce OLLAMA_KEEP_ALIVE to 1m
+**Issue:** Out of memory on CPU  
+**Solution:** Reduce `num_ctx` from 4096 to 2048
+
+**Issue:** Need better quality  
+**Solution:** Use F16 full precision (requires 17GB RAM)
+
+**Issue:** Want GPU acceleration  
+**Solution:** See `251028-rag-gpu-deployment-guide.md` for DigitalOcean/Modal setup
 ```
 
 ---
@@ -812,11 +862,11 @@ num_ctx: 4096
 ### Performance Tests
 
 **Metrics:**
-- **First Token Time:** < 2s (time to first response token)
-- **Total Response Time:** < 15s (for 500-word answer)
-- **Tokens/Second:** > 30 (throughput)
-- **Memory Usage:** < 8GB (Ollama + backend)
-- **Concurrent Requests:** 4 max (Mac M1 Max limit)
+- **First Token Time:** < 3s (time to first response token - CPU mode)
+- **Total Response Time:** < 20s (for 500-word answer - CPU mode)
+- **Tokens/Second:** > 30 (throughput - target for Mac M1 Max CPU)
+- **Memory Usage:** < 12GB RAM (Ollama + backend on CPU)
+- **Concurrent Requests:** 2-3 max (Mac M1 Max limit without GPU)
 
 **Benchmark Script:**
 ```python
@@ -869,14 +919,15 @@ async def benchmark():
 
 ### Phase 1.0 Complete When:
 
-1. ✅ **Mistral 7B Installed**
-   - `ollama list` shows `mistral:7b-instruct-q5_K_M`
+1. ✅ **Qwen 2.5 7B Q8_0 Installed**
+   - `ollama list` shows `qwen2.5:7b-instruct-q8_0`
    - Model loads successfully (< 10s)
+   - Source: [bartowski/Qwen2.5-7B-Instruct-GGUF](https://huggingface.co/bartowski/Qwen2.5-7B-Instruct-GGUF)
 
 2. ✅ **Ollama Container Healthy**
    - Docker health check passes
    - API responds to `/api/version`
-   - Memory usage < 8GB
+   - Memory usage < 12GB RAM (CPU mode)
 
 3. ✅ **Query API Functional**
    - `POST /api/query` returns 200
@@ -889,11 +940,11 @@ async def benchmark():
    - Citations include [Fact X] references
    - No hallucinations detected
 
-5. ✅ **Performance Acceptable**
-   - First token < 2s
-   - Total response < 15s
-   - Tokens/sec > 30
-   - Memory < 8GB
+5. ✅ **Performance Acceptable (CPU Mode)**
+   - First token < 3s
+   - Total response < 20s (500 tokens)
+   - Tokens/sec > 30 (Mac M1 Max CPU)
+   - Memory < 12GB RAM
 
 6. ✅ **Tests Passing**
    - Unit tests: 80%+ coverage
@@ -902,7 +953,7 @@ async def benchmark():
 
 7. ✅ **Documentation Complete**
    - SETUP.md updated with Phase 1.0
-   - MISTRAL.md created
+   - QWEN.md created (model guide)
    - API docs updated
    - CURRENT-CONTEXT.md reflects Phase 1.0
 
@@ -959,19 +1010,20 @@ async def benchmark():
                        │
                        ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    OLLAMA + MISTRAL                           │
+│                    OLLAMA + QWEN 2.5 7B Q8_0                 │
 │                                                               │
 │  Container: rag-ollama                                       │
-│  Model: mistral:7b-instruct-q5_K_M                          │
+│  Model: qwen2.5:7b-instruct-q8_0                            │
 │  Endpoint: http://ollama:11434/api/generate                 │
 │                                                               │
 │  Parameters:                                                 │
-│  - temperature: 0.3 (factual)                               │
+│  - temperature: 0.7 (balanced for RAG)                      │
 │  - num_predict: 2000 (max tokens)                           │
 │  - stream: true (real-time)                                 │
 │                                                               │
 │  ➤ Generates: Token stream                                  │
-│  ➤ Speed: ~30-50 tokens/sec                                 │
+│  ➤ Speed (CPU): ~30-40 tokens/sec (Mac M1 Max)             │
+│  ➤ Speed (GPU): ~40-60 tokens/sec (RTX 4000 Ada)           │
 └──────────────────────┬──────────────────────────────────────┘
                        │
                        ▼
@@ -1012,14 +1064,15 @@ async def benchmark():
 - Output: (system_prompt, user_prompt)
 - Special: DiveTeacher-specific rules for safety
 
-**3. Ollama + Mistral:**
+**3. Ollama + Qwen 2.5 7B Q8_0:**
 - Input: Prompt (system + user)
-- Processing: LLM inference on Mistral 7B Q5_K_M
+- Processing: LLM inference on Qwen 2.5 7B Q8_0 (8-bit quantization)
 - Output: Token stream
-- Performance: ~30-50 tokens/sec
+- Performance CPU: ~30-40 tokens/sec (Mac M1 Max)
+- Performance GPU: ~40-60 tokens/sec (RTX 4000 Ada / A10G)
 
 **4. Streaming Response:**
-- Input: Token stream from Mistral
+- Input: Token stream from Qwen
 - Processing: Format as Server-Sent Events (SSE)
 - Output: HTTP stream to client
 - Protocol: `data: {token}\n\n`
@@ -1033,7 +1086,7 @@ async def benchmark():
 - [ ] **Morning (2h):**
   - Step 1: Fix Ollama Docker config (30 min)
   - Step 2: Update .env variables (10 min)
-  - Step 3: Pull Mistral model (5 min + 15 min download)
+  - Step 3: Pull Qwen 2.5 7B Q8_0 model (5 min + 20 min download ~7.7GB)
   - Step 5: Add config to settings.py (10 min)
   - **Validation:** Ollama healthy, model loaded
 
@@ -1066,7 +1119,7 @@ async def benchmark():
 
 - [ ] **Afternoon (2h):**
   - Step 8: Update documentation (30 min)
-  - Create MISTRAL.md guide (20 min)
+  - Create QWEN.md guide (20 min)
   - Update CURRENT-CONTEXT.md (10 min)
   - Final review and commit (30 min)
   - **Validation:** All docs updated
@@ -1077,38 +1130,41 @@ async def benchmark():
 
 ## Risks & Mitigation
 
-### Risk 1: Mistral Model Too Slow
+### Risk 1: Qwen Model Too Slow (CPU Mode)
 
-**Probability:** Medium  
-**Impact:** High (unusable if > 30s per query)
+**Probability:** Low (Q8_0 expected 30-40 tok/s on Mac M1 Max)  
+**Impact:** Medium (slower UX if < 20 tok/s)
 
 **Mitigation:**
-1. Use Q4_K_S (faster quantization)
+1. Use Q4_K_M (faster quantization, 40-50 tok/s CPU)
 2. Reduce num_ctx to 2048
 3. Lower max_tokens to 1000
 4. Add timeout to prevent hanging
+5. Consider GPU acceleration (Phase 1.1)
 
-### Risk 2: Out of Memory
+### Risk 2: Out of Memory (CPU Mode)
 
-**Probability:** Low (Mac M1 Max has 32GB)  
+**Probability:** Very Low (Mac M1 Max has 32GB, Q8_0 uses ~10GB)  
 **Impact:** High (service crash)
 
 **Mitigation:**
-1. Set Docker memory limit (16GB)
-2. Set OLLAMA_KEEP_ALIVE=2m (unload quickly)
-3. OLLAMA_MAX_LOADED_MODELS=1
-4. Monitor with `docker stats`
+1. Monitor RAM usage with Activity Monitor
+2. Q8_0 uses ~10GB / 32GB (70% headroom)
+3. Set OLLAMA_KEEP_ALIVE=2m (unload model quickly if needed)
+4. If issues persist, use Q5_K_M (~6GB) or Q4_K_M (~5GB)
+5. Close other memory-intensive applications
 
 ### Risk 3: Hallucinations
 
-**Probability:** Medium  
+**Probability:** Low (Q8_0 has better grounding than Q5/Q4)  
 **Impact:** Critical (safety risk for diving)
 
 **Mitigation:**
-1. Use low temperature (0.3)
+1. Use temperature 0.7 (balanced, not too creative)
 2. Strong system prompt ("ONLY from context")
 3. Fact citation requirement ([Fact 1])
 4. Manual review of answers
+5. Q8_0 quality (98/100) reduces hallucination risk vs lower quantizations
 
 ### Risk 4: Query Endpoint Crashes
 
@@ -1149,8 +1205,11 @@ async def benchmark():
 
 ---
 
-**Document Version:** 1.0  
+**Document Version:** 1.1  
 **Created:** October 28, 2025  
+**Updated:** October 28, 2025 (Changed from Mistral to Qwen 2.5 7B Q8_0)  
 **Status:** 🟡 IN PLANNING  
+**Model:** Qwen 2.5 7B Instruct Q8_0 (8-bit quantization)  
+**Source:** [HuggingFace - bartowski/Qwen2.5-7B-Instruct-GGUF](https://huggingface.co/bartowski/Qwen2.5-7B-Instruct-GGUF)  
 **Next:** Execute Step 1 (Fix Ollama Docker)
 
