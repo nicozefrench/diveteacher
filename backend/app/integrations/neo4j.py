@@ -10,10 +10,14 @@ This client is kept for:
 - Fallback if Graphiti unavailable
 
 For RAG queries, use: graphiti.search_knowledge_graph()
+
+TODO: Migrate to AsyncGraphDatabase for production (HIGH PRIORITY)
+      See FIXES-LOG.md - "Neo4j Async Migration Roadmap"
 """
 
 from typing import List, Dict, Any, Optional
 import logging
+import asyncio
 from neo4j import GraphDatabase, RoutingControl
 from neo4j.exceptions import (
     ServiceUnavailable,
@@ -74,31 +78,43 @@ class Neo4jClient:
             self.driver = None
             logger.info("✅ Neo4j connection closed")
     
-    def verify_connection(self) -> bool:
+    async def verify_connection(self) -> bool:
         """
-        Verify Neo4j connection
+        Verify Neo4j connection (async wrapper)
+        
+        Note:
+            Uses asyncio.to_thread() to run sync Neo4j call in thread pool
+            This prevents blocking the FastAPI event loop
+            
+            TODO: Replace with native AsyncGraphDatabase in production
+                  See FIXES-LOG.md for migration plan
         
         Returns:
             True if connected, raises exception otherwise
         """
-        self.connect()
-        try:
-            records, summary, keys = self.driver.execute_query(
-                "RETURN 1 AS test",
-                database_=self.database,
-                routing_=RoutingControl.READ
-            )
-            logger.info("✅ Neo4j connection verified")
-            return True
-        except ServiceUnavailable as e:
-            logger.error(f"❌ Neo4j unavailable: {e}")
-            raise
-        except AuthError as e:
-            logger.error(f"❌ Neo4j authentication failed: {e}")
-            raise
-        except Exception as e:
-            logger.error(f"❌ Neo4j connection verification failed: {e}")
-            raise
+        def _sync_verify() -> bool:
+            """Synchronous verification (runs in thread pool)"""
+            self.connect()
+            try:
+                records, summary, keys = self.driver.execute_query(
+                    "RETURN 1 AS test",
+                    database_=self.database,
+                    routing_=RoutingControl.READ
+                )
+                logger.info("✅ Neo4j connection verified")
+                return True
+            except ServiceUnavailable as e:
+                logger.error(f"❌ Neo4j unavailable: {e}")
+                raise
+            except AuthError as e:
+                logger.error(f"❌ Neo4j authentication failed: {e}")
+                raise
+            except Exception as e:
+                logger.error(f"❌ Neo4j connection verification failed: {e}")
+                raise
+        
+        # Run sync function in thread pool to avoid blocking event loop
+        return await asyncio.to_thread(_sync_verify)
     
     def query_context_fulltext(
         self, 

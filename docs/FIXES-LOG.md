@@ -275,8 +275,9 @@ docker exec rag-ollama curl -f http://localhost:11434/api/version
 
 ### 🟡 Backend Neo4j Health Error
 
-**Status:** 🟡 OPEN - LOW  
+**Status:** 🟡 IN PROGRESS  
 **Opened:** October 29, 2025, 08:00 CET  
+**Updated:** October 29, 2025, 08:45 CET  
 **Priority:** P3 - LOW (non-blocking)  
 **Impact:** Healthcheck shows "degraded" but works fine
 
@@ -290,15 +291,153 @@ docker exec rag-ollama curl -f http://localhost:11434/api/version
 }
 ```
 
-**Analysis:**
-- Neo4j connection works fine (verified with direct queries)
-- Issue is in the healthcheck code itself
-- Probably using `await` on a boolean instead of coroutine
+**Root Cause Analysis:**
+```python
+# backend/app/api/health.py (line 34)
+await neo4j_client.verify_connection()  # ← await on NON-async function!
+
+# backend/app/integrations/neo4j.py (line 77 - old)
+def verify_connection(self) -> bool:  # ← Returns bool, not coroutine
+    # ... sync code
+    return True  # ← This is a bool, not awaitable!
+```
+
+**Why This Happens:**
+- `verify_connection()` is a **synchronous** function (returns `bool`)
+- Using `await` on a `bool` raises: `TypeError: object bool can't be used in 'await' expression`
+- Python expects a coroutine after `await`, not a plain value
+
+**Solution Implemented (Option B - Temporary Fix):**
+
+Using `asyncio.to_thread()` to wrap sync call:
+
+```python
+# backend/app/integrations/neo4j.py (line 81 - new)
+async def verify_connection(self) -> bool:
+    """Async wrapper using thread pool"""
+    
+    def _sync_verify() -> bool:
+        """Sync verification (runs in thread pool)"""
+        self.connect()
+        records, summary, keys = self.driver.execute_query(
+            "RETURN 1 AS test",
+            database_=self.database,
+            routing_=RoutingControl.READ
+        )
+        return True
+    
+    # Run in thread pool to avoid blocking event loop
+    return await asyncio.to_thread(_sync_verify)
+```
+
+**Why This Works:**
+- ✅ `verify_connection()` is now `async` (returns coroutine)
+- ✅ `await` can be used in `health.py` without error
+- ✅ Sync Neo4j call runs in thread pool (non-blocking)
+- ✅ FastAPI event loop stays responsive
+
+**Tradeoffs (Technical Debt):**
+- ⚠️ Thread creation overhead on each healthcheck call
+- ⚠️ Not optimal for high-frequency calls
+- ⚠️ Temporary solution (see Roadmap below)
+
+**Files Modified:**
+- `backend/app/integrations/neo4j.py` - Made `verify_connection()` async
+- Added `import asyncio` at top
+- Added TODO comment for production migration
 
 **Next Steps:**
-1. Fix healthcheck in `backend/app/api/health.py`
-2. Make healthcheck async-safe
-3. Test with proper Neo4j client calls
+1. Test healthcheck endpoint
+2. Verify no more "await bool" error
+3. Monitor for any performance issues
+
+---
+
+### 🔵 ROADMAP: Neo4j Async Migration (HIGH PRIORITY)
+
+**Status:** 🔵 PLANNED  
+**Priority:** P1 - HIGH (post-MVP)  
+**Effort:** 2-3 hours  
+**Target:** v1.0 production release
+
+**Goal:**
+Replace sync `neo4j` driver with native `AsyncGraphDatabase` for production-ready async architecture.
+
+**Current Architecture:**
+```python
+from neo4j import GraphDatabase  # ← Sync driver
+
+class Neo4jClient:
+    def verify_connection(self) -> bool:  # ← Wrapped in asyncio.to_thread()
+        self.driver.execute_query(...)   # ← Sync call
+```
+
+**Target Architecture:**
+```python
+from neo4j import AsyncGraphDatabase  # ← Native async driver
+
+class Neo4jAsyncClient:
+    async def verify_connection(self) -> bool:  # ← Native async
+        async with self.driver.session() as session:
+            await session.run("RETURN 1")  # ← Native async
+```
+
+**Benefits:**
+- ✅ **Native async** - No thread pool overhead
+- ✅ **Non-blocking** - True async I/O with Neo4j
+- ✅ **Scalable** - Better connection pooling for async
+- ✅ **Future-proof** - Neo4j-recommended pattern
+- ✅ **Zero technical debt** - Clean architecture
+
+**Migration Plan:**
+
+**Phase 1: Create AsyncClient (1 hour)**
+1. Create `Neo4jAsyncClient` class in same file
+2. Implement async methods:
+   - `async def connect()`
+   - `async def verify_connection()`
+   - `async def execute_query()`
+3. Keep old `Neo4jClient` for compatibility
+
+**Phase 2: Migrate Endpoints (1 hour)**
+1. Health endpoint (simple, low risk)
+2. Graph stats endpoint
+3. Any other direct Neo4j calls
+
+**Phase 3: Testing & Cleanup (30 min)**
+1. Integration tests
+2. Load testing
+3. Remove old `Neo4jClient`
+4. Rename `Neo4jAsyncClient` → `Neo4jClient`
+
+**Files to Modify:**
+- `backend/app/integrations/neo4j.py` - Main refactor
+- `backend/app/api/health.py` - Already using `await` (no change needed)
+- `backend/app/api/graph.py` - Update query calls to `await`
+- `backend/requirements.txt` - Verify `neo4j>=5.0` (already compatible)
+
+**Risk Assessment:**
+- 🟢 **Low Risk** - Graphiti uses own driver (not affected)
+- 🟢 **Low Risk** - RAG queries via Graphiti (not affected)
+- 🟡 **Medium Risk** - Need to test all Neo4j endpoints
+- 🟢 **Low Risk** - Can migrate gradually (keep both clients)
+
+**Success Criteria:**
+- [ ] All healthchecks pass
+- [ ] Graph stats endpoint works
+- [ ] No blocking calls in event loop
+- [ ] Performance equal or better
+- [ ] Zero technical debt remaining
+
+**Reference:**
+- Neo4j Async Driver: https://neo4j.com/docs/python-manual/current/async/
+- FastAPI Async Best Practices: https://fastapi.tiangolo.com/async/
+
+**Priority Justification:**
+- Not blocking MVP (healthcheck works with Option B)
+- Important for production scalability
+- Clean architecture = easier maintenance
+- Should be done before v1.0 launch
 
 ---
 
@@ -306,29 +445,32 @@ docker exec rag-ollama curl -f http://localhost:11434/api/version
 
 ### By Priority
 
-| Priority | Open | Resolved | Total |
-|----------|------|----------|-------|
-| P0 (Critical) | 1 | 0 | 1 |
-| P1 (High) | 0 | 1 | 1 |
-| P2 (Medium) | 1 | 0 | 1 |
-| P3 (Low) | 2 | 0 | 2 |
-| **TOTAL** | **4** | **1** | **5** |
+| Priority | Open | In Progress | Resolved | Total |
+|----------|------|-------------|----------|-------|
+| P0 (Critical) | 1 | 0 | 0 | 1 |
+| P1 (High) | 0 | 1 (Roadmap) | 1 | 2 |
+| P2 (Medium) | 1 | 0 | 0 | 1 |
+| P3 (Low) | 1 | 1 | 0 | 2 |
+| **TOTAL** | **3** | **2** | **1** | **6** |
 
 ### By Category
 
-| Category | Open | Resolved |
-|----------|------|----------|
-| Infrastructure | 0 | 1 |
-| Backend API | 2 | 0 |
-| Graphiti/Neo4j | 1 | 0 |
-| Logging | 1 | 0 |
+| Category | Open | In Progress | Resolved |
+|----------|------|-------------|----------|
+| Infrastructure | 0 | 0 | 1 |
+| Backend API | 2 | 1 | 0 |
+| Graphiti/Neo4j | 1 | 0 | 0 |
+| Logging | 1 | 0 | 0 |
+| Roadmap | 0 | 1 | 0 |
 
 ### Resolution Time
 
 | Fix | Duration | Status |
 |-----|----------|--------|
 | Ollama Healthcheck | 13 hours | ✅ Resolved |
+| Neo4j Async Wrapper | 15 min | 🟡 In Progress |
 | Graphiti Search | Ongoing | 🔴 Open |
+| Neo4j Full Async | Planned | 🔵 Roadmap (P1)
 
 ---
 
