@@ -265,8 +265,7 @@ async def search_knowledge_graph(
         edge_results = await client.search(
             query=query,
             num_results=num_results,
-            group_ids=group_ids,
-            search_config=search_config or EDGE_HYBRID_SEARCH_RRF
+            group_ids=group_ids
         )
         
         # Format results pour RAG pipeline

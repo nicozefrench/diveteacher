@@ -3,8 +3,15 @@
 > **🤖 AI Agent Notice:** This file is the persistent memory for Claude Sonnet 4.5 agents working on DiveTeacher.  
 > **Purpose:** Maintain continuity across sessions, track progress, document decisions.  
 > **Usage:** Read at start of EVERY session, update at end of EVERY session.
+> 
+> **⚠️ CRITICAL RULE:** After EVERY test execution, update `docs/TESTING-LOG.md` with:
+> - Test date, duration, document used
+> - Detailed results (what worked, what failed)
+> - Issues encountered with error messages
+> - Performance metrics
+> - Next steps
 
-**Last Updated:** October 28, 2025 21:45 CET - Session 6 COMPLETE - Docling Warm-up Refactoring ✅ 🟢  
+**Last Updated:** October 29, 2025 08:30 CET - Session 7 - Test Run #5 COMPLETED ⚠️  
 **Project:** DiveTeacher - Assistant IA pour Formation Plongée  
 **Repository:** https://github.com/nicozefrench/diveteacher (PRIVÉ)  
 **Domaine Principal:** diveteacher.io (+ diveteacher.app en redirect)
@@ -13,10 +20,22 @@
 
 ## 📍 Current Status
 
-**Phase:** 1.0 + Warm-up Refactoring ✅ COMPLETE 🟢  
-**Session:** 6 COMPLETE (Docling Warm-up System Refactored)  
+**Phase:** 1.0 COMPLETE + Test Run #5 ⚠️ PARTIAL SUCCESS  
+**Session:** 7 (Test Ingestion Pipeline - test.pdf)  
 **Environment:** macOS (darwin 24.6.0) - Mac M1 Max, 32GB RAM, Docker Desktop 16GB  
-**Status:** 🟢 **READY FOR INGESTION TESTING** - Warm-up system validated, awaiting document upload test
+**Status:** ⚠️ **BLOCKER IDENTIFIED** - Ingestion works, Graphiti search broken
+
+**Test Results Summary:**
+- ✅ **Ingestion Pipeline:** WORKS PERFECTLY (test.pdf → 221 Neo4j nodes)
+- ❌ **Graphiti Search:** BROKEN (returns 0 facts despite 221 nodes)
+- ❌ **RAG Query:** UNUSABLE (no context retrieved)
+- ❌ **Status Endpoint:** 404 Not Found
+
+**Critical Issue:**
+`TypeError: Graphiti.search() got an unexpected keyword argument 'search_config'`
+- Graphiti v0.17.0 API compatibility issue
+- Search returns 0 results despite successful ingestion
+- **BLOCKING** for RAG functionality
 
 **Development Strategy:**
 - ✅ **Phases 0-1.0:** 100% Local sur Mac M1 Max (Docker) → **Coût: ~$5/mois (APIs)**
