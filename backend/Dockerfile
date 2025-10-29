@@ -27,9 +27,12 @@ RUN chmod +x /app/docker-entrypoint.sh
 # Create uploads directory
 RUN mkdir -p /uploads
 
+# ✨ NOTE: Build-time Docling warm-up temporarily disabled
+# The runtime warm-up (docker-entrypoint.sh) works well and models are cached after first use.
+# TODO Phase 3: Add reportlab to requirements.txt and re-enable build-time warm-up for optimal cold-start
+
 # Expose port
 EXPOSE 8000
 
 # Use custom entrypoint with warm-up
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
-

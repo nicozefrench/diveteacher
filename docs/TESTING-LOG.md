@@ -1,10 +1,12 @@
 # 🧪 Testing Log - DiveTeacher RAG System
 
 > **Purpose:** Historique complet des tests effectués, résultats, et état du système  
-> **Last Updated:** October 29, 2025, 09:50 CET  
-> **Current Status:** 🎉 END-TO-END PIPELINE FULLY FUNCTIONAL
+> **Last Updated:** October 29, 2025, 12:52 CET  
+> **Current Status:** 🎉 END-TO-END PIPELINE FULLY FUNCTIONAL (with timeout caveat)
 
-**🎉 Latest Achievement:** Complete E2E Pipeline Validated (Oct 29, 09:50 CET) - Document ingestion → Knowledge graph → RAG query working perfectly! - See Test Run #7
+**🎉 Latest Achievement:** Complete E2E Test with Production Monitoring (Oct 29, 12:52 CET) - Full pipeline validated with detailed monitoring and metrics! - See Test Run #8
+
+**⚠️ Known Issue:** Backend timeout configuration needs adjustment for CPU inference (recurring issue from Test Run #6)
 
 ---
 
@@ -34,9 +36,67 @@ Testing Strategy
 │   ├── Status tracking
 │   ├── Neo4j ingestion
 │   └── RAG query (streaming + non-streaming)
-└── End-to-End Tests ⏳
-    └── Complete pipeline (upload → ingest → query)
+└── End-to-End Tests ✅
+    ├── Complete pipeline (upload → ingest → query)
+    └── Pre-test cleanup (database reset)
 ```
+
+### 🧹 Pre-Test Cleanup Procedure
+
+**⚠️ IMPORTANT:** Toujours nettoyer Neo4j/Graphiti avant un test E2E pour garantir un état propre.
+
+#### Method 1: Via API (Recommended)
+
+```bash
+# Clean Neo4j + Graphiti (supprime TOUT)
+curl -X DELETE "http://localhost:8000/api/neo4j/clear" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "confirm": true,
+    "confirmation_code": "DELETE_ALL_DATA",
+    "backup_first": false
+  }'
+
+# Vérifier le cleanup
+curl -s http://localhost:8000/api/neo4j/stats | python3 -c "import sys, json; d=json.load(sys.stdin); print(f\"Nodes: {d['nodes']['total']}, Relations: {d['relationships']['total']}\")"
+# Expected: Nodes: 0, Relations: 0
+```
+
+#### Method 2: Via CLI Script
+
+```bash
+# Interactive cleanup avec confirmations
+./scripts/neo4j-cli.sh clear
+
+# Suivre les prompts:
+#   ⚠️  WARNING: About to delete ALL data
+#   Continue? (yes/no): yes
+#   Confirmation code: DELETE_ALL_DATA
+#   Create backup first? (yes/no): no
+```
+
+#### Method 3: Direct (Emergency)
+
+```bash
+# Direct Neo4j cleanup (bypass sécurité)
+docker exec rag-backend python3 << 'PYEOF'
+from app.integrations.neo4j import neo4j_client
+neo4j_client.connect()
+with neo4j_client.driver.session() as session:
+    result = session.run("MATCH (n) DETACH DELETE n RETURN count(n) as deleted")
+    print(f"Deleted: {result.single()['deleted']} nodes")
+PYEOF
+```
+
+#### Cleanup Verification
+
+```bash
+# Vérifier que la base est vide
+curl -s http://localhost:8000/api/neo4j/stats | jq '{nodes: .nodes.total, rels: .relationships.total}'
+# Expected output: {"nodes": 0, "rels": 0}
+```
+
+**Note:** Le cleanup Neo4j supprime automatiquement toutes les données Graphiti (Episodic nodes, Entity nodes, Relations).
 
 ### Phases de Testing
 
@@ -489,6 +549,139 @@ docker ps | grep ollama
 ---
 
 ## Test Execution Log
+
+### Test Run #8: Complete E2E with Production Monitoring Suite
+
+**Date:** October 29, 2025, 12:45-12:52 CET  
+**Duration:** ~7 minutes  
+**Result:** ✅ PASS (with timeout caveat)
+
+**Objective:**
+- Complete end-to-end test with full production monitoring
+- Clean Neo4j start
+- Verify Docling warm-up
+- Test ingestion with detailed metrics
+- Validate RAG query with real context
+
+**Test Phases:**
+
+1. **Phase 1: Preparation (12:45)**
+   - ✅ All Docker services healthy
+   - ✅ Backend API responding
+   - ✅ Neo4j cleaned (via backend Python)
+   - ✅ Docling cache verified (535MB)
+
+2. **Phase 2: Ingestion (12:45-12:49)**
+   - ✅ Upload test.pdf successful (< 1s)
+   - ✅ Upload ID: `9fcea6e0-8f67-446f-bd0a-087e11c97616`
+   - ✅ Processing monitored in real-time (status API)
+   - ✅ Completed in 248.06s (4m 8s)
+   - 📊 Breakdown:
+     - Conversion: 9.71s
+     - Chunking: ~0s
+     - Ingestion: 238.36s
+   - ✅ 30 chunks created
+   - ✅ 8 pictures detected
+
+3. **Phase 3: Verification (12:50)**
+   - ⚠️ Direct Neo4j query not available (tools not deployed)
+   - ✅ Ingestion confirmed via backend logs
+   - ✅ Knowledge graph population inferred from RAG results
+
+4. **Phase 4: RAG Query (12:50-12:51)**
+   - ❌ First attempt: Timeout after 61s (`httpx.ReadTimeout`)
+   - ✅ Second attempt: Success with extended client timeout
+   - ✅ 5 facts retrieved from knowledge graph
+   - ✅ Answer generated with proper citations
+   - ⏱️ Duration: ~90-120s
+
+**Results:**
+
+| Metric | Value | Status | Notes |
+|--------|-------|--------|-------|
+| **Upload Time** | < 1s | ✅ PASS | Instant |
+| **Processing Time** | 248s (4m 8s) | ✅ PASS | Acceptable for 2 pages |
+| **Docling Conversion** | 9.71s | ✅ PASS | Models cached |
+| **Graphiti Ingestion** | 238.36s | ✅ PASS | Claude extraction |
+| **Chunks Created** | 30 | ✅ PASS | - |
+| **Facts Retrieved** | 5 | ✅ PASS | **Knowledge graph works!** |
+| **Answer Quality** | Excellent | ✅ PASS | Proper citations |
+| **RAG Query (1st)** | 61s timeout | ❌ FAIL | Backend timeout issue |
+| **RAG Query (2nd)** | ~90-120s | ✅ PASS | Extended client timeout |
+
+**Sample Retrieved Facts:**
+
+1. "Le plongeur niveau 1 est capable de réaliser des plongées d'exploration"
+2. "Le plongeur niveau 1 est capable de réaliser des plongées d'exploration jusqu'à 20 m de profondeur"
+3. "Le plongeur niveau 1 réalise des plongées au sein d'une palanquée"
+4. (2 more similar facts)
+
+**Generated Answer (excerpt):**
+```
+Le niveau 1 de plongée est caractérisé par la capacité du plongeur à 
+réaliser des plongées d'exploration jusqu'à une profondeur maximale de 
+20 mètres, en groupe (palanquée) [Fact 4]. Cela inclut également les 
+compétences pour effectuer des plongées d'exploration [Fact 1] et des 
+plongées individuelles ou en groupe jusqu'à 20 mètres de profondeur 
+[Fact 2, Fact 3, Fact 5].
+```
+
+**Issues Encountered:**
+
+1. **⚠️ Backend RAG Timeout (P1 - RECURRING):**
+   - First RAG query timed out after 61s
+   - Same issue as Test Run #6
+   - Root cause: `httpx.ReadTimeout` - backend timeout insufficient
+   - Resolution: Extended client timeout to 180s (workaround)
+   - **Action Required:** Re-apply timeout fix from Test Run #6 or increase to 180s
+
+2. **⚠️ Neo4j CLI Tools Not Available:**
+   - New endpoints (`/api/neo4j/clear`, `/api/neo4j/stats`) not deployed
+   - Had to use backend Python for Neo4j operations
+   - Cannot directly inspect graph during tests
+   - **Action Required:** Complete Phase 2 deployment
+
+3. **ℹ️ Processing Monitoring:**
+   - Status stayed at 75% (ingestion) for most of duration
+   - This is expected (Graphiti entity extraction takes time)
+   - More granular progress tracking would be helpful (Phase 1.2)
+
+**Conclusion:**
+
+🎉 **END-TO-END PIPELINE IS FULLY FUNCTIONAL!**
+
+✅ **Working Components:**
+- Document upload API with status tracking
+- Docling conversion with warm-up (9.7s for 2 pages)
+- Chunking system (30 chunks from 2 pages)
+- Graphiti entity extraction (Claude Haiku 4.5)
+- Neo4j knowledge graph storage
+- Graphiti hybrid search (5 facts retrieved)
+- RAG query with context retrieval
+- LLM generation with fact citations (Qwen 2.5 7B Q8_0)
+
+✅ **Performance Metrics:**
+- Upload: < 1s ⭐
+- Processing: 4m 8s for 2 pages (acceptable)
+- RAG Query: 90-120s on CPU (acceptable for MVP)
+- Facts Retrieved: 5 (excellent)
+- Answer Quality: Excellent with citations
+
+⚠️ **Action Items:**
+1. **URGENT:** Fix backend timeout for RAG queries (re-apply Test Run #6 fix or increase to 180s)
+2. **High:** Complete Phase 2 monitoring tools deployment
+3. **Medium:** Test with larger document (Niveau 1.pdf - 35 pages)
+4. **Future:** GPU migration for 10-20x speedup (5-10s vs 90-120s)
+
+**Next Steps:**
+- [ ] Fix backend timeout configuration
+- [ ] Re-test RAG query without client-side timeout extension
+- [ ] Deploy Neo4j management API endpoints
+- [ ] Test with larger document
+
+**Full Report:** See `docs/TEST-REPORT-RUN-8.md`
+
+---
 
 ### Test Run #7: Complete End-to-End Pipeline Validation
 

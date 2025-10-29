@@ -19,14 +19,14 @@ from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from app.core.config import settings
 from app.core.logging_config import setup_structured_logging
-from app.api import upload, query, health, graph
+from app.api import upload, query, health, graph, neo4j
 from app.integrations.neo4j import neo4j_client
 from app.integrations.graphiti import close_graphiti_client
 from app.integrations.sentry import init_sentry
 from app.integrations.neo4j_indexes import create_rag_indexes, verify_indexes
 
 # Initialize structured logging
-setup_structured_logging(level=settings.LOG_LEVEL)
+setup_structured_logging(level=getattr(settings, 'LOG_LEVEL', 'INFO'))
 
 # Initialize Sentry (if configured)
 if settings.SENTRY_DSN_BACKEND:
@@ -55,6 +55,7 @@ app.include_router(health.router, prefix="/api", tags=["Health"])
 app.include_router(upload.router, prefix="/api", tags=["Upload"])
 app.include_router(query.router, prefix="/api", tags=["Query"])
 app.include_router(graph.router, prefix="/api", tags=["Graph"])
+app.include_router(neo4j.router, prefix="/api", tags=["Neo4j Management"])
 
 
 @app.on_event("startup")

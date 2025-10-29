@@ -93,7 +93,7 @@ class OllamaProvider(LLMProvider):
         # pool: Time to get connection from pool
         timeout_config = httpx.Timeout(
             connect=10.0,   # 10s to connect to Ollama
-            read=120.0,     # 2min between tokens (generous for CPU inference)
+            read=180.0,     # 3min between tokens (CPU inference can be slow)
             write=10.0,     # 10s to send request
             pool=10.0       # 10s to get connection from pool
         )

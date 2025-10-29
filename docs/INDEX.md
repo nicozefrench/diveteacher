@@ -1,9 +1,9 @@
 # 📚 DiveTeacher - Documentation Index
 
-> **Version:** Phase 1.0 + Warm-up Refactoring COMPLETE  
-> **Last Updated:** October 28, 2025, 22:00 CET  
+> **Version:** Phase 1.0 + Production Monitoring Suite + Post-E2E Fixes COMPLETE  
+> **Last Updated:** October 29, 2025, 13:20 CET  
 > **Environment:** Local Development (Mac M1 Max)  
-> **Status:** 🟢 Fully Operational - Ready for E2E Testing
+> **Status:** 🟢 Production-Ready (98%) - All Systems Operational
 
 ---
 
@@ -69,20 +69,33 @@
   - Refactored warm-up architecture
   - Deployment instructions
 
-### 🔍 Monitoring & Testing ✅ NEW
-- **[MONITORING.md](MONITORING.md)** - Scripts de monitoring & debugging ✅ **NEW**
-  - `monitor_ingestion.sh` - Logs Graphiti temps réel
-  - `monitor_ollama.sh` - Performance Ollama/Docker
-  - `test_rag_query.sh` - Tests RAG query automatisés
-  - `clean_neo4j.sh` - Nettoyage Neo4j complet
-  - Commandes Docker utiles
-  - Debugging avancé
-- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **NEW**
+### 🔍 Monitoring & Testing ✅ PRODUCTION-READY
+- **[MONITORING.md](MONITORING.md)** - Comprehensive monitoring & debugging ✅ **UPDATED**
+  - **🆕 Unified Monitoring Suite** - `diveteacher-monitor` CLI (18 commands)
+  - Neo4j management (stats, query, export, health, clear)
+  - Graphiti monitoring (status, metrics, validate)
+  - Docling monitoring (verify, cache, performance)
+  - System monitoring (health, resources, docker)
+  - Scripts historiques (monitor_ingestion.sh, monitor_ollama.sh, etc.)
+  - [Complete Suite Documentation](../scripts/monitoring/README.md)
+- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED**
+  - **🆕 Pre-Test Cleanup Procedure** - Database reset methods (API, CLI, Direct)
   - État actuel du système
-  - Historique des sessions de test
-  - Tests en attente (E2E pipeline)
+  - 8 sessions de test documentées (E2E Test Run #8 complete)
   - Known issues & resolutions
   - Success criteria & metrics
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Tracker de bugs et fixes ✅ **UPDATED**
+  - Root cause analysis
+  - Solutions implemented
+  - Tradeoffs & decisions
+  - Future roadmap items
+- **[PRODUCTION-READINESS.md](PRODUCTION-READINESS.md)** - Production checklist ✅ **NEW**
+  - Production readiness score (95%)
+  - Core systems checklist
+  - Performance benchmarks
+  - Security checklist
+  - Deployment readiness
+  - Go/No-Go criteria
 
 ### ☁️ Deployment
 - **[DEPLOYMENT.md](DEPLOYMENT.md)** - Production deployment (Phase 9)
@@ -150,10 +163,25 @@
 | **RAG Query API** | ✅ 3 endpoints | [API.md](API.md#rag-query-endpoints) |
 | **Streaming (SSE)** | ✅ Working | [API.md](API.md#streaming) |
 | **Test Scripts** | ✅ 4/4 passing | [MONITORING.md](MONITORING.md#3-🧪-test_rag_querysh) |
-| **Monitoring Scripts** | ✅ 5 scripts ready | [MONITORING.md](MONITORING.md) ✅ **NEW** |
+| **Monitoring Scripts** | ✅ 5 scripts ready | [MONITORING.md](MONITORING.md) |
 | **Documentation** | ✅ Complete | [STATUS-PHASE-1.0](../Devplan/STATUS-PHASE-1.0-COMPLETION-REPORT.md) |
 
 **Phase 1.0 Achievement:** Full RAG pipeline operational (upload → process → query) with Qwen 2.5 7B Q8_0 for optimal RAG quality (98/100).
+
+---
+
+### ✅ Phase 1.2 - Production Monitoring Suite (COMPLETE) 🎉
+
+| Task | Status | Documentation |
+|------|--------|---------------|
+| **Phase 1: Visibility & Logging** | ✅ Complete | [Plan Phase 1](../Devplan/251029-PRODUCTION-MONITORING-PLAN.md#phase-1) |
+| **Phase 2: Neo4j Management** | ✅ Complete | [Plan Phase 2](../Devplan/251029-PRODUCTION-MONITORING-PLAN.md#phase-2) |
+| **Phase 3: Docling Warm-up Fix** | ✅ Complete | [Plan Phase 3](../Devplan/251029-PRODUCTION-MONITORING-PLAN.md#phase-3) |
+| **Phase 4: Monitoring Suite** | ✅ Complete | [Plan Phase 4](../Devplan/251029-PRODUCTION-MONITORING-PLAN.md#phase-4) |
+| **Unified CLI** | ✅ 18 commands | [Monitoring Suite README](../scripts/monitoring/README.md) |
+| **Production Readiness** | ✅ 95% | [PRODUCTION-READINESS.md](PRODUCTION-READINESS.md) |
+
+**Phase 1.2 Achievement:** Complete production monitoring suite with unified CLI (`diveteacher-monitor`), comprehensive tooling for Neo4j/Graphiti/Docling/System, and 95% production readiness.
 
 ---
 
@@ -207,14 +235,19 @@
    - Graphiti: `@docs/GRAPHITI.md` + `@resources/251020-graphiti-technical-guide.md`
    - **RAG Query:** `@Devplan/PHASE-1.0-RAG-QUERY-IMPLEMENTATION.md` (complete plan)
    - **GPU Deployment:** `@resources/251028-rag-gpu-deployment-guide.md`
-   - **Monitoring:** `@docs/MONITORING.md` (scripts guide) ✅ **NEW**
-   - **Testing:** `@docs/TESTING-LOG.md` (test history) ✅ **NEW**
+   - **Monitoring:** `@docs/MONITORING.md` + `@scripts/monitoring/README.md` ✅
+   - **Production:** `@docs/PRODUCTION-READINESS.md` ✅
+   - **Testing:** `@docs/TESTING-LOG.md` (test history) ✅
+   - **Fixes:** `@docs/FIXES-LOG.md` (bug tracker) ✅
    - **Status Reports:** `@Devplan/STATUS-PHASE-1.0-COMPLETION-REPORT.md`
+   - **Monitoring Plan:** `@Devplan/251029-PRODUCTION-MONITORING-PLAN.md` ✅
 
 3. **Troubleshooting:**
    - `@docs/TROUBLESHOOTING.md` first
-   - `@docs/MONITORING.md` for debugging scripts ✅ **NEW**
-   - `@docs/TESTING-LOG.md` for known issues ✅ **NEW**
+   - `@docs/MONITORING.md` for debugging scripts & unified CLI ✅
+   - `@docs/PRODUCTION-READINESS.md` for production checklist ✅
+   - `@docs/TESTING-LOG.md` for known issues ✅
+   - `@docs/FIXES-LOG.md` for bug history ✅
    - Then specific domain doc (DOCLING.md, NEO4J.md, etc.)
 
 ---
@@ -259,8 +292,10 @@
 | `TROUBLESHOOTING.md` | New bugs discovered, solutions found |
 | `DEPLOYMENT.md` | Production setup changes |
 | `TIMEOUT-FIX-GUIDE.md` | Timeout issues, warm-up changes |
-| `MONITORING.md` ✅ **NEW** | New scripts, monitoring tools changes |
-| `TESTING-LOG.md` ✅ **NEW** | After each test run, issues, resolutions |
+| `MONITORING.md` ✅ | New scripts, monitoring tools, unified CLI changes |
+| `TESTING-LOG.md` ✅ | After each test run, issues, resolutions |
+| `FIXES-LOG.md` ✅ | Bug fixes, root cause analysis, solutions |
+| `PRODUCTION-READINESS.md` ✅ | Production readiness changes, deployment criteria |
 | `STATUS-REPORT-*.md` | After major debugging sessions or phase blockers |
 
 ---

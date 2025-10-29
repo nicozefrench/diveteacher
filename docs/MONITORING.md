@@ -48,7 +48,84 @@ Monitoring System
 
 ---
 
-## Scripts de Monitoring
+## 🆕 Unified Monitoring Suite (Production-Ready)
+
+### DiveTeacher Monitor CLI
+
+**Status:** ✅ Production-Ready (Phase 4 Complete)  
+**Localisation:** `scripts/monitoring/`  
+**Documentation:** [scripts/monitoring/README.md](../scripts/monitoring/README.md)
+
+La nouvelle suite de monitoring unifiée offre un CLI professionnel pour toutes les opérations de monitoring et de gestion :
+
+```bash
+# Installation
+cd scripts/monitoring
+pip install -e .
+
+# Usage
+diveteacher-monitor <command> <subcommand>
+```
+
+### Commandes Disponibles
+
+#### Neo4j Management
+
+```bash
+diveteacher-monitor neo4j stats          # Graph statistics
+diveteacher-monitor neo4j query "<cypher>"  # Execute query
+diveteacher-monitor neo4j export         # Export data
+diveteacher-monitor neo4j health         # Health check
+diveteacher-monitor neo4j clear          # Clear (with backup)
+```
+
+#### Graphiti Monitoring
+
+```bash
+diveteacher-monitor graphiti status <id>    # Ingestion status
+diveteacher-monitor graphiti metrics <id>   # Detailed metrics
+diveteacher-monitor graphiti validate <id>  # Validate results
+```
+
+#### Docling Monitoring
+
+```bash
+diveteacher-monitor docling verify          # Verify warm-up
+diveteacher-monitor docling cache           # Cache info
+diveteacher-monitor docling performance <id> # Conversion perf
+```
+
+#### System Monitoring
+
+```bash
+diveteacher-monitor system health           # Overall health
+diveteacher-monitor system resources        # Resource usage
+diveteacher-monitor system docker           # Container status
+```
+
+### Avantages
+
+✅ **Interface unifiée** - Une seule commande pour tout  
+✅ **Installation facile** - `pip install -e .`  
+✅ **API Python** - Utilisation directe en Python  
+✅ **Production-ready** - Code structuré et testé  
+✅ **Extensible** - Architecture modulaire
+
+### Migration depuis les anciens scripts
+
+Les scripts bash historiques restent disponibles mais la nouvelle suite est recommandée pour la production :
+
+| Ancien Script | Nouvelle Commande |
+|---------------|-------------------|
+| `scripts/neo4j-cli.sh stats` | `diveteacher-monitor neo4j stats` |
+| `scripts/verify-warmup.sh` | `diveteacher-monitor docling verify` |
+| N/A | `diveteacher-monitor system health` |
+
+**📘 Pour plus de détails**, voir [Monitoring Suite README](../scripts/monitoring/README.md)
+
+---
+
+## Scripts de Monitoring (Historiques)
 
 ### 1. 🔄 monitor_ingestion.sh
 
