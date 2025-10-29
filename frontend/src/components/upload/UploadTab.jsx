@@ -66,6 +66,7 @@ const UploadTab = () => {
                   sub_stage: status.sub_stage,
                   progress: status.progress,
                   progress_detail: status.progress_detail,
+                  ingestion_progress: status.ingestion_progress,  // ← Bug #9 Fix: Real-time chunk progress
                   metrics: status.metrics || {},
                   durations: status.durations,
                   metadata: status.metadata || {},
@@ -73,6 +74,10 @@ const UploadTab = () => {
                   started_at: status.started_at,
                   completed_at: status.completed_at,
                   failed_at: status.failed_at,
+                  // Preserve original filename and size
+                  filename: doc.filename,
+                  file_size_mb: doc.file_size_mb,
+                  size: doc.size,
                 }
               : doc
           )

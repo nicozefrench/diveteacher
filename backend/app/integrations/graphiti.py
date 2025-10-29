@@ -121,7 +121,8 @@ async def close_graphiti_client():
 async def ingest_chunks_to_graph(
     chunks: List[Dict[str, Any]],
     metadata: Dict[str, Any],
-    upload_id: Optional[str] = None
+    upload_id: Optional[str] = None,
+    processing_status: Optional[Dict] = None
 ) -> None:
     """
     Ingest semantic chunks to Graphiti knowledge graph avec logs détaillés et timeout
@@ -130,6 +131,7 @@ async def ingest_chunks_to_graph(
         chunks: List of chunks from HierarchicalChunker
         metadata: Document-level metadata
         upload_id: Optional upload ID for logging context
+        processing_status: Optional dict for real-time progress updates
         
     Raises:
         RuntimeError: If Graphiti is disabled
@@ -141,6 +143,7 @@ async def ingest_chunks_to_graph(
         - Timeout: 120s per chunk (configurable)
         - Community building is NOT called here (too expensive, call periodically)
         - Expected success rate: 100% (ARIA-validated)
+        - Real-time progress updates: processing_status updated after each chunk
     """
     if not settings.GRAPHITI_ENABLED:
         logger.warning("⚠️  Graphiti disabled - skipping ingestion")
@@ -219,9 +222,26 @@ async def ingest_chunks_to_graph(
             total_time += elapsed
             successful += 1
             
+            # 🔧 REAL-TIME PROGRESS UPDATE (Bug #9 Fix)
+            if processing_status and upload_id:
+                chunks_completed = i
+                ingestion_pct = int((chunks_completed / len(chunks)) * 100)
+                overall_progress = 75 + int(25 * chunks_completed / len(chunks))
+                
+                processing_status[upload_id].update({
+                    "sub_stage": "graphiti_episode",
+                    "progress": overall_progress,
+                    "ingestion_progress": {
+                        "chunks_completed": chunks_completed,
+                        "chunks_total": len(chunks),
+                        "progress_pct": ingestion_pct,
+                        "current_chunk_index": i - 1,
+                    }
+                })
+            
             if upload_id:
                 logger.info(
-                    f"✅ Chunk {chunk_index} ingested",
+                    f"✅ Chunk {chunk_index} ingested ({i}/{len(chunks)} - {int((i/len(chunks))*100)}%)",
                     extra={
                         'upload_id': upload_id,
                         'stage': 'ingestion',

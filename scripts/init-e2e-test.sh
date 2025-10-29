@@ -217,14 +217,15 @@ handle_neo4j_cleanup() {
     fi
     
     # Check if cleanup was successful
-    SUCCESS=$(echo "$CLEANUP_RESPONSE" | jq -r '.success' 2>/dev/null || echo "false")
+    # API returns {"status": "cleared", "deleted": {"nodes": X, "relationships": Y}}
+    STATUS=$(echo "$CLEANUP_RESPONSE" | jq -r '.status' 2>/dev/null || echo "unknown")
     
-    if [ "$SUCCESS" = "true" ]; then
-      DELETED_NODES=$(echo "$CLEANUP_RESPONSE" | jq -r '.deleted_nodes' 2>/dev/null || echo "N/A")
-      DELETED_RELS=$(echo "$CLEANUP_RESPONSE" | jq -r '.deleted_relationships' 2>/dev/null || echo "N/A")
+    if [ "$STATUS" = "cleared" ]; then
+      DELETED_NODES=$(echo "$CLEANUP_RESPONSE" | jq -r '.deleted.nodes' 2>/dev/null || echo "N/A")
+      DELETED_RELS=$(echo "$CLEANUP_RESPONSE" | jq -r '.deleted.relationships' 2>/dev/null || echo "N/A")
       log_success "Database cleaned: $DELETED_NODES nodes and $DELETED_RELS relationships deleted"
     else
-      log_error "Cleanup may have failed. Response: $CLEANUP_RESPONSE"
+      log_error "Cleanup failed. Status: $STATUS, Response: $CLEANUP_RESPONSE"
       exit 1
     fi
     
@@ -300,7 +301,7 @@ verify_services() {
   
   # Check Backend
   log_info "Checking backend API..."
-  BACKEND_HEALTH=$(curl -s http://localhost:8000/health 2>/dev/null)
+  BACKEND_HEALTH=$(curl -s http://localhost:8000/api/health 2>/dev/null)
   if [ $? -eq 0 ] && [ -n "$BACKEND_HEALTH" ]; then
     log_success "Backend API: Healthy"
   else
@@ -320,11 +321,13 @@ verify_services() {
   
   # Check Neo4j
   log_info "Checking Neo4j database..."
-  NEO4J_STATUS=$(curl -s http://localhost:8000/api/neo4j/stats 2>/dev/null | jq -r '.database.status' 2>/dev/null)
-  if [ "$NEO4J_STATUS" = "online" ]; then
-    log_success "Neo4j: Online"
+  NEO4J_STATS=$(curl -s http://localhost:8000/api/neo4j/stats 2>/dev/null)
+  NEO4J_STATUS=$(echo "$NEO4J_STATS" | jq -r '.status' 2>/dev/null)
+  if [ "$NEO4J_STATUS" = "healthy" ]; then
+    NEO4J_VERSION=$(echo "$NEO4J_STATS" | jq -r '.version' 2>/dev/null)
+    log_success "Neo4j: Online (version $NEO4J_VERSION)"
   else
-    log_warning "Neo4j: Status unclear ($NEO4J_STATUS)"
+    log_warning "Neo4j: Status unclear (status: $NEO4J_STATUS)"
   fi
   
   # Check Frontend (optional)

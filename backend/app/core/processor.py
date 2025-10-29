@@ -39,6 +39,59 @@ logger = logging.getLogger('diveteacher.processor')
 processing_status: Dict[str, Dict[str, Any]] = {}
 
 
+async def get_entity_count() -> int:
+    """
+    Query Neo4j for Entity node count
+    
+    Returns:
+        Total number of Entity nodes in Neo4j
+        
+    Note:
+        - Uses asyncio.to_thread for synchronous Neo4j driver
+        - Returns 0 if query fails (graceful degradation)
+    """
+    try:
+        # Run in thread pool (Neo4j driver is synchronous)
+        def _query():
+            with neo4j_client.driver.session() as session:
+                result = session.run("MATCH (n:Entity) RETURN count(n) as count")
+                record = result.single()
+                return record["count"] if record else 0
+        
+        count = await asyncio.to_thread(_query)
+        return count
+    except Exception as e:
+        logger.warning(f"⚠️  Failed to get entity count: {e}")
+        return 0
+
+
+async def get_relation_count() -> int:
+    """
+    Query Neo4j for RELATES_TO relationship count
+    
+    Returns:
+        Total number of RELATES_TO relationships in Neo4j
+        
+    Note:
+        - Uses asyncio.to_thread for synchronous Neo4j driver
+        - Returns 0 if query fails (graceful degradation)
+    """
+    try:
+        def _query():
+            with neo4j_client.driver.session() as session:
+                result = session.run(
+                    "MATCH ()-[r:RELATES_TO]->() RETURN count(r) as count"
+                )
+                record = result.single()
+                return record["count"] if record else 0
+        
+        count = await asyncio.to_thread(_query)
+        return count
+    except Exception as e:
+        logger.warning(f"⚠️  Failed to get relation count: {e}")
+        return 0
+
+
 async def process_document(
     file_path: str, 
     upload_id: str, 
@@ -197,6 +250,12 @@ async def process_document(
                 "current": 3,
                 "total": 4,
                 "unit": "stages"
+            },
+            "ingestion_progress": {
+                "chunks_completed": 0,
+                "chunks_total": len(chunks),
+                "progress_pct": 0,
+                "current_chunk_index": 0,
             }
         })
         
@@ -218,10 +277,12 @@ async def process_document(
             **(metadata or {})
         }
         
+        # 🔧 Pass processing_status for real-time updates
         await ingest_chunks_to_graph(
             chunks=chunks,
             metadata=enriched_metadata,
-            upload_id=upload_id  # Pass upload_id for progress tracking
+            upload_id=upload_id,
+            processing_status=processing_status  # ← ADD THIS
         )
         
         ingestion_duration = time() - ingestion_start
@@ -236,12 +297,27 @@ async def process_document(
             }
         )
         
+        # 🔧 QUERY NEO4J FOR ENTITY/RELATION COUNTS (Bug #10 Fix)
+        logger.info(f"📊 Querying Neo4j for entity/relation counts...", extra={'upload_id': upload_id})
+        entity_count = await get_entity_count()
+        relation_count = await get_relation_count()
+        logger.info(
+            f"✅ Neo4j counts: {entity_count} entities, {relation_count} relations",
+            extra={
+                'upload_id': upload_id,
+                'entities': entity_count,
+                'relations': relation_count
+            }
+        )
+        
         processing_status[upload_id].update({
             "progress": 95,
             "sub_stage": "ingestion_complete",
             "metrics": {
                 **processing_status[upload_id].get("metrics", {}),
-                "ingestion_duration": round(ingestion_duration, 2)
+                "ingestion_duration": round(ingestion_duration, 2),
+                "entities": entity_count,      # ← ADD
+                "relations": relation_count,    # ← ADD
             }
         })
         

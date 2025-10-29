@@ -7,6 +7,8 @@ import uuid
 import asyncio
 import aiofiles
 from pathlib import Path
+from typing import Optional, Dict, Any
+from pydantic import BaseModel
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 import logging
@@ -16,6 +18,49 @@ from app.core.processor import process_document, get_processing_status
 
 router = APIRouter()
 logger = logging.getLogger('diveteacher.upload')
+
+
+# ════════════════════════════════════════════════════════
+# Pydantic Models for Enhanced Status API
+# ════════════════════════════════════════════════════════
+
+class IngestionProgress(BaseModel):
+    """Real-time ingestion progress (Bug #9 Fix)"""
+    chunks_completed: int
+    chunks_total: int
+    progress_pct: int
+    current_chunk_index: int
+
+
+class ProcessingMetrics(BaseModel):
+    """Processing metrics"""
+    file_size_mb: Optional[float] = None
+    filename: Optional[str] = None
+    pages: Optional[int] = None
+    conversion_duration: Optional[float] = None
+    num_chunks: Optional[int] = None
+    avg_chunk_size: Optional[float] = None
+    chunking_duration: Optional[float] = None
+    ingestion_duration: Optional[float] = None
+    entities: Optional[int] = None       # ← Bug #10 Fix
+    relations: Optional[int] = None      # ← Bug #10 Fix
+
+
+class UploadStatusResponse(BaseModel):
+    """Enhanced upload status response"""
+    status: str  # "processing", "completed", "failed"
+    stage: str   # "validation", "conversion", "chunking", "ingestion", "completed"
+    sub_stage: str
+    progress: int  # 0-100
+    progress_detail: Optional[Dict[str, Any]] = None
+    ingestion_progress: Optional[IngestionProgress] = None  # ← Bug #9 Fix
+    error: Optional[str] = None
+    started_at: Optional[str] = None
+    completed_at: Optional[str] = None
+    failed_at: Optional[str] = None
+    metrics: Optional[ProcessingMetrics] = None
+    durations: Optional[Dict[str, float]] = None
+    metadata: Optional[Dict[str, Any]] = None
 
 # ❌ REMOVED: ThreadPoolExecutor
 # from concurrent.futures import ThreadPoolExecutor
@@ -251,16 +296,16 @@ def _sanitize_for_json(obj):
             return f"<{obj.__class__.__name__}>"
 
 
-@router.get("/upload/{upload_id}/status")
+@router.get("/upload/{upload_id}/status", response_model=None)
 async def get_upload_status(upload_id: str):
     """
-    Get processing status for uploaded document (Enhanced)
+    Get processing status for uploaded document (Enhanced with real-time progress)
     
     Args:
         upload_id: Upload identifier
         
     Returns:
-        Processing status with progress, stage, sub_stage, metrics, ETA
+        Processing status with real-time ingestion_progress, entity/relation counts
         
     Status Structure:
         - status: "processing" | "completed" | "failed"
@@ -268,7 +313,8 @@ async def get_upload_status(upload_id: str):
         - sub_stage: Current sub-stage within stage
         - progress: Overall progress percentage (0-100)
         - progress_detail: {current, total, unit}
-        - metrics: Stage-specific metrics
+        - ingestion_progress: Real-time chunk progress (Bug #9 Fix)
+        - metrics: Stage-specific metrics including entities/relations (Bug #10 Fix)
         - durations: Time spent in each stage
         - started_at, completed_at/failed_at: Timestamps
     """

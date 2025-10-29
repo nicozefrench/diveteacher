@@ -125,15 +125,15 @@ const MetricsPanel = memo(({ uploadId, status, metadata = {} }) => {
           <MetricCard
             icon={GitFork}
             label="Entities"
-            value={metrics.entities || metadata.entities || '—'}
-            unit="found"
+            value={metrics.entities !== undefined && metrics.entities !== null ? metrics.entities : (metadata.entities || '—')}
+            unit={metrics.entities !== undefined && metrics.entities !== null ? 'found' : ''}
             color="green"
           />
           <MetricCard
             icon={GitFork}
             label="Relations"
-            value={metrics.relations || metadata.relations || '—'}
-            unit="found"
+            value={metrics.relations !== undefined && metrics.relations !== null ? metrics.relations : (metadata.relations || '—')}
+            unit={metrics.relations !== undefined && metrics.relations !== null ? 'found' : ''}
             color="green"
           />
         </div>
