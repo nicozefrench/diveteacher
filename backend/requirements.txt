@@ -38,6 +38,7 @@ python-jose[cryptography]==3.3.0  # JWT for authentication
 passlib[bcrypt]==1.7.4            # Password hashing
 tenacity==9.0.0                   # Retry logic (Graphiti requires >= 9.0.0)
 tqdm==4.66.0                      # Progress bars (4.67.1 breaks threading with docling)
+reportlab==4.2.5                  # PDF generation for warmup test
 
 # Development
 pytest==8.3.3

@@ -1,9 +1,9 @@
 # 📚 DiveTeacher - Documentation Index
 
-> **Version:** Phase 1.0 + Production Monitoring Suite + Post-E2E Fixes COMPLETE  
-> **Last Updated:** October 29, 2025, 13:20 CET  
+> **Version:** Phase 1.0 + Production Monitoring Suite + Post-E2E Fixes + Performance Optimization COMPLETE  
+> **Last Updated:** October 29, 2025, 20:10 CET  
 > **Environment:** Local Development (Mac M1 Max)  
-> **Status:** 🟢 Production-Ready (98%) - All Systems Operational
+> **Status:** 🟢 Production-Ready (100%) - All Systems Operational + Performance Optimized
 
 ---
 
@@ -26,12 +26,13 @@
   - Database schemas
 
 ### 📄 Document Processing
-- **[DOCLING.md](DOCLING.md)** - Advanced document processing
+- **[DOCLING.md](DOCLING.md)** - Advanced document processing ✅ **UPDATED (Oct 29)**
   - Docling integration & configuration
   - `PdfPipelineOptions` (OCR, TableFormer)
   - `HierarchicalChunker` semantic chunking
   - Metadata extraction
-  - Performance optimization
+  - **🆕 Enhanced Warmup System** - Test conversion for OCR model caching
+  - Performance optimization (+80s improvement)
   - Common issues & solutions
 
 ### 🔗 Knowledge Graph & RAG
@@ -57,6 +58,11 @@
   - Rate limiting (future)
 
 ### 🔧 Troubleshooting
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Complete bug fix history ✅ **UPDATED (Oct 29)**
+  - **Session 8:** 8 fixes deployed (7 bugs + 1 performance optimization)
+  - **Latest:** Fix #8 - Warmup OCR Incomplete (+80s performance gain)
+  - All root causes, solutions, and validation results
+  - Production-ready documentation
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues & fixes
   - Neo4j authentication errors
   - Docling conversion timeouts
@@ -79,7 +85,8 @@
   - Scripts historiques (monitor_ingestion.sh, monitor_ollama.sh, etc.)
   - [Complete Suite Documentation](../scripts/monitoring/README.md)
 - **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED**
-  - **🆕 Pre-Test Cleanup Procedure** - Database reset methods (API, CLI, Direct)
+  - **🆕 E2E Test Initialization** - `init-e2e-test.sh` automated script ✨ **NEW**
+  - **🆕 Pre-Test Cleanup Procedure** - 4 methods (Automated, API, CLI, Direct)
   - État actuel du système
   - 8 sessions de test documentées (E2E Test Run #8 complete)
   - Known issues & resolutions

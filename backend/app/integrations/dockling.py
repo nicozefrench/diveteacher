@@ -64,12 +64,13 @@ class DoclingSingleton:
     @classmethod
     def warmup(cls) -> bool:
         """
-        Warm-up: Initialize singleton and download models if needed.
+        Warm-up: Initialize singleton and download ALL models (including OCR).
         
         This method should be called during container startup to:
         1. Pre-download Docling models from HuggingFace
-        2. Initialize the singleton instance
-        3. Validate the setup
+        2. Pre-download EasyOCR models (triggered by test conversion)
+        3. Initialize the singleton instance
+        4. Validate the setup with a real conversion
         
         Returns:
             bool: True if successful, False otherwise
@@ -89,12 +90,50 @@ class DoclingSingleton:
             converter = cls.get_converter()
             
             logger.info("✅ DoclingSingleton initialized successfully!")
+            logger.info("")
+            
+            # 🔥 CRITICAL: Perform a test conversion to download OCR models
+            logger.info("🧪 Performing test conversion to download OCR models...")
+            logger.info("   This ensures EasyOCR models are cached BEFORE first upload")
+            logger.info("")
+            
+            import io
+            from reportlab.pdfgen import canvas
+            from reportlab.lib.pagesizes import letter
+            
+            # Create minimal test PDF in memory
+            buffer = io.BytesIO()
+            c = canvas.Canvas(buffer, pagesize=letter)
+            c.drawString(100, 750, "Warmup Test - DiveTeacher RAG")
+            c.save()
+            buffer.seek(0)
+            
+            # Save to temp file
+            import tempfile
+            with tempfile.NamedTemporaryFile(mode='wb', suffix='.pdf', delete=False) as tmp:
+                tmp.write(buffer.read())
+                tmp_path = tmp.name
+            
+            try:
+                # Perform test conversion (triggers OCR model download)
+                # Note: convert() accepts a file path directly
+                result = converter.convert(tmp_path)
+                
+                logger.info("✅ Test conversion successful!")
+                logger.info("✅ OCR models downloaded and cached")
+                logger.info("")
+                
+            finally:
+                # Cleanup temp file
+                import os
+                os.unlink(tmp_path)
+            
             logger.info("=" * 60)
             logger.info("🎉 DOCLING WARM-UP COMPLETE!")
             logger.info("=" * 60)
             logger.info("")
             logger.info("ℹ️  Singleton initialized with ACCURATE + OCR + Tables config")
-            logger.info("ℹ️  Models are now cached and ready for use")
+            logger.info("ℹ️  ALL models (Docling + EasyOCR) are now cached")
             logger.info("ℹ️  Subsequent document processing will be FAST")
             logger.info("")
             
@@ -117,6 +156,8 @@ class DoclingSingleton:
             logger.error("⚠️  Document processing may be slower on first upload")
             logger.error("⚠️  Models will be downloaded on-demand")
             logger.error("")
+            import traceback
+            traceback.print_exc()
             return False
 
 

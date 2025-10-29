@@ -1,11 +1,12 @@
 import { FileText, RefreshCw } from 'lucide-react';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
-import StageProgress from './StageProgress';
+import DetailedProgress from './DetailedProgress';
+import ExpandableDetails from './ExpandableDetails';
 import { formatBytes } from '../../lib/utils';
 
 const DocumentItem = ({ document, onRetry }) => {
-  const { filename, size, status, current_stage, metadata, error } = document;
+  const { filename, size, status, metadata, error } = document;
 
   const getStatusVariant = (status) => {
     switch (status) {
@@ -41,27 +42,31 @@ const DocumentItem = ({ document, onRetry }) => {
               <h4 className="text-sm font-medium text-gray-900 truncate">
                 {filename}
               </h4>
-              <p className="mt-1 text-xs text-gray-500">
-                {formatBytes(size)}
-              </p>
+              <div className="mt-1 flex items-center gap-3 text-xs text-gray-500">
+                <span>{formatBytes(size)}</span>
+                {metadata?.pages && (
+                  <span>• {metadata.pages} pages</span>
+                )}
+              </div>
             </div>
             <Badge variant={getStatusVariant(status)}>
               {getStatusLabel(status)}
             </Badge>
           </div>
 
-          {/* Stage Progress */}
+          {/* Enhanced Progress for Processing */}
           {status === 'processing' && (
             <div className="mt-4">
               {/* First-time upload warning - show at the top */}
-              <div className="mb-3 rounded-md bg-warning-50 border border-warning-200 p-3">
+              <div className="mb-4 rounded-md bg-warning-50 border border-warning-200 p-3">
                 <p className="text-xs text-warning-700">
                   <strong>⏳ First upload may take 10-15 minutes</strong> while AI models are downloaded. 
                   This is normal! Subsequent uploads will be much faster (1-2 min). ⚡
                 </p>
               </div>
               
-              <StageProgress currentStage={current_stage} />
+              {/* NEW: Detailed Progress with sub-stages and metrics */}
+              <DetailedProgress status={document} />
             </div>
           )}
 
@@ -81,28 +86,48 @@ const DocumentItem = ({ document, onRetry }) => {
             </div>
           )}
 
-          {/* Metadata */}
+          {/* Completion Metadata - Enhanced Display */}
           {status === 'completed' && metadata && (
-            <div className="mt-4 flex flex-wrap gap-4 text-xs text-gray-500">
-              {metadata.chunks_created && (
-                <div className="flex items-center gap-1.5">
-                  <span className="font-medium text-gray-700">{metadata.chunks_created}</span>
-                  <span>chunks</span>
-                </div>
-              )}
-              {metadata.entities_extracted && (
-                <div className="flex items-center gap-1.5">
-                  <span className="font-medium text-gray-700">{metadata.entities_extracted}</span>
-                  <span>entities</span>
-                </div>
-              )}
-              {metadata.relations_created && (
-                <div className="flex items-center gap-1.5">
-                  <span className="font-medium text-gray-700">{metadata.relations_created}</span>
-                  <span>relations</span>
+            <div className="mt-4 space-y-2">
+              {/* Summary Stats */}
+              <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+                {metadata.chunks && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-medium text-gray-700">{metadata.chunks}</span>
+                    <span>chunks</span>
+                  </div>
+                )}
+                {metadata.entities && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-medium text-gray-700">{metadata.entities}</span>
+                    <span>entities</span>
+                  </div>
+                )}
+                {metadata.relations && (
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-medium text-gray-700">{metadata.relations}</span>
+                    <span>relations</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Processing Time */}
+              {metadata.durations?.total && (
+                <div className="text-xs text-gray-500">
+                  <span className="font-medium">Processing time:</span>{' '}
+                  <span className="text-gray-700">{metadata.durations.total.toFixed(1)}s</span>
                 </div>
               )}
             </div>
+          )}
+
+          {/* Expandable Details Panel (for processing and completed) */}
+          {(status === 'processing' || status === 'completed') && (
+            <ExpandableDetails
+              uploadId={document.id}
+              status={document}
+              metadata={metadata}
+            />
           )}
         </div>
       </div>

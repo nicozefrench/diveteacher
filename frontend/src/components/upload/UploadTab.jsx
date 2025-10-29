@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AlertCircle } from 'lucide-react';
 import DocumentUpload from './DocumentUpload';
 import DocumentList from './DocumentList';
@@ -10,6 +10,8 @@ const UploadTab = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(null);
   const [retryAttempts, setRetryAttempts] = useState({}); // Track retry attempts per document
+  const pollIntervalsRef = useRef({}); // Track polling intervals
+  const isVisibleRef = useRef(true); // Track tab visibility
 
   const handleFileUpload = async (file) => {
     setIsUploading(true);
@@ -39,7 +41,17 @@ const UploadTab = () => {
   };
 
   const pollDocumentStatus = (uploadId) => {
+    // Clear existing interval if any
+    if (pollIntervalsRef.current[uploadId]) {
+      clearInterval(pollIntervalsRef.current[uploadId]);
+    }
+
     const interval = setInterval(async () => {
+      // Skip polling if tab not visible
+      if (!isVisibleRef.current) {
+        return;
+      }
+
       try {
         const status = await getUploadStatus(uploadId);
         
@@ -48,10 +60,19 @@ const UploadTab = () => {
             doc.id === uploadId 
               ? {
                   ...doc,
+                  // Map all enhanced status fields
                   status: status.status,
-                  current_stage: status.current_stage,
+                  stage: status.stage,
+                  sub_stage: status.sub_stage,
+                  progress: status.progress,
+                  progress_detail: status.progress_detail,
+                  metrics: status.metrics || {},
+                  durations: status.durations,
                   metadata: status.metadata || {},
                   error: status.error,
+                  started_at: status.started_at,
+                  completed_at: status.completed_at,
+                  failed_at: status.failed_at,
                 }
               : doc
           )
@@ -78,7 +99,8 @@ const UploadTab = () => {
                     ? { 
                         ...d, 
                         status: 'processing', 
-                        current_stage: 'validation', 
+                        stage: 'initialization',
+                        sub_stage: 'starting',
                         error: `Retrying (attempt ${attempts + 2}/3)...` 
                       }
                     : d
@@ -93,22 +115,41 @@ const UploadTab = () => {
             console.log(`Max retry attempts reached for ${uploadId}`);
             // Clear interval after max retries
             clearInterval(interval);
+            delete pollIntervalsRef.current[uploadId];
           }
         }
 
         // Stop polling if complete or failed (and not retrying)
         if (status.status === 'completed' || status.status === 'failed') {
           clearInterval(interval);
+          delete pollIntervalsRef.current[uploadId];
         }
       } catch (err) {
         console.error('Status poll error:', err);
-        clearInterval(interval);
+        // Continue polling even on error (might be temporary network issue)
       }
-    }, 2000); // Poll every 2 seconds
-
-    // Cleanup on unmount
-    return () => clearInterval(interval);
+    }, 1500); // Poll every 1.5 seconds
+    
+    // Store interval reference
+    pollIntervalsRef.current[uploadId] = interval;
   };
+
+  // Detect tab visibility for optimized polling
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      isVisibleRef.current = !document.hidden;
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
+  // Cleanup all intervals on unmount
+  useEffect(() => {
+    return () => {
+      Object.values(pollIntervalsRef.current).forEach(interval => clearInterval(interval));
+    };
+  }, []);
 
   const handleRetry = async (documentId) => {
     // Find the document

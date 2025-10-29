@@ -161,7 +161,9 @@ async def process_document(
         )
         
         chunking_duration = time() - chunking_start
-        avg_chunk_size = sum(len(c.content) for c in chunks) / len(chunks) if chunks else 0
+        # Chunks are dicts with "text" key, not objects with .content attribute
+        avg_chunk_size = sum(len(c["text"]) for c in chunks) / len(chunks) if chunks else 0
+        total_tokens = sum(c.get("metadata", {}).get("num_tokens", 0) for c in chunks)
         
         log_stage_complete(
             logger,
@@ -171,7 +173,7 @@ async def process_document(
             metrics={
                 "num_chunks": len(chunks),
                 "avg_chunk_size": round(avg_chunk_size, 0),
-                "total_tokens": sum(getattr(c, 'num_tokens', 0) for c in chunks)
+                "total_tokens": total_tokens
             }
         )
         

@@ -1,14 +1,15 @@
 /**
  * TabNavigation Component
- * Tabs for switching between Upload and Query
+ * Tabs for switching between Upload, Query, and Admin
  */
 
-import { Upload, MessageSquare } from 'lucide-react';
+import { Upload, MessageSquare, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const TABS = [
   { id: 'upload', label: 'Document Upload', icon: Upload },
-  { id: 'query', label: 'RAG Query', icon: MessageSquare }
+  { id: 'query', label: 'RAG Query', icon: MessageSquare },
+  { id: 'admin', label: 'Admin', icon: Settings }
 ];
 
 export function TabNavigation({ activeTab, setActiveTab }) {

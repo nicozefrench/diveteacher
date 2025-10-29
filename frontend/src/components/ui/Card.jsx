@@ -1,61 +1,56 @@
 import { cn } from '../../lib/utils';
 
-export const Card = ({ className, children, ...props }) => {
-  return (
-    <div
-      className={cn(
-        "card hover:shadow-card-hover transition-shadow duration-200",
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-};
+/**
+ * Card Component
+ * 
+ * Container component with consistent styling
+ */
+export const Card = ({ children, className }) => (
+  <div className={cn("bg-white rounded-lg border border-gray-200 shadow-sm", className)}>
+    {children}
+  </div>
+);
 
-export const CardHeader = ({ className, children, ...props }) => {
-  return (
-    <div className={cn("card-header", className)} {...props}>
-      {children}
-    </div>
-  );
-};
+/**
+ * CardHeader Component
+ * 
+ * Card header section
+ */
+export const CardHeader = ({ children, className }) => (
+  <div className={cn("px-6 py-4 border-b border-gray-200", className)}>
+    {children}
+  </div>
+);
 
-export const CardBody = ({ className, children, ...props }) => {
-  return (
-    <div className={cn("card-body", className)} {...props}>
-      {children}
-    </div>
-  );
-};
+/**
+ * CardBody Component
+ * 
+ * Card body section
+ */
+export const CardBody = ({ children, className }) => (
+  <div className={cn("px-6 py-4", className)}>
+    {children}
+  </div>
+);
 
-export const CardFooter = ({ className, children, ...props }) => {
-  return (
-    <div className={cn("card-footer", className)} {...props}>
-      {children}
-    </div>
-  );
-};
+/**
+ * CardTitle Component
+ * 
+ * Card title
+ */
+export const CardTitle = ({ children, className }) => (
+  <h3 className={cn("text-lg font-semibold text-gray-900", className)}>
+    {children}
+  </h3>
+);
 
-export const CardTitle = ({ className, children, ...props }) => {
-  return (
-    <h3
-      className={cn("text-lg font-semibold text-gray-900", className)}
-      {...props}
-    >
-      {children}
-    </h3>
-  );
-};
-
-export const CardDescription = ({ className, children, ...props }) => {
-  return (
-    <p
-      className={cn("mt-1 text-sm text-gray-500", className)}
-      {...props}
-    >
-      {children}
-    </p>
-  );
-};
+/**
+ * CardDescription Component
+ * 
+ * Card description/subtitle
+ */
+export const CardDescription = ({ children, className }) => (
+  <p className={cn("text-sm text-gray-600 mt-1", className)}>
+    {children}
+  </p>
+);

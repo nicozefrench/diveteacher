@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { Upload, MessageSquare, Activity } from 'lucide-react';
+import { Upload, MessageSquare, Settings, Activity } from 'lucide-react';
 import UploadTab from './components/upload/UploadTab';
 import ChatInterface from './components/query/ChatInterface';
+import AdminTab from './components/admin/AdminTab';
+import { ToastProvider } from './components/ui/Toast';
 
 function App() {
   const [activeTab, setActiveTab] = useState('upload');
@@ -15,7 +17,8 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <ToastProvider>
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white shadow-sm">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -124,6 +127,25 @@ function App() {
                 </span>
               )}
             </button>
+
+            <button
+              onClick={() => setActiveTab('admin')}
+              className={`
+                group inline-flex items-center gap-2 border-b-2 px-1 py-4 text-sm font-medium transition-all
+                ${activeTab === 'admin'
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                }
+              `}
+            >
+              <Settings className={`h-5 w-5 ${activeTab === 'admin' ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-500'}`} />
+              Admin
+              {activeTab === 'admin' && (
+                <span className="rounded-full bg-primary-100 px-2 py-0.5 text-xs font-medium text-primary-700">
+                  Active
+                </span>
+              )}
+            </button>
           </nav>
         </div>
 
@@ -131,6 +153,7 @@ function App() {
         <div className="animate-fade-in">
           {activeTab === 'upload' && <UploadTab />}
           {activeTab === 'query' && <ChatInterface />}
+          {activeTab === 'admin' && <AdminTab />}
         </div>
       </main>
 
@@ -154,6 +177,7 @@ function App() {
         </div>
       </footer>
     </div>
+    </ToastProvider>
   );
 }
 

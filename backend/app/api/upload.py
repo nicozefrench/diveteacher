@@ -103,6 +103,37 @@ async def upload_document(
         }
         
         # ═══════════════════════════════════════════════════════════
+        # 🔧 FIX: Initialize status BEFORE creating background task
+        # This ensures status endpoint returns 200 immediately
+        # ═══════════════════════════════════════════════════════════
+        from app.core.processor import processing_status
+        from datetime import datetime
+        
+        print(f"[{upload_id}] Initializing status dict...", flush=True)
+        
+        # Pre-initialize status to prevent 404
+        processing_status[upload_id] = {
+            "status": "processing",
+            "stage": "queued",
+            "sub_stage": "initializing",
+            "progress": 0,
+            "progress_detail": {
+                "current": 0,
+                "total": 4,
+                "unit": "stages"
+            },
+            "error": None,
+            "started_at": datetime.now().isoformat(),
+            "metrics": {
+                "file_size_mb": round(total_size / (1024 * 1024), 2),
+                "filename": file.filename
+            }
+        }
+        
+        logger.info(f"[{upload_id}] ✅ Status dict initialized (pre-processing)")
+        print(f"[{upload_id}] ✅ Status initialized in processing_status dict", flush=True)
+        
+        # ═══════════════════════════════════════════════════════════
         # ✅ NEW APPROACH: asyncio.create_task() (ARIA pattern)
         # ═══════════════════════════════════════════════════════════
         print(f"[{upload_id}] Creating async background task...", flush=True)
@@ -220,7 +251,7 @@ def _sanitize_for_json(obj):
             return f"<{obj.__class__.__name__}>"
 
 
-@router.get("/upload/status/{upload_id}")
+@router.get("/upload/{upload_id}/status")
 async def get_upload_status(upload_id: str):
     """
     Get processing status for uploaded document (Enhanced)
@@ -300,20 +331,56 @@ async def get_upload_logs(
             detail=f"Upload ID not found: {upload_id}"
         )
     
+    # 🔧 FIX: Return accurate status from processing_status dict
+    # Don't hardcode "failed" when still processing
+    current_status = status.get("status", "unknown")
+    current_stage = status.get("stage", "unknown")
+    sub_stage = status.get("sub_stage", "")
+    
+    # Build log entries from status information
+    logs = [
+        {
+            "timestamp": status.get("started_at"),
+            "level": "INFO",
+            "stage": "initialization",
+            "message": "Processing started"
+        }
+    ]
+    
+    # Add current stage info if processing
+    if current_status == "processing" and current_stage != "initialization":
+        logs.append({
+            "timestamp": status.get("started_at"),  # Would be stage start time in prod
+            "level": "INFO",
+            "stage": current_stage,
+            "sub_stage": sub_stage,
+            "message": f"Currently processing: {current_stage}"
+        })
+    
+    # Add completion/error log if done
+    if current_status == "completed":
+        logs.append({
+            "timestamp": status.get("completed_at"),
+            "level": "INFO",
+            "stage": "completed",
+            "message": "Processing completed successfully"
+        })
+    elif current_status == "failed":
+        logs.append({
+            "timestamp": status.get("failed_at"),
+            "level": "ERROR",
+            "stage": "error",
+            "message": status.get("error", "Processing failed")
+        })
+    
     # TODO: In production, query centralized logging system
-    # For MVP, return basic log info from status
+    # For MVP, return logs built from status dict
     return JSONResponse(content={
         "upload_id": upload_id,
-        "logs": [
-            {
-                "timestamp": status.get("started_at"),
-                "level": "INFO",
-                "stage": "initialization",
-                "message": "Processing started"
-            },
-            # Additional logs would come from centralized logging system
-        ],
+        "logs": logs,
         "note": "Full log streaming requires centralized logging setup (Phase 2)",
-        "status": status.get("status"),
-        "current_stage": status.get("stage")
+        "status": current_status,  # Use actual status, not hardcoded "failed"
+        "current_stage": current_stage,
+        "sub_stage": sub_stage,
+        "progress": status.get("progress", 0)
     })
