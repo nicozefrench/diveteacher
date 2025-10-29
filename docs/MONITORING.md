@@ -1,8 +1,12 @@
 # 🔍 Monitoring & Scripts Guide
 
 > **Purpose:** Documentation complète de tous les scripts de monitoring, debugging et testing  
-> **Last Updated:** October 28, 2025, 21:50 CET  
+> **Last Updated:** October 29, 2025, 08:30 CET  
 > **Status:** 🟢 Production-Ready Monitoring System
+
+**📚 Related Docs:**
+- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique des tests exécutés
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Tracker de tous les bugs et fixes
 
 ---
 

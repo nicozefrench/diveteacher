@@ -1,8 +1,10 @@
 # 🧪 Testing Log - DiveTeacher RAG System
 
 > **Purpose:** Historique complet des tests effectués, résultats, et état du système  
-> **Last Updated:** October 28, 2025, 21:55 CET  
+> **Last Updated:** October 29, 2025, 08:30 CET  
 > **Current Status:** 🟡 Awaiting Complete Ingestion Pipeline Test
+
+**🎉 Recent Fix:** Ollama healthcheck now fully functional (Oct 29, 08:25 CET) - See [FIXES-LOG.md](FIXES-LOG.md)
 
 ---
 
@@ -52,16 +54,16 @@ Testing Strategy
 
 ## État Actuel du Système
 
-**Last Updated:** October 28, 2025, 21:55 CET
+**Last Updated:** October 29, 2025, 08:30 CET
 
 ### Services Status
 
 | Service | Status | Version/Model | Health | Notes |
 |---------|--------|---------------|--------|-------|
-| **Backend (FastAPI)** | 🟢 Running | Latest | ✅ Healthy | Port 8000 |
+| **Backend (FastAPI)** | 🟢 Running | Latest | 🟡 Degraded | Port 8000, Neo4j healthcheck bug |
 | **Frontend (React)** | 🟢 Running | Latest | ✅ Healthy | Port 5173 |
-| **Neo4j** | 🟢 Running | 5.26.0 | ✅ Healthy | Ports 7475, 7688 |
-| **Ollama** | 🟢 Running | Latest | ✅ Healthy | Port 11434 |
+| **Neo4j** | 🟢 Running | 5.26.0 | ✅ Healthy | Ports 7475, 7688, 221 nodes |
+| **Ollama** | 🟢 Running | Latest | ✅ **Healthy** | Port 11434, **FIXED Oct 29** |
 | **Qwen Model** | 🟢 Loaded | 2.5 7B Q8_0 | ✅ Ready | 8.1GB |
 | **Warm-up System** | 🟢 Functional | Refactored | ✅ Validated | < 1s |
 
@@ -338,25 +340,75 @@ curl -X POST http://localhost:8000/api/upload \
 
 ### 🔴 Critical
 
-**None currently** - All blocking issues resolved in Session 6
+#### 1. Graphiti Search Returns 0 Results ← **BLOCKING**
+
+**Status:** 🔴 OPEN  
+**Opened:** October 29, 2025, 08:00 CET  
+**Impact:** RAG query system unusable
+
+**Issue:**
+- Graphiti search returns 0 facts despite 221 nodes in Neo4j
+- Error: `TypeError: Graphiti.search() got an unexpected keyword argument 'search_config'`
+- RAG cannot retrieve context for queries
+
+**Investigation:**
+- Removed `search_config` parameter from `graphiti.py`
+- Cleared Python cache
+- Restarted backend multiple times
+- Issue persists
+
+**Root Cause:** Graphiti v0.17.0 API compatibility issue
+
+**Next Steps:**
+1. Review Graphiti v0.17.0 documentation
+2. Test `client.search()` with minimal parameters
+3. Verify Neo4j indices are built
+4. Consider downgrading Graphiti if needed
+
+**Reference:** See [FIXES-LOG.md](FIXES-LOG.md#-critical---graphiti-search-returns-0-results) for full details
 
 ---
 
 ### 🟡 Non-Critical
 
-#### 1. CPU Performance (Local Dev)
+#### 1. ~~Ollama Healthcheck Always Unhealthy~~ ✅ **FIXED**
+
+**Status:** ✅ RESOLVED  
+**Fixed:** October 29, 2025, 08:25 CET  
+**Duration:** 13 hours (spanned 2 sessions)
+
+**Issue:** Docker showed Ollama as "unhealthy" constantly  
+**Root Cause:** `curl` not installed in base `ollama/ollama:latest` image  
+**Solution:** Created custom Dockerfile with curl installed
+
+**Files:**
+- Created: `docker/ollama/Dockerfile`
+- Modified: `docker/docker-compose.dev.yml`
+
+**Result:**
+```bash
+docker ps | grep ollama
+# Before: rag-ollama   Up X minutes (unhealthy)
+# After:  rag-ollama   Up 24 seconds (healthy)  ✅
+```
+
+**Reference:** See [FIXES-LOG.md](FIXES-LOG.md#-fix-1-ollama-healthcheck-always-unhealthy) for full details
+
+---
+
+#### 2. CPU Performance (Local Dev)
 
 **Issue:** 10-15 tok/s on Mac M1 Max CPU  
 **Expected:** 40-60 tok/s on GPU  
 **Impact:** Slower queries locally, but expected  
 **Resolution:** N/A (production will use GPU)
 
-#### 2. Knowledge Graph Empty
+#### 3. Knowledge Graph State
 
-**Issue:** Neo4j has 0 nodes/relations  
-**Cause:** Cleaned for fresh testing  
-**Impact:** RAG queries return 0 sources  
-**Resolution:** Upload test documents
+**Issue:** Neo4j has 221 nodes after test.pdf ingestion  
+**Status:** Expected (test data)  
+**Impact:** RAG queries should work but search is broken (see Critical #1)  
+**Resolution:** Fix Graphiti search issue first
 
 ---
 

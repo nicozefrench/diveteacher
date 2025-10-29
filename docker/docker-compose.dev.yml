@@ -23,7 +23,10 @@ services:
 
   # Ollama LLM Server
   ollama:
-    image: ollama/ollama:latest
+    build:
+      context: ./ollama
+      dockerfile: Dockerfile
+    image: diveteacher-ollama:latest
     container_name: rag-ollama
     ports:
       - "11434:11434"
@@ -42,7 +45,7 @@ services:
         limits:
           memory: 16G  # Mac M1 Max has 32GB, leave 16GB for system
     healthcheck:
-      # FIX: Check API version instead of tags (works without models)
+      # FIXED: Using custom image with curl installed
       test: ["CMD", "curl", "-f", "http://localhost:11434/api/version"]
       interval: 10s
       timeout: 5s
