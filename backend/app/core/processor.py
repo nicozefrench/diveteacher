@@ -14,8 +14,16 @@ import logging
 from pathlib import Path
 from typing import Dict, Any, Optional
 from datetime import datetime
+from time import time
 
 from app.core.config import settings
+from app.core.logging_config import (
+    get_context_logger,
+    log_stage_start,
+    log_stage_progress,
+    log_stage_complete,
+    log_error
+)
 from app.integrations.dockling import (
     convert_document_to_docling, 
     extract_document_metadata
@@ -52,62 +60,98 @@ async def process_document(
         metadata: Optional document metadata
     """
     
-    # ═══════════════════════════════════════════════════════════
-    # CRITICAL DEBUG - CONFIRM FUNCTION IS CALLED
-    # ═══════════════════════════════════════════════════════════
-    print(f"[{upload_id}] 🎯 ENTERED process_document()", flush=True)
-    print(f"[{upload_id}] 🎯 file_path={file_path}", flush=True)
-    print(f"[{upload_id}] 🎯 Initializing status dict...", flush=True)
+    # Initialize status dict FIRST (before any exception)
+    file_size = os.path.getsize(file_path) if os.path.exists(file_path) else 0
+    file_size_mb = file_size / (1024 * 1024)
     
-    # ═══════════════════════════════════════════════════════════
-    # CRITICAL: Initialize status dict FIRST (before any exception)
-    # ═══════════════════════════════════════════════════════════
     processing_status[upload_id] = {
         "status": "processing",
         "stage": "initialization",
+        "sub_stage": "starting",
         "progress": 0,
+        "progress_detail": {
+            "current": 0,
+            "total": 4,
+            "unit": "stages"
+        },
         "error": None,
         "started_at": datetime.now().isoformat(),
+        "metrics": {
+            "file_size_mb": round(file_size_mb, 2),
+            "filename": Path(file_path).name
+        }
     }
     
-    print(f"[{upload_id}] ✅ Status dict initialized", flush=True)
+    # Structured logging
+    log_stage_start(
+        logger,
+        upload_id=upload_id,
+        stage="initialization",
+        details={
+            "filename": Path(file_path).name,
+            "file_size_mb": round(file_size_mb, 2),
+            "metadata": metadata
+        }
+    )
     
-    # Log AFTER status init (so status endpoint works even if logging fails)
+    start_time = time()
+    
     try:
-        logger.info(f"[{upload_id}] ═══════════════════════════════════════")
-        logger.info(f"[{upload_id}] Starting document processing")
-        logger.info(f"[{upload_id}] File: {Path(file_path).name}")
-    except Exception as log_error:
-        # If logging fails, print to stdout (will appear in Docker logs)
-        print(f"[{upload_id}] WARNING: Logger failed: {log_error}")
-        print(f"[{upload_id}] Starting document processing: {Path(file_path).name}")
-    
-    start_time = datetime.now()
-    
-    try:
-        # ═══════════════════════════════════════════════════════════
         # STEP 1: Convert to DoclingDocument
-        # ═══════════════════════════════════════════════════════════
-        processing_status[upload_id]["stage"] = "conversion"
-        processing_status[upload_id]["progress"] = 10
+        processing_status[upload_id].update({
+            "stage": "conversion",
+            "sub_stage": "docling_start",
+            "progress": 10,
+            "progress_detail": {
+                "current": 1,
+                "total": 4,
+                "unit": "stages"
+            }
+        })
         
-        logger.info(f"[{upload_id}] Step 1/4: Docling conversion")
+        log_stage_start(logger, upload_id, "conversion")
+        conversion_start = time()
         
-        docling_doc = await convert_document_to_docling(file_path)
+        docling_doc = await convert_document_to_docling(file_path, upload_id=upload_id)
         doc_metadata = extract_document_metadata(docling_doc)
         
-        conversion_duration = (datetime.now() - start_time).total_seconds()
-        logger.info(f"[{upload_id}] ✅ Conversion: {conversion_duration:.2f}s")
+        conversion_duration = time() - conversion_start
         
-        processing_status[upload_id]["progress"] = 40
+        log_stage_complete(
+            logger,
+            upload_id=upload_id,
+            stage="conversion",
+            duration=conversion_duration,
+            metrics={
+                "pages": len(docling_doc.pages) if hasattr(docling_doc, 'pages') else 0,
+                "file_size_mb": round(file_size_mb, 2)
+            }
+        )
         
-        # ═══════════════════════════════════════════════════════════
-        # STEP 2: Semantic Chunking avec HybridChunker
-        # ═══════════════════════════════════════════════════════════
-        processing_status[upload_id]["stage"] = "chunking"
-        processing_status[upload_id]["progress"] = 50
+        processing_status[upload_id].update({
+            "progress": 40,
+            "sub_stage": "conversion_complete",
+            "metrics": {
+                **processing_status[upload_id].get("metrics", {}),
+                "pages": len(docling_doc.pages) if hasattr(docling_doc, 'pages') else 0,
+                "conversion_duration": round(conversion_duration, 2)
+            }
+        })
         
-        logger.info(f"[{upload_id}] Step 2/4: Semantic chunking")
+        # STEP 2: Semantic Chunking
+        processing_status[upload_id].update({
+            "stage": "chunking",
+            "sub_stage": "tokenizing",
+            "progress": 50,
+            "progress_detail": {
+                "current": 2,
+                "total": 4,
+                "unit": "stages"
+            }
+        })
+        
+        log_stage_start(logger, upload_id, "chunking")
+        chunking_start = time()
         
         chunker = get_chunker()
         chunks = chunker.chunk_document(
@@ -116,20 +160,53 @@ async def process_document(
             upload_id=upload_id
         )
         
-        chunking_duration = (datetime.now() - start_time).total_seconds() - conversion_duration
-        logger.info(f"[{upload_id}] ✅ Chunking: {chunking_duration:.2f}s ({len(chunks)} chunks)")
+        chunking_duration = time() - chunking_start
+        avg_chunk_size = sum(len(c.content) for c in chunks) / len(chunks) if chunks else 0
         
-        processing_status[upload_id]["progress"] = 70
+        log_stage_complete(
+            logger,
+            upload_id=upload_id,
+            stage="chunking",
+            duration=chunking_duration,
+            metrics={
+                "num_chunks": len(chunks),
+                "avg_chunk_size": round(avg_chunk_size, 0),
+                "total_tokens": sum(getattr(c, 'num_tokens', 0) for c in chunks)
+            }
+        )
         
-        # ═══════════════════════════════════════════════════════════
-        # STEP 3: Ingest chunks to knowledge graph
-        # ═══════════════════════════════════════════════════════════
-        processing_status[upload_id]["stage"] = "ingestion"
-        processing_status[upload_id]["progress"] = 75
+        processing_status[upload_id].update({
+            "progress": 70,
+            "sub_stage": "chunking_complete",
+            "metrics": {
+                **processing_status[upload_id].get("metrics", {}),
+                "num_chunks": len(chunks),
+                "avg_chunk_size": round(avg_chunk_size, 0),
+                "chunking_duration": round(chunking_duration, 2)
+            }
+        })
         
-        logger.info(f"[{upload_id}] Step 3/4: Neo4j ingestion")
+        # STEP 3: Ingest to Knowledge Graph
+        processing_status[upload_id].update({
+            "stage": "ingestion",
+            "sub_stage": "graphiti_start",
+            "progress": 75,
+            "progress_detail": {
+                "current": 3,
+                "total": 4,
+                "unit": "stages"
+            }
+        })
         
-        # Métadonnées enrichies
+        log_stage_start(
+            logger,
+            upload_id,
+            "ingestion",
+            details={"num_chunks": len(chunks)}
+        )
+        ingestion_start = time()
+        
+        # Enriched metadata
         enriched_metadata = {
             "filename": Path(file_path).name,
             "upload_id": upload_id,
@@ -141,32 +218,40 @@ async def process_document(
         
         await ingest_chunks_to_graph(
             chunks=chunks,
-            metadata=enriched_metadata
+            metadata=enriched_metadata,
+            upload_id=upload_id  # Pass upload_id for progress tracking
         )
         
-        ingestion_duration = (datetime.now() - start_time).total_seconds() - conversion_duration - chunking_duration
-        logger.info(f"[{upload_id}] ✅ Ingestion: {ingestion_duration:.2f}s")
+        ingestion_duration = time() - ingestion_start
         
-        processing_status[upload_id]["progress"] = 95
+        log_stage_complete(
+            logger,
+            upload_id=upload_id,
+            stage="ingestion",
+            duration=ingestion_duration,
+            metrics={
+                "chunks_processed": len(chunks)
+            }
+        )
         
-        # ═══════════════════════════════════════════════════════════
-        # STEP 4: Cleanup & Mark complete
-        # ═══════════════════════════════════════════════════════════
-        logger.info(f"[{upload_id}] Step 4/4: Cleanup")
+        processing_status[upload_id].update({
+            "progress": 95,
+            "sub_stage": "ingestion_complete",
+            "metrics": {
+                **processing_status[upload_id].get("metrics", {}),
+                "ingestion_duration": round(ingestion_duration, 2)
+            }
+        })
         
-        # Optionnel: Supprimer fichier après ingestion réussie
-        # os.remove(file_path)
-        # logger.info(f"[{upload_id}] Deleted temporary file")
+        # STEP 4: Finalize and complete
+        total_duration = time() - start_time
         
-        total_duration = (datetime.now() - start_time).total_seconds()
-        
-        # Ensure all metadata is JSON-serializable (convert datetime, etc.)
+        # Ensure metadata is JSON-serializable
         safe_metadata = {}
         for key, value in doc_metadata.items():
             if isinstance(value, datetime):
                 safe_metadata[key] = value.isoformat()
             elif callable(value):
-                # Skip methods/functions
                 continue
             else:
                 safe_metadata[key] = value
@@ -174,8 +259,13 @@ async def process_document(
         processing_status[upload_id].update({
             "status": "completed",
             "stage": "completed",
+            "sub_stage": "finalized",
             "progress": 100,
-            "num_chunks": len(chunks),
+            "progress_detail": {
+                "current": 4,
+                "total": 4,
+                "unit": "stages"
+            },
             "metadata": safe_metadata,
             "durations": {
                 "conversion": round(conversion_duration, 2),
@@ -186,75 +276,71 @@ async def process_document(
             "completed_at": datetime.now().isoformat(),
         })
         
-        # DEBUG: Check for non-serializable fields
-        print(f"\n[{upload_id}] 🔍 DEBUG: Status dict after completion update:", flush=True)
-        for key, value in processing_status[upload_id].items():
-            is_callable = callable(value)
-            value_type = type(value).__name__
-            if is_callable:
-                print(f"  ❌ {key}: <{value_type} - CALLABLE!>", flush=True)
-            else:
-                print(f"  ✅ {key}: {value_type}", flush=True)
-        print(flush=True)
-        
-        logger.info(f"[{upload_id}] ✅ Processing COMPLETE ({total_duration:.2f}s)")
-        logger.info(f"[{upload_id}] ═══════════════════════════════════════")
+        logger.info(
+            f"✅ Processing complete",
+            extra={
+                'upload_id': upload_id,
+                'stage': 'completed',
+                'duration': round(total_duration, 2),
+                'metrics': {
+                    'total_duration': round(total_duration, 2),
+                    'conversion_duration': round(conversion_duration, 2),
+                    'chunking_duration': round(chunking_duration, 2),
+                    'ingestion_duration': round(ingestion_duration, 2),
+                    'num_chunks': len(chunks),
+                    'pages': len(docling_doc.pages) if hasattr(docling_doc, 'pages') else 0
+                }
+            }
+        )
         
     except ValueError as e:
-        # Validation error
-        logger.error(f"[{upload_id}] ❌ Validation error: {str(e)}")
+        log_error(logger, upload_id, "validation", e)
         sentry_sdk.capture_exception(e)
         processing_status[upload_id].update({
             "status": "failed",
             "stage": "validation_error",
+            "sub_stage": "error",
             "error": str(e),
             "failed_at": datetime.now().isoformat(),
         })
         raise
         
     except TimeoutError as e:
-        # Conversion timeout
-        logger.error(f"[{upload_id}] ❌ Timeout error: {str(e)}")
+        log_error(logger, upload_id, "conversion", e)
         sentry_sdk.capture_exception(e)
         processing_status[upload_id].update({
             "status": "failed",
             "stage": "timeout_error",
+            "sub_stage": "error",
             "error": str(e),
             "failed_at": datetime.now().isoformat(),
         })
         raise
         
     except Exception as e:
-        # Unexpected error
-        error_msg = f"Unexpected error: {str(e)}"
-        logger.error(f"[{upload_id}] ❌ {error_msg}", exc_info=True)
-        
-        # Also print to stdout for Docker logs
-        print(f"[{upload_id}] ❌ EXCEPTION: {error_msg}")
-        print(f"[{upload_id}] Exception type: {type(e).__name__}")
-        import traceback
-        print(f"[{upload_id}] Traceback:\n{traceback.format_exc()}")
-        
+        log_error(logger, upload_id, processing_status[upload_id].get("stage", "unknown"), e)
         sentry_sdk.capture_exception(e)
         
-        # Update status if dict exists
         if upload_id in processing_status:
             processing_status[upload_id].update({
                 "status": "failed",
                 "stage": "unknown_error",
-                "error": error_msg,
+                "sub_stage": "error",
+                "error": str(e),
                 "error_type": type(e).__name__,
                 "failed_at": datetime.now().isoformat(),
             })
-        
-        # Don't re-raise - let background task complete gracefully
-        # (FastAPI background tasks don't propagate exceptions to main app)
     
     finally:
-        # Always log completion (success or failure)
         status = processing_status.get(upload_id, {}).get("status", "unknown")
-        logger.info(f"[{upload_id}] Processing finished with status: {status}")
-        print(f"[{upload_id}] Processing finished with status: {status}")
+        logger.info(
+            f"Processing finished: {status}",
+            extra={
+                'upload_id': upload_id,
+                'stage': 'finalized',
+                'final_status': status
+            }
+        )
 
 
 def get_processing_status(upload_id: str) -> Optional[Dict[str, Any]]:

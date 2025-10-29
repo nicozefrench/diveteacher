@@ -24,6 +24,7 @@ from graphiti_core.search.search_config_recipes import EDGE_HYBRID_SEARCH_RRF
 from graphiti_core.search.search_config import SearchConfig
 
 from app.core.config import settings
+from app.core.logging_config import log_stage_start, log_stage_progress, log_stage_complete, log_error
 
 logger = logging.getLogger('diveteacher.graphiti')
 
@@ -119,7 +120,8 @@ async def close_graphiti_client():
 
 async def ingest_chunks_to_graph(
     chunks: List[Dict[str, Any]],
-    metadata: Dict[str, Any]
+    metadata: Dict[str, Any],
+    upload_id: Optional[str] = None
 ) -> None:
     """
     Ingest semantic chunks to Graphiti knowledge graph avec logs détaillés et timeout
@@ -127,6 +129,7 @@ async def ingest_chunks_to_graph(
     Args:
         chunks: List of chunks from HierarchicalChunker
         metadata: Document-level metadata
+        upload_id: Optional upload ID for logging context
         
     Raises:
         RuntimeError: If Graphiti is disabled
@@ -143,18 +146,32 @@ async def ingest_chunks_to_graph(
         logger.warning("⚠️  Graphiti disabled - skipping ingestion")
         return
     
-    logger.info(f"📥 Starting Graphiti ingestion: {len(chunks)} chunks")
-    logger.info(f"   Document: {metadata.get('filename', 'unknown')}")
-    logger.info(f"   Group ID: {metadata.get('user_id', 'default')}")
+    if upload_id:
+        log_stage_start(
+            logger,
+            upload_id,
+            "graphiti_ingestion",
+            details={
+                "total_chunks": len(chunks),
+                "filename": metadata.get('filename', 'unknown'),
+                "group_id": metadata.get('user_id', 'default')
+            }
+        )
+    else:
+        logger.info(f"📥 Starting Graphiti ingestion: {len(chunks)} chunks")
+        logger.info(f"   Document: {metadata.get('filename', 'unknown')}")
+        logger.info(f"   Group ID: {metadata.get('user_id', 'default')}")
     
     client = await get_graphiti_client()
     
     successful = 0
     failed = 0
     total_time = 0.0
+    total_entities = 0
+    total_relations = 0
     
     # Determine group_id for multi-tenant isolation
-    group_id = metadata.get("user_id", "default")  # ✅ Phase 1+: real user IDs
+    group_id = metadata.get("user_id", "default")
     
     # Pour chaque chunk, appeler Graphiti avec logs détaillés et timeout
     for i, chunk in enumerate(chunks, start=1):
@@ -162,7 +179,21 @@ async def ingest_chunks_to_graph(
         chunk_index = chunk["index"]
         chunk_tokens = len(chunk_text.split())  # Approximation
         
-        logger.info(f"[{i}/{len(chunks)}] 📝 Processing chunk {chunk_index} (~{chunk_tokens} words)...")
+        if upload_id:
+            log_stage_progress(
+                logger,
+                upload_id=upload_id,
+                stage="ingestion",
+                sub_stage="graphiti_episode",
+                current=i,
+                total=len(chunks),
+                metrics={
+                    "chunk_index": chunk_index,
+                    "chunk_tokens": chunk_tokens
+                }
+            )
+        else:
+            logger.info(f"[{i}/{len(chunks)}] 📝 Processing chunk {chunk_index} (~{chunk_tokens} words)...")
         
         try:
             start_time = time.time()
@@ -170,10 +201,7 @@ async def ingest_chunks_to_graph(
             # IMPORTANT: Utiliser datetime avec timezone UTC
             reference_time = datetime.now(timezone.utc)
             
-            # ════════════════════════════════════════════════════════
             # Ingest chunk avec TIMEOUT de 120s
-            # ════════════════════════════════════════════════════════
-            
             await asyncio.wait_for(
                 client.add_episode(
                     name=f"{metadata['filename']} - Chunk {chunk_index}",
@@ -182,51 +210,94 @@ async def ingest_chunks_to_graph(
                     source_description=f"Document: {metadata['filename']}, "
                                      f"Chunk {chunk_index}/{chunk['metadata']['total_chunks']}",
                     reference_time=reference_time,
-                    group_id=group_id,  # ✅ Multi-tenant isolation
-                    # TODO Phase 1+: Ajouter entity_types et edge_types custom
+                    group_id=group_id,
                 ),
-                timeout=120.0  # ✅ Timeout de 2 minutes par chunk
+                timeout=120.0
             )
             
             elapsed = time.time() - start_time
             total_time += elapsed
             successful += 1
             
-            logger.info(f"[{i}/{len(chunks)}] ✅ Chunk {chunk_index} ingested in {elapsed:.2f}s")
+            if upload_id:
+                logger.info(
+                    f"✅ Chunk {chunk_index} ingested",
+                    extra={
+                        'upload_id': upload_id,
+                        'stage': 'ingestion',
+                        'sub_stage': 'chunk_complete',
+                        'duration': round(elapsed, 2),
+                        'metrics': {
+                            'chunk_index': chunk_index,
+                            'chunks_completed': i,
+                            'chunks_total': len(chunks),
+                            'elapsed': round(elapsed, 2)
+                        }
+                    }
+                )
+            else:
+                logger.info(f"[{i}/{len(chunks)}] ✅ Chunk {chunk_index} ingested in {elapsed:.2f}s")
             
         except asyncio.TimeoutError:
             elapsed = time.time() - start_time
-            logger.error(f"[{i}/{len(chunks)}] ⏱️  TIMEOUT after {elapsed:.2f}s for chunk {chunk_index}")
             failed += 1
-            # Continue avec chunks suivants (ne pas fail tout le pipeline)
+            
+            if upload_id:
+                log_error(
+                    logger,
+                    upload_id,
+                    "ingestion",
+                    asyncio.TimeoutError(f"Chunk {chunk_index} timeout after {elapsed:.2f}s"),
+                    context={'chunk_index': chunk_index, 'elapsed': elapsed}
+                )
+            else:
+                logger.error(f"[{i}/{len(chunks)}] ⏱️  TIMEOUT after {elapsed:.2f}s for chunk {chunk_index}")
             
         except Exception as e:
             elapsed = time.time() - start_time
-            logger.error(f"[{i}/{len(chunks)}] ❌ Failed chunk {chunk_index} after {elapsed:.2f}s: {e}", exc_info=True)
             failed += 1
-            # Continue avec chunks suivants (ne pas fail tout le pipeline)
+            
+            if upload_id:
+                log_error(
+                    logger,
+                    upload_id,
+                    "ingestion",
+                    e,
+                    context={'chunk_index': chunk_index, 'elapsed': elapsed}
+                )
+            else:
+                logger.error(f"[{i}/{len(chunks)}] ❌ Failed chunk {chunk_index} after {elapsed:.2f}s: {e}", exc_info=True)
     
-    # ════════════════════════════════════════════════════════
     # Résumé final de l'ingestion
-    # ════════════════════════════════════════════════════════
-    
     avg_time = total_time / successful if successful > 0 else 0
     
-    logger.info(f"")
-    logger.info(f"📊 Ingestion Summary:")
-    logger.info(f"   • Total chunks: {len(chunks)}")
-    logger.info(f"   • Successful: {successful}")
-    logger.info(f"   • Failed: {failed}")
-    logger.info(f"   • Total time: {total_time:.2f}s")
-    logger.info(f"   • Avg time/chunk: {avg_time:.2f}s")
-    
-    if failed > 0:
-        logger.warning(f"⚠️  Ingestion completed with {failed} failures")
+    if upload_id:
+        log_stage_complete(
+            logger,
+            upload_id=upload_id,
+            stage="graphiti_ingestion",
+            duration=total_time,
+            metrics={
+                "total_chunks": len(chunks),
+                "successful": successful,
+                "failed": failed,
+                "avg_time_per_chunk": round(avg_time, 2),
+                "success_rate": round((successful / len(chunks)) * 100, 1) if chunks else 0
+            }
+        )
     else:
-        logger.info(f"✅ All chunks ingested successfully!")
-    
-    # ❌ NE PAS appeler build_communities() ici (trop coûteux)
-    # À appeler manuellement via endpoint dédié ou cron job
+        logger.info(f"")
+        logger.info(f"📊 Ingestion Summary:")
+        logger.info(f"   • Total chunks: {len(chunks)}")
+        logger.info(f"   • Successful: {successful}")
+        logger.info(f"   • Failed: {failed}")
+        logger.info(f"   • Total time: {total_time:.2f}s")
+        logger.info(f"   • Avg time/chunk: {avg_time:.2f}s")
+        
+        if failed > 0:
+            logger.warning(f"⚠️  Ingestion completed with {failed} failures")
+        else:
+            logger.info(f"✅ All chunks ingested successfully!")
 
 
 async def search_knowledge_graph(

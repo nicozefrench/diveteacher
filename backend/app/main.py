@@ -18,11 +18,15 @@ from sentry_sdk.integrations.fastapi import FastApiIntegration
 from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from app.core.config import settings
+from app.core.logging_config import setup_structured_logging
 from app.api import upload, query, health, graph
 from app.integrations.neo4j import neo4j_client
 from app.integrations.graphiti import close_graphiti_client
 from app.integrations.sentry import init_sentry
 from app.integrations.neo4j_indexes import create_rag_indexes, verify_indexes
+
+# Initialize structured logging
+setup_structured_logging(level=settings.LOG_LEVEL)
 
 # Initialize Sentry (if configured)
 if settings.SENTRY_DSN_BACKEND:

@@ -223,13 +223,23 @@ def _sanitize_for_json(obj):
 @router.get("/upload/status/{upload_id}")
 async def get_upload_status(upload_id: str):
     """
-    Get processing status for uploaded document
+    Get processing status for uploaded document (Enhanced)
     
     Args:
         upload_id: Upload identifier
         
     Returns:
-        Processing status
+        Processing status with progress, stage, sub_stage, metrics, ETA
+        
+    Status Structure:
+        - status: "processing" | "completed" | "failed"
+        - stage: Current processing stage
+        - sub_stage: Current sub-stage within stage
+        - progress: Overall progress percentage (0-100)
+        - progress_detail: {current, total, unit}
+        - metrics: Stage-specific metrics
+        - durations: Time spent in each stage
+        - started_at, completed_at/failed_at: Timestamps
     """
     
     status = get_processing_status(upload_id)
@@ -240,42 +250,10 @@ async def get_upload_status(upload_id: str):
             detail=f"Upload ID not found: {upload_id}"
         )
     
-    # DEBUG: Log problematic fields before sanitization
-    import json
-    try:
-        # Try raw JSON dump to see exact error
-        json.dumps(status)
-        logger.info(f"[{upload_id}] Status is JSON-serializable (no sanitization needed)")
-    except Exception as e:
-        logger.error(f"[{upload_id}] ❌ Status has non-serializable fields: {e}")
-        logger.error(f"[{upload_id}] Status keys: {list(status.keys())}")
-        
-        # Check each field
-        for key, value in status.items():
-            try:
-                json.dumps({key: value})
-            except Exception as field_error:
-                logger.error(f"[{upload_id}] ❌ Field '{key}' is not serializable: {type(value).__name__} - {field_error}")
-                if callable(value):
-                    logger.error(f"[{upload_id}]   → Field is a {type(value).__name__}: {getattr(value, '__name__', 'anonymous')}")
-    
-    # DEBUG: Print raw status dict to logs
-    print(f"\n{'='*60}", flush=True)
-    print(f"[{upload_id}] RAW STATUS DICT:", flush=True)
-    print(f"Keys: {list(status.keys())}", flush=True)
-    for key, value in status.items():
-        value_type = type(value).__name__
-        if callable(value):
-            print(f"  ❌ {key}: <{value_type} - CALLABLE>", flush=True)
-        else:
-            print(f"  ✅ {key}: {value_type}", flush=True)
-    print(f"{'='*60}\n", flush=True)
-    
     # Sanitize status dict to ensure JSON serializability
     sanitized_status = _sanitize_for_json(status)
     
     # Pre-serialize to JSON to ensure no errors
-    # Then return as Response with application/json content-type
     import json as json_module
     from starlette.responses import Response
     
@@ -283,10 +261,59 @@ async def get_upload_status(upload_id: str):
         json_str = json_module.dumps(sanitized_status, indent=2)
         return Response(content=json_str, media_type="application/json")
     except Exception as e:
-        logger.error(f"[{upload_id}] ❌ FATAL: Even sanitized status is not JSON-serializable: {e}")
-        # Return error as plain dict
+        logger.error(f"[{upload_id}] ❌ Status serialization failed: {e}")
         return JSONResponse(content={
             "error": "Status serialization failed",
             "upload_id": upload_id,
             "details": str(e)
         }, status_code=500)
+
+
+@router.get("/upload/{upload_id}/logs")
+async def get_upload_logs(
+    upload_id: str,
+    limit: int = 100,
+    level: str = "INFO"
+):
+    """
+    Get structured logs for a specific upload
+    
+    Args:
+        upload_id: Upload identifier
+        limit: Maximum number of log entries to return (default: 100)
+        level: Minimum log level (DEBUG, INFO, WARNING, ERROR)
+        
+    Returns:
+        List of log entries with timestamps, levels, stages, and metrics
+        
+    Note:
+        This endpoint reads from structured JSON logs.
+        In production, this would query a centralized logging system (e.g., ELK, Datadog).
+        For MVP, we return logs from memory (if available).
+    """
+    
+    # Check if upload exists
+    status = get_processing_status(upload_id)
+    if not status:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Upload ID not found: {upload_id}"
+        )
+    
+    # TODO: In production, query centralized logging system
+    # For MVP, return basic log info from status
+    return JSONResponse(content={
+        "upload_id": upload_id,
+        "logs": [
+            {
+                "timestamp": status.get("started_at"),
+                "level": "INFO",
+                "stage": "initialization",
+                "message": "Processing started"
+            },
+            # Additional logs would come from centralized logging system
+        ],
+        "note": "Full log streaming requires centralized logging setup (Phase 2)",
+        "status": status.get("status"),
+        "current_stage": status.get("stage")
+    })

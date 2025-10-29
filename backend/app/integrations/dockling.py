@@ -15,6 +15,7 @@ from docling.datamodel.pipeline_options import PdfPipelineOptions, TableFormerMo
 from docling.datamodel.document import DoclingDocument
 
 from app.core.config import settings
+from app.core.logging_config import log_stage_start, log_stage_complete, log_error
 from app.services.document_validator import DocumentValidator
 
 logger = logging.getLogger('diveteacher.docling')
@@ -121,7 +122,8 @@ class DoclingSingleton:
 
 async def convert_document_to_docling(
     file_path: str,
-    timeout: Optional[int] = None
+    timeout: Optional[int] = None,
+    upload_id: Optional[str] = None
 ) -> DoclingDocument:
     """
     Convert document to DoclingDocument (NOT markdown)
@@ -135,6 +137,7 @@ async def convert_document_to_docling(
     Args:
         file_path: Path to document file
         timeout: Optional timeout in seconds (default: from settings)
+        upload_id: Optional upload ID for logging context
         
     Returns:
         DoclingDocument object (pour chunking ultérieur)
@@ -144,6 +147,7 @@ async def convert_document_to_docling(
         RuntimeError: Docling conversion failed
         TimeoutError: Conversion timeout exceeded
     """
+    from time import time
     
     # 1. Validation stricte
     is_valid, error_msg = DocumentValidator.validate(
@@ -151,69 +155,124 @@ async def convert_document_to_docling(
         max_size_mb=settings.MAX_UPLOAD_SIZE_MB
     )
     if not is_valid:
-        logger.error(f"❌ Validation failed: {error_msg}")
+        if upload_id:
+            log_error(logger, upload_id, "validation", ValueError(error_msg))
+        else:
+            logger.error(f"❌ Validation failed: {error_msg}")
         raise ValueError(error_msg)
     
     filename = Path(file_path).name
-    logger.info(f"🔄 Converting document: {filename}")
+    file_size_mb = Path(file_path).stat().st_size / (1024 * 1024)
+    
+    if upload_id:
+        logger.info(
+            f"🔄 Starting Docling conversion",
+            extra={
+                'upload_id': upload_id,
+                'stage': 'conversion',
+                'sub_stage': 'validation_passed',
+                'metrics': {
+                    'filename': filename,
+                    'file_size_mb': round(file_size_mb, 2)
+                }
+            }
+        )
+    else:
+        logger.info(f"🔄 Converting document: {filename}")
     
     # 2. Conversion avec timeout
     timeout_seconds = timeout or settings.DOCLING_TIMEOUT
+    conversion_start = time()
     
     try:
         loop = asyncio.get_event_loop()
         
-        # ═══════════════════════════════════════════════════════════
-        # ✅ FIXED: Use dedicated executor (not None!)
-        # ═══════════════════════════════════════════════════════════
+        # Run conversion in dedicated executor
         result = await asyncio.wait_for(
             loop.run_in_executor(
-                _docling_executor,  # ← Dedicated executor (module-level)
+                _docling_executor,
                 _convert_sync,
-                file_path
+                file_path,
+                upload_id
             ),
             timeout=timeout_seconds
         )
         
+        conversion_duration = time() - conversion_start
+        
         # Log métriques
-        logger.info(f"✅ Conversion successful: {filename}")
-        logger.info(f"   📄 Pages: {len(result.pages)}")
-        logger.info(f"   📊 Tables: {len(result.tables)}")
-        logger.info(f"   🖼️  Images: {len(result.pictures)}")
+        if upload_id:
+            logger.info(
+                f"✅ Conversion successful",
+                extra={
+                    'upload_id': upload_id,
+                    'stage': 'conversion',
+                    'sub_stage': 'complete',
+                    'duration': round(conversion_duration, 2),
+                    'metrics': {
+                        'filename': filename,
+                        'pages': len(result.pages),
+                        'tables': len(result.tables),
+                        'pictures': len(result.pictures),
+                        'file_size_mb': round(file_size_mb, 2)
+                    }
+                }
+            )
+        else:
+            logger.info(f"✅ Conversion successful: {filename}")
+            logger.info(f"   📄 Pages: {len(result.pages)}")
+            logger.info(f"   📊 Tables: {len(result.tables)}")
+            logger.info(f"   🖼️  Images: {len(result.pictures)}")
         
         return result
         
     except asyncio.TimeoutError:
         error_msg = f"⏱️  Conversion timeout after {timeout_seconds}s: {filename}"
-        logger.error(error_msg)
+        if upload_id:
+            log_error(logger, upload_id, "conversion", TimeoutError(error_msg))
+        else:
+            logger.error(error_msg)
         raise TimeoutError(error_msg)
     
     except Exception as e:
         error_msg = f"❌ Docling conversion error: {filename} - {str(e)}"
-        logger.error(error_msg, exc_info=True)
+        if upload_id:
+            log_error(logger, upload_id, "conversion", e, context={'filename': filename})
+        else:
+            logger.error(error_msg, exc_info=True)
         raise RuntimeError(error_msg)
 
 
-def _convert_sync(file_path: str) -> DoclingDocument:
+def _convert_sync(file_path: str, upload_id: Optional[str] = None) -> DoclingDocument:
     """
     Synchronous Docling conversion (runs in dedicated thread pool)
     
     Args:
         file_path: Path to document
+        upload_id: Optional upload ID for logging
         
     Returns:
         DoclingDocument (NOT markdown string)
     """
     filename = Path(file_path).name
-    print(f"[_convert_sync] 🔄 START conversion: {filename}", flush=True)
     
-    print(f"[_convert_sync] 📦 Getting converter singleton...", flush=True)
+    if upload_id:
+        print(f"[{upload_id}] 🔄 START conversion: {filename}", flush=True)
+    else:
+        print(f"[_convert_sync] 🔄 START conversion: {filename}", flush=True)
+    
     converter = DoclingSingleton.get_converter()
-    print(f"[_convert_sync] ✅ Converter obtained (should be instant if warm-up worked)", flush=True)
     
-    print(f"[_convert_sync] 🚀 Starting conversion...", flush=True)
+    if upload_id:
+        print(f"[{upload_id}] ✅ Converter obtained", flush=True)
+        print(f"[{upload_id}] 🚀 Starting conversion...", flush=True)
+    
     result = converter.convert(file_path)
-    print(f"[_convert_sync] ✅ Conversion complete", flush=True)
+    
+    if upload_id:
+        print(f"[{upload_id}] ✅ Conversion complete", flush=True)
+    else:
+        print(f"[_convert_sync] ✅ Conversion complete", flush=True)
     
     # Return DoclingDocument object pour chunking
     return result.document
