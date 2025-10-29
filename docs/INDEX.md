@@ -1,9 +1,9 @@
 # 📚 DiveTeacher - Documentation Index
 
-> **Version:** Phase 1.0 COMPLETE (RAG Query Implementation)  
-> **Last Updated:** October 28, 2025, 16:15 CET  
+> **Version:** Phase 1.0 + Warm-up Refactoring COMPLETE  
+> **Last Updated:** October 28, 2025, 22:00 CET  
 > **Environment:** Local Development (Mac M1 Max)  
-> **Status:** 🟢 Fully Operational (Phase 0-1.0 complete)
+> **Status:** 🟢 Fully Operational - Ready for E2E Testing
 
 ---
 
@@ -63,6 +63,26 @@
   - Docker port conflicts
   - Performance issues
   - Known bugs & workarounds
+- **[TIMEOUT-FIX-GUIDE.md](TIMEOUT-FIX-GUIDE.md)** - Docling timeout fix (COMPLETE)
+  - Problem analysis
+  - 3-layer solution (timeout + warm-up + UI)
+  - Refactored warm-up architecture
+  - Deployment instructions
+
+### 🔍 Monitoring & Testing ✅ NEW
+- **[MONITORING.md](MONITORING.md)** - Scripts de monitoring & debugging ✅ **NEW**
+  - `monitor_ingestion.sh` - Logs Graphiti temps réel
+  - `monitor_ollama.sh` - Performance Ollama/Docker
+  - `test_rag_query.sh` - Tests RAG query automatisés
+  - `clean_neo4j.sh` - Nettoyage Neo4j complet
+  - Commandes Docker utiles
+  - Debugging avancé
+- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **NEW**
+  - État actuel du système
+  - Historique des sessions de test
+  - Tests en attente (E2E pipeline)
+  - Known issues & resolutions
+  - Success criteria & metrics
 
 ### ☁️ Deployment
 - **[DEPLOYMENT.md](DEPLOYMENT.md)** - Production deployment (Phase 9)
@@ -126,14 +146,30 @@
 | Task | Status | Documentation |
 |------|--------|---------------|
 | **Ollama Docker Config** | ✅ Optimized | [Docker Compose](../docker/docker-compose.dev.yml) |
-| **Qwen 2.5 7B Q8_0** | ✅ Loaded (8.1GB) | [ENV_CONFIGURATION_QWEN.md](../ENV_CONFIGURATION_QWEN.md) |
+| **Qwen 2.5 7B Q8_0** | ✅ Loaded (8.1GB) | [ENV_CONFIGURATION](../resources/251028-qwen2.5-7b-instruct-q8_0-ollama-guide.md) |
 | **RAG Query API** | ✅ 3 endpoints | [API.md](API.md#rag-query-endpoints) |
 | **Streaming (SSE)** | ✅ Working | [API.md](API.md#streaming) |
-| **Test Scripts** | ✅ 4/4 passing | [scripts/test_rag_query.sh](../scripts/test_rag_query.sh) |
-| **Monitoring** | ✅ Scripts ready | [scripts/monitor_ollama.sh](../scripts/monitor_ollama.sh) |
-| **Documentation** | ✅ Complete | [Devplan/STATUS-PHASE-1.0-COMPLETION-REPORT.md](../Devplan/STATUS-PHASE-1.0-COMPLETION-REPORT.md) |
+| **Test Scripts** | ✅ 4/4 passing | [MONITORING.md](MONITORING.md#3-🧪-test_rag_querysh) |
+| **Monitoring Scripts** | ✅ 5 scripts ready | [MONITORING.md](MONITORING.md) ✅ **NEW** |
+| **Documentation** | ✅ Complete | [STATUS-PHASE-1.0](../Devplan/STATUS-PHASE-1.0-COMPLETION-REPORT.md) |
 
 **Phase 1.0 Achievement:** Full RAG pipeline operational (upload → process → query) with Qwen 2.5 7B Q8_0 for optimal RAG quality (98/100).
+
+---
+
+### ✅ Warm-up System Refactoring (COMPLETE) 🎉
+
+| Task | Status | Documentation |
+|------|--------|---------------|
+| **Root Cause Identified** | ✅ Import errors | [STATUS-REPORT](../Devplan/251028-STATUS-REPORT-WARM-UP-ISSUE.md) |
+| **Refactoring Plan** | ✅ Solution C chosen | [WARMUP-REFACTORING-PLAN](../Devplan/251028-WARMUP-REFACTORING-PLAN.md) |
+| **`app/warmup.py`** | ✅ Created | Inside package (proper imports) |
+| **`DoclingSingleton.warmup()`** | ✅ Implemented | Reusable method in dockling.py |
+| **Docker Entrypoint** | ✅ Modified | `python3 -m app.warmup` |
+| **Validation** | ✅ Tested | < 1s warm-up, no errors |
+| **Documentation** | ✅ Complete | [TIMEOUT-FIX-GUIDE](TIMEOUT-FIX-GUIDE.md) |
+
+**Warm-up Achievement:** Production-ready architecture with proper package structure, reusable warm-up method, and validated execution.
 
 ---
 
@@ -171,10 +207,14 @@
    - Graphiti: `@docs/GRAPHITI.md` + `@resources/251020-graphiti-technical-guide.md`
    - **RAG Query:** `@Devplan/PHASE-1.0-RAG-QUERY-IMPLEMENTATION.md` (complete plan)
    - **GPU Deployment:** `@resources/251028-rag-gpu-deployment-guide.md`
+   - **Monitoring:** `@docs/MONITORING.md` (scripts guide) ✅ **NEW**
+   - **Testing:** `@docs/TESTING-LOG.md` (test history) ✅ **NEW**
    - **Status Reports:** `@Devplan/STATUS-PHASE-1.0-COMPLETION-REPORT.md`
 
 3. **Troubleshooting:**
    - `@docs/TROUBLESHOOTING.md` first
+   - `@docs/MONITORING.md` for debugging scripts ✅ **NEW**
+   - `@docs/TESTING-LOG.md` for known issues ✅ **NEW**
    - Then specific domain doc (DOCLING.md, NEO4J.md, etc.)
 
 ---
@@ -214,10 +254,13 @@
 | `ARCHITECTURE.md` | Tech stack changes, new services |
 | `DOCLING.md` | Docling version upgrades, new features |
 | `NEO4J.md` | Neo4j changes, query updates |
-| `GRAPHITI.md` | Graphiti/OpenAI config changes, LLM updates |
+| `GRAPHITI.md` | Graphiti/Anthropic config changes, LLM updates |
 | `API.md` | New endpoints, parameter changes |
 | `TROUBLESHOOTING.md` | New bugs discovered, solutions found |
 | `DEPLOYMENT.md` | Production setup changes |
+| `TIMEOUT-FIX-GUIDE.md` | Timeout issues, warm-up changes |
+| `MONITORING.md` ✅ **NEW** | New scripts, monitoring tools changes |
+| `TESTING-LOG.md` ✅ **NEW** | After each test run, issues, resolutions |
 | `STATUS-REPORT-*.md` | After major debugging sessions or phase blockers |
 
 ---
