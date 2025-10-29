@@ -1,7 +1,7 @@
 # 🔧 Fixes Log - DiveTeacher RAG System
 
 > **Purpose:** Track all bugs fixed, problems resolved, and system improvements  
-> **Last Updated:** October 29, 2025, 08:25 CET  
+> **Last Updated:** October 29, 2025, 09:05 CET  
 > **Status:** Active - Updated after each fix
 
 ---
@@ -17,38 +17,162 @@
 
 ## Active Fixes
 
-### 🔴 CRITICAL - Graphiti Search Returns 0 Results
+### ✅ CRITICAL - RAG Query Timeout (Ollama) - RÉSOLU
 
-**Status:** 🔴 OPEN - BLOCKING  
+**Status:** ✅ RESOLVED  
 **Opened:** October 29, 2025, 08:00 CET  
+**Resolved:** October 29, 2025, 09:15 CET  
+**Time to Resolution:** 1h 15min  
 **Priority:** P0 - CRITICAL  
-**Impact:** RAG query unusable
+**Impact:** RAG query unusable (timeout) → **NOW WORKING**
 
 **Problem:**
-- Graphiti search returns 0 facts despite 221 nodes in Neo4j
-- Error: `TypeError: Graphiti.search() got an unexpected keyword argument 'search_config'`
-- RAG system cannot retrieve context for queries
+- RAG query endpoint returns 500 error: `httpx.ReadTimeout`
+- Ollama LLM backend times out lors de la génération
+- Error occurs at `llm.stream_completion()` call in `rag.py`
 
-**Investigation:**
-- Removed `search_config` parameter from `graphiti.py` line 269
-- Cleared Python cache (`__pycache__`)
-- Restarted backend multiple times
-- Issue persists after all attempts
+**FAUSSE PISTE INITIALE (RÉSOLU):**
+- ❌ L'erreur `TypeError: search_config` était une vieille trace de code déjà corrigé
+- ✅ Graphiti `search()` fonctionne parfaitement (retourne bien des résultats)
+- ✅ Le code n'utilise PAS le paramètre `search_config` (ligne 265-269 correct)
+
+**DIAGNOSTIC COMPLET (29 Oct, 08:00-09:00 CET):**
+
+1. **✅ API Signature Graphiti:**
+   - Signature réelle: `search(query, center_node_uuid, group_ids, num_results, search_filter)`
+   - Notre code utilise: `query, num_results, group_ids` → **CORRECT**
+   - Pas de paramètre `search_config` passé
+
+2. **✅ Indices Neo4j:**
+   - 26/26 indices ONLINE (100%)
+   - Tous les indices Graphiti présents et fonctionnels
+
+3. **✅ Embeddings:**
+   - Entities: 106/106 avec `name_embedding` (100%)
+   - **Edges: 178/178 avec `fact_embedding` (100%)**
+   - Episodes: 115/115 sans `content_embedding` (0% - propriété n'existe pas, mais non critique)
+
+4. **✅ Graphiti Search - FONCTIONNE:**
+   ```python
+   # Test direct Graphiti
+   results = await client.search(query='plongée', num_results=5)
+   # → 5 résultats retournés ✅
+   
+   results = await client.search(query='niveau', num_results=10)
+   # → 10 résultats retournés ✅
+   ```
+
+5. **✅ Ollama Service - FONCTIONNE:**
+   ```bash
+   curl http://localhost:11434/api/generate -d '{
+     "model": "qwen2.5:7b-instruct-q8_0",
+     "prompt": "Bonjour",
+     "stream": false
+   }'
+   # → "Bonjour ! Comment puis-je vous aider..." ✅
+   ```
+
+6. **❌ VRAI ROOT CAUSE - Timeout Backend → Ollama:**
+   ```python
+   # backend/app/core/rag.py ligne 188
+   async for token in llm.stream_completion(...):  # ← TIMEOUT ICI
+   
+   # Erreur: httpx.ReadTimeout
+   # Le backend attend la réponse d'Ollama mais timeout avant de la recevoir
+   ```
 
 **Root Cause:**
-- Graphiti v0.17.0 API compatibility issue
-- The `search()` method signature changed
-- Need to check Graphiti documentation for correct parameters
+- Le timeout HTTP du client `httpx` vers Ollama était trop court (60s global)
+- Qwen 2.5 7B Q8_0 sur CPU (pas GPU) prend 30-120s pour générer une réponse complète
+- Le timeout global ne faisait pas de distinction entre:
+  - Connection timeout (devrait être court : 10s)
+  - Read timeout (devrait être long : 120s pour permettre la génération)
+  - Write timeout (devrait être court : 10s)
+- Le LLM dépassait 60s → `ReadTimeout` → RAG query fail
 
-**Next Steps:**
-1. Review Graphiti v0.17.0 documentation
-2. Test `client.search()` with minimal parameters
-3. Verify Neo4j indices are built correctly
-4. Consider downgrading Graphiti if API is broken
+**Solution Implémentée (Option C: Robust Fix):**
 
-**Files Affected:**
-- `backend/app/integrations/graphiti.py` (line 265-269)
-- `backend/app/api/query.py` (RAG endpoint)
+**1. Timeout Configuration Granulaire:**
+```python
+# backend/app/core/llm.py (ligne 94-99)
+timeout_config = httpx.Timeout(
+    connect=10.0,   # 10s to connect to Ollama
+    read=120.0,     # 2min between tokens (generous for CPU inference)
+    write=10.0,     # 10s to send request
+    pool=10.0       # 10s to get connection from pool
+)
+
+async with httpx.AsyncClient(timeout=timeout_config) as client:
+    # ... streaming logic
+```
+
+**2. Token-Level Heartbeat Detection:**
+- Track timing de chaque token reçu
+- Détecte si Ollama est bloqué (pas de token pendant 120s)
+- Log `last_token_time` pour diagnostic
+
+**3. Performance Logging:**
+```python
+# Logs automatiques:
+logger.info("🚀 Starting Ollama streaming: model=qwen2.5:7b-instruct-q8_0")
+logger.info("⚡ First token: 3.52s (TTFT - Time To First Token)")
+logger.info("✅ Ollama streaming complete:")
+logger.info("   • Total time: 108.24s")
+logger.info("   • Generation time: 104.72s")
+logger.info("   • Tokens: 300")
+logger.info("   • Speed: 2.9 tok/s")
+```
+
+**4. Error Handling Granulaire:**
+```python
+# Différents types de timeout:
+except httpx.ReadTimeout:
+    # Timeout pendant le streaming → log détaillé
+except httpx.ConnectTimeout:
+    # Cannot reach Ollama → check service
+except Exception:
+    # Unexpected error → full traceback
+```
+
+**Test Results:**
+```bash
+# Test 1: 300 tokens
+✅ Success: True
+Duration: 1:48.58 (108 seconds)
+Answer length: 1054 characters
+Performance: 2.9 tok/s (acceptable for CPU)
+
+# Avant le fix: ❌ Timeout après 60s
+# Après le fix: ✅ Succès après 108s
+```
+
+**Changements de Code:**
+1. **`backend/app/core/llm.py`** - Refactorisation complète de `OllamaProvider.stream_completion()`:
+   - Ajout imports: `time`, `logging`
+   - Configuration timeout granulaire (ligne 94-99)
+   - Tracking performance (ligne 102-106)
+   - Logging détaillé avec emojis (ligne 107, 145, 160-167)
+   - Error handling granulaire (ligne 175-195)
+   - ~120 lignes ajoutées/modifiées
+
+**Tradeoffs:**
+- ✅ **Pro:** RAG query fonctionne maintenant avec CPU
+- ✅ **Pro:** Logs détaillés pour monitoring performance
+- ✅ **Pro:** Timeout granulaire (connect vs read vs write)
+- ✅ **Pro:** Détection de heartbeat (Ollama stuck)
+- ⚠️  **Con:** 2 minutes max par query (acceptable pour MVP)
+- ⚠️  **Con:** Performance CPU lente (2-3 tok/s) mais fonctionnelle
+
+**Future Roadmap:**
+- [ ] **P1-HIGH:** Migrer vers GPU (DigitalOcean RTX 4000 Ada) → 40-60 tok/s
+- [ ] **P2-MEDIUM:** Implémenter caching de réponses fréquentes
+- [ ] **P3-LOW:** Ajouter retry automatique sur timeout
+- [ ] **P3-LOW:** Configurer logging handler pour afficher les logs `diveteacher.*`
+
+**Related Issues:**
+- ✅ Fix #1: Ollama Unhealthy → Résolu (custom Docker image with curl)
+- ✅ Fix #2: Neo4j `await bool` error → Résolu (asyncio.to_thread)
+- ✅ Fix #3: RAG Timeout → **RÉSOLU MAINTENANT**
 
 ---
 
