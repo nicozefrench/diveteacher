@@ -83,6 +83,18 @@ const UploadTab = () => {
           )
         );
 
+        // 🔍 DEBUG: Phase 1 Investigation - Track data flow
+        console.log(`[UploadTab] Updated document ${uploadId}:`, {
+          timestamp: new Date().toISOString(),
+          status: status.status,
+          metrics_from_api: JSON.parse(JSON.stringify(status.metrics || {})),
+          metadata_from_api: JSON.parse(JSON.stringify(status.metadata || {})),
+          metrics_entities: status.metrics?.entities,
+          metrics_relations: status.metrics?.relations,
+          metadata_entities: status.metadata?.entities,
+          metadata_relations: status.metadata?.relations
+        });
+
         // Handle timeout errors with auto-retry (max 2 attempts)
         if (status.status === 'failed' && status.error && status.error.includes('timeout')) {
           const attempts = retryAttempts[uploadId] || 0;

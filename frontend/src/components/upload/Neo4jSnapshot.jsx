@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { Database, GitFork, Layers, TrendingUp, RefreshCw, AlertCircle } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { getNeo4jStats } from '../../lib/api';
+import EntityBreakdown from './EntityBreakdown';
+import RelationshipBreakdown from './RelationshipBreakdown';
 
 /**
  * Neo4jSnapshot Component
@@ -77,89 +79,9 @@ const Neo4jSnapshot = ({ uploadId, status, metadata = {} }) => {
     </div>
   );
 
-  // Entity type breakdown component
-  const EntityBreakdown = ({ entities }) => {
-    if (!entities || Object.keys(entities).length === 0) {
-      return null;
-    }
-
-    // Memoize sorted entities and total calculation
-    const { sortedEntities, total } = useMemo(() => {
-      const sorted = Object.entries(entities)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 10); // Top 10
-      const totalCount = Object.values(entities).reduce((sum, count) => sum + count, 0);
-      return { sortedEntities: sorted, total: totalCount };
-    }, [entities]);
-
-    return (
-      <div className="space-y-2">
-        <h5 className="text-sm font-medium text-gray-700 mb-3">Entity Types</h5>
-        {sortedEntities.map(([type, count]) => {
-          const percentage = total > 0 ? (count / total) * 100 : 0;
-          
-          return (
-            <div key={type} className="space-y-1">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 truncate">{type}</span>
-                <span className="font-medium text-gray-900">
-                  {count} ({percentage.toFixed(1)}%)
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-green-500 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${percentage}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
-
-  // Relationship type breakdown component
-  const RelationshipBreakdown = ({ relationships }) => {
-    if (!relationships || Object.keys(relationships).length === 0) {
-      return null;
-    }
-
-    // Memoize sorted relationships and total calculation
-    const { sortedRelationships, total } = useMemo(() => {
-      const sorted = Object.entries(relationships)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 10); // Top 10
-      const totalCount = Object.values(relationships).reduce((sum, count) => sum + count, 0);
-      return { sortedRelationships: sorted, total: totalCount };
-    }, [relationships]);
-
-    return (
-      <div className="space-y-2">
-        <h5 className="text-sm font-medium text-gray-700 mb-3">Relationship Types</h5>
-        {sortedRelationships.map(([type, count]) => {
-          const percentage = total > 0 ? (count / total) * 100 : 0;
-          
-          return (
-            <div key={type} className="space-y-1">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-700 truncate">{type}</span>
-                <span className="font-medium text-gray-900">
-                  {count} ({percentage.toFixed(1)}%)
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-purple-500 h-2 rounded-full transition-all duration-500"
-                  style={{ width: `${percentage}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+  // FIX #18: EntityBreakdown and RelationshipBreakdown now imported as separate components
+  // Previously defined here as internal functions, causing React Hooks violations
+  // when conditional rendering changed the hook count within Neo4jSnapshot.
 
   if (loading && !stats) {
     return (
@@ -303,15 +225,11 @@ const Neo4jSnapshot = ({ uploadId, status, metadata = {} }) => {
             </div>
           )}
 
-          {/* Entity Breakdown - Add additional safety check */}
-          {stats?.nodes?.by_label && Object.keys(stats.nodes.by_label).length > 0 && (
-            <EntityBreakdown entities={stats.nodes.by_label} />
-          )}
+          {/* Entity Breakdown - FIX #18: Always rendered (returns null if no data) */}
+          <EntityBreakdown entities={stats?.nodes?.by_label} />
 
-          {/* Relationship Breakdown - Add additional safety check */}
-          {stats?.relationships?.by_type && Object.keys(stats.relationships.by_type).length > 0 && (
-            <RelationshipBreakdown relationships={stats.relationships.by_type} />
-          )}
+          {/* Relationship Breakdown - FIX #18: Always rendered (returns null if no data) */}
+          <RelationshipBreakdown relationships={stats?.relationships?.by_type} />
 
           {/* Connection Status */}
           <div className="flex items-center gap-2 text-sm text-gray-600">

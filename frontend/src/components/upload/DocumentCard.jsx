@@ -6,6 +6,18 @@ export default function DocumentCard({ document, onRetry }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('metrics');
 
+  // 🔍 DEBUG: Phase 1 Investigation - Track props received
+  console.log(`[DocumentCard] Rendering for ${document.id}:`, {
+    timestamp: new Date().toISOString(),
+    status: document.status,
+    metrics: JSON.parse(JSON.stringify(document.metrics || {})),
+    metadata: JSON.parse(JSON.stringify(document.metadata || {})),
+    metrics_entities: document.metrics?.entities,
+    metrics_relations: document.metrics?.relations,
+    metadata_entities: document.metadata?.entities,
+    metadata_relations: document.metadata?.relations
+  });
+
   // Import tabs dynamically to avoid circular dependencies
   const MetricsPanel = React.lazy(() => import('./MetricsPanel'));
   const LogViewer = React.lazy(() => import('./LogViewer'));

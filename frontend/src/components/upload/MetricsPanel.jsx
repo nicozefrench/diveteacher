@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { useEffect } from 'react';
 import { Clock, FileText, Layers, GitFork, Zap, CheckCircle } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
@@ -11,16 +11,43 @@ import { cn } from '../../lib/utils';
  * - Performance metrics (durations, tokens/sec)
  * - Success/failure indicators
  * 
- * Optimized with React.memo to prevent unnecessary re-renders
+ * FIX #19: Removed React.memo() to ensure component always re-renders
+ * when parent state updates. This fixes the issue where final metrics
+ * (entities, relations) were not displayed after document completion.
+ * 
+ * Root Cause: React.memo() was using shallow comparison, which didn't
+ * detect changes in nested objects (status.metrics.entities/relations).
+ * 
+ * Solution: Remove memo() to guarantee re-render on every parent update.
+ * Performance impact is minimal as this component is only rendered per
+ * active document (typically 1-2 at a time).
  * 
  * @param {Object} props
  * @param {string} props.uploadId - Upload identifier
  * @param {Object} props.status - Current upload status
  * @param {Object} props.metadata - Document metadata
  */
-const MetricsPanel = memo(({ uploadId, status, metadata = {} }) => {
+const MetricsPanel = ({ uploadId, status, metadata = {} }) => {
   const metrics = status?.metrics || {};
   const durations = status?.durations || {};
+
+  // 🔍 DEBUG: Phase 1 Investigation - Track when props change
+  useEffect(() => {
+    console.log(`[MetricsPanel] Props received/updated:`, {
+      timestamp: new Date().toISOString(),
+      uploadId,
+      status_status: status?.status,
+      metrics: JSON.parse(JSON.stringify(metrics)),
+      metadata: JSON.parse(JSON.stringify(metadata)),
+      metrics_entities: metrics?.entities,
+      metrics_relations: metrics?.relations,
+      metadata_entities: metadata?.entities,
+      metadata_relations: metadata?.relations,
+      metrics_file_size_mb: metrics?.file_size_mb,
+      metrics_pages: metrics?.pages,
+      metrics_num_chunks: metrics?.num_chunks
+    });
+  }, [uploadId, status, metrics, metadata]);
 
   // Calculate derived metrics
   const totalDuration = durations.total || 0;
@@ -275,7 +302,7 @@ const MetricsPanel = memo(({ uploadId, status, metadata = {} }) => {
       )}
     </div>
   );
-});
+};
 
 // Display name for debugging
 MetricsPanel.displayName = 'MetricsPanel';
