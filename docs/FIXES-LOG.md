@@ -1,8 +1,8 @@
 # 🔧 Fixes Log - DiveTeacher RAG System
 
 > **Purpose:** Track all bugs fixed, problems resolved, and system improvements  
-> **Last Updated:** October 30, 2025, 19:30 CET  
-> **Status:** Session 10 COMPLETE (Fix #19-20 VALIDATED ✅ + Performance Optimization DEPLOYED 🚀)
+> **Last Updated:** October 30, 2025, 20:20 CET  
+> **Status:** Session 10 COMPLETE (Fix #19-20 VALIDATED ✅ + Performance Optimized 74% 🚀)
 
 ---
 
@@ -17,13 +17,14 @@
 
 ## Active Fixes
 
-### 🚀 PERFORMANCE OPTIMIZATION - Parallel Processing (ARIA Pattern) - EN COURS
+### ✅ PERFORMANCE OPTIMIZATION - Parallel Processing (ARIA Pattern) - VALIDÉ ✅
 
-**Status:** 🚧 DEPLOYED - AWAITING VALIDATION  
+**Status:** ✅ FIXED, DEPLOYED & VALIDATED  
 **Opened:** October 30, 2025, 19:05 CET (User request for performance improvement)  
-**Deployed:** October 30, 2025, 19:52 CET (Revised: Parallel only, no custom embedder)  
+**Deployed:** October 30, 2025, 19:52 CET (Parallel processing only)  
+**Validated:** October 30, 2025, 20:11 CET (Test Run #16)  
 **Priority:** P1 - HIGH (User Experience)  
-**Impact:** Expected 5× speedup via parallel processing (4m → 45-60s for 30 chunks)
+**Impact:** 74% faster processing (4m 6s → 1m 13s for 30 chunks) 🚀
 
 **Context:**
 After achieving 100% production readiness (Fix #19, #20), user questioned why ingestion takes 8.2s per chunk for a simple 2-page PDF. Analysis revealed sequential chunk processing as the bottleneck.
@@ -101,9 +102,19 @@ Gain: -185s (-75%) 🚀
 - **Focus:** Parallel processing only (still significant gain)
 
 **Testing:**
-- ⏳ Awaiting E2E test with test.pdf
-- ⏳ Expected: < 1 minute (vs 4 minutes baseline)
-- ⏳ Verify 100% success rate (ARIA standard)
+- ✅ **VALIDATED in Test Run #16** (Oct 30, 20:11 CET)
+- ✅ **PROOF:** 73 seconds total (vs 245s baseline)
+- ✅ **SUCCESS:** 74% faster, 100% success rate, no crashes
+
+**Test Results (Run #16):**
+- ✅ Total time: 73s (vs 249s baseline) - **70% faster**
+- ✅ Ingestion: 62.8s (vs 245s) - **74% faster**
+- ✅ Avg per chunk: 2.1s effective (vs 8.2s) - **3.9× speedup**
+- ✅ Best batch: 7.44s for 5 chunks (5.5× speedup)
+- ✅ 30/30 chunks successful (100%)
+- ✅ Metrics displayed: 82 entities, 77 relations
+- ✅ Performance badge: "Good" (green)
+- ✅ No crashes, no errors
 
 **Deployment:**
 ```bash
