@@ -17,16 +17,16 @@
 
 ## Active Fixes
 
-### 🚀 PERFORMANCE OPTIMIZATION - Batch Embeddings + Parallel Processing - EN COURS
+### 🚀 PERFORMANCE OPTIMIZATION - Parallel Processing (ARIA Pattern) - EN COURS
 
 **Status:** 🚧 DEPLOYED - AWAITING VALIDATION  
 **Opened:** October 30, 2025, 19:05 CET (User request for performance improvement)  
-**Deployed:** October 30, 2025, 19:30 CET  
+**Deployed:** October 30, 2025, 19:52 CET (Revised: Parallel only, no custom embedder)  
 **Priority:** P1 - HIGH (User Experience)  
-**Impact:** Expected 80-85% reduction in processing time (4m → 45s for 30 chunks)
+**Impact:** Expected 5× speedup via parallel processing (4m → 45-60s for 30 chunks)
 
 **Context:**
-After achieving 100% production readiness (Fix #19, #20), user questioned why ingestion takes 8.2s per chunk for a simple 2-page PDF. Analysis revealed sequential API calls (Claude + OpenAI embeddings) as the bottleneck.
+After achieving 100% production readiness (Fix #19, #20), user questioned why ingestion takes 8.2s per chunk for a simple 2-page PDF. Analysis revealed sequential chunk processing as the bottleneck.
 
 **Problem:**
 ```
@@ -53,52 +53,52 @@ User impact: UNACCEPTABLE for production
 
 **Solution Implemented (ARIA Pattern):**
 
-**1. Batch OpenAI Embeddings:**
-```python
-# NEW: backend/app/integrations/batch_embedder.py
-class BatchOpenAIEmbedder:
-    """
-    Batch embeddings: 100 texts per API call (vs 1)
-    Queue management: Auto-batch concurrent requests
-    Expected gain: 60-70% faster embeddings
-    """
-    
-    async def embed_many(self, texts: List[str]) -> List[List[float]]:
-        # Single API call for entire batch
-        response = await self.client.embeddings.create(
-            model="text-embedding-3-small",
-            input=texts  # Batch!
-        )
-        return [item.embedding for item in response.data]
-```
-
-**2. Parallel Chunk Processing:**
+**Parallel Chunk Processing:**
 ```python
 # MODIFIED: backend/app/integrations/graphiti.py
-# Process 5 chunks simultaneously (ARIA pattern)
-for batch in chunks_in_batches(5):
-    results = await asyncio.gather(*[
-        _process_single_chunk(client, chunk, metadata, group_id)
-        for chunk in batch
-    ])
+
+# Helper function for single chunk
+async def _process_single_chunk(client, chunk, metadata, group_id):
+    await client.add_episode(...)
+    return result
+
+# Main ingestion with parallel batches
+async def ingest_chunks_to_graph(...):
+    BATCH_SIZE = 5  # ARIA-validated (safe for Neo4j)
+    
+    for batch in chunks_in_batches(5):
+        # Process 5 chunks simultaneously
+        results = await asyncio.gather(*[
+            _process_single_chunk(client, chunk, metadata, group_id)
+            for chunk in batch
+        ])
+        
+        # Log performance metrics
+        speedup = (len(batch) * 8.2) / batch_elapsed
+        logger.info(f"Speedup: {speedup:.1f}× vs sequential")
 ```
 
 **Files Changed:**
-- NEW: `backend/app/integrations/batch_embedder.py` (BatchOpenAIEmbedder implementation)
-- MODIFIED: `backend/app/integrations/graphiti.py` (parallel batching + batch embedder integration)
+- MODIFIED: `backend/app/integrations/graphiti.py` (parallel batching implementation)
 - MODIFIED: `backend/app/core/config.py` (added GRAPHITI_PARALLEL_BATCH_SIZE=5)
 
 **Expected Performance:**
 ```
 Current: 30 chunks × 8.2s = 245s (4m 6s)
 
-With Optimizations:
-- Batch embeddings: 8.2s → 5s per chunk (-40%)
-- Parallel (batch=5): 6 batches × 5s = 30s (-88%)
+With Parallel Processing (batch=5):
+- 6 batches × 8s = 48s (wall-clock time)
+- Effective: ~1.6s per chunk
 
-Expected: 30-45 seconds for 30 chunks
-Gain: -215s (-88%) 🚀
+Expected: 45-60 seconds for 30 chunks  
+Gain: -185s (-75%) 🚀
 ```
+
+**Note on Batch Embeddings:**
+- Attempted custom BatchOpenAIEmbedder
+- **Blocked by:** Graphiti Pydantic strict validation (requires EmbedderClient type)
+- **Decision:** Keep default OpenAI embedder (works, no Pydantic issues)
+- **Focus:** Parallel processing only (still significant gain)
 
 **Testing:**
 - ⏳ Awaiting E2E test with test.pdf

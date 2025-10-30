@@ -25,7 +25,6 @@ from graphiti_core.search.search_config import SearchConfig
 
 from app.core.config import settings
 from app.core.logging_config import log_stage_start, log_stage_progress, log_stage_complete, log_error
-from app.integrations.batch_embedder import BatchOpenAIEmbedder
 
 logger = logging.getLogger('diveteacher.graphiti')
 
@@ -80,20 +79,14 @@ async def get_graphiti_client() -> Graphiti:
         llm_client = AnthropicClient(config=llm_config, cache=False)
         
         # ════════════════════════════════════════════════════════
-        # PERFORMANCE OPTIMIZATION: Batch Embedder (ARIA Pattern)
+        # PERFORMANCE OPTIMIZATION: Parallel Processing Only
         # ════════════════════════════════════════════════════════
-        
-        # Custom batch embedder for 60-70% faster embeddings
-        batch_embedder = BatchOpenAIEmbedder(
-            api_key=settings.OPENAI_API_KEY,
-            model="text-embedding-3-small",
-            batch_size=100,  # OpenAI supports up to 2048, using 100 for safety
-            batch_wait_ms=50  # Wait 50ms for batch to fill
-        )
+        # Note: Batch embedder removed due to Graphiti Pydantic strict validation
+        # Keeping only parallel chunk processing (still 5× speedup)
         
         logger.info(f"🚀 Performance optimization enabled:")
-        logger.info(f"   • Batch Embedder: 100 texts per API call (vs 1)")
-        logger.info(f"   • Expected: 60-70% faster embeddings")
+        logger.info(f"   • Parallel Processing: batch_size={getattr(settings, 'GRAPHITI_PARALLEL_BATCH_SIZE', 5)}")
+        logger.info(f"   • Expected: 5× speedup on wall-clock time")
         
         # ════════════════════════════════════════════════════════
         # Initialisation Graphiti avec config Claude Haiku 4.5
@@ -103,15 +96,15 @@ async def get_graphiti_client() -> Graphiti:
             uri=settings.NEO4J_URI,
             user=settings.NEO4J_USER,
             password=settings.NEO4J_PASSWORD,
-            llm_client=llm_client,  # ✅ Native Anthropic client
-            embedder=batch_embedder  # ✅ Custom batch embedder for performance
+            llm_client=llm_client  # ✅ Native Anthropic client
+            # embedder: Default OpenAI (Graphiti handles internally, no Pydantic issues)
         )
         
         logger.info(f"✅ Graphiti client initialized:")
         logger.info(f"   • LLM: Claude Haiku 4.5 (native AnthropicClient)")
-        logger.info(f"   • Embedder: Batch OpenAI (text-embedding-3-small, dim: 1536)")
+        logger.info(f"   • Embedder: Default OpenAI (text-embedding-3-small, dim: 1536)")
         logger.info(f"   • Architecture: ARIA-validated (5 days production, 100% uptime)")
-        logger.info(f"   • Optimization: Batch embeddings enabled (ARIA pattern)")
+        logger.info(f"   • Optimization: Parallel chunk processing enabled")
     
     # Build indices and constraints (only once)
     if not _indices_built:
@@ -384,7 +377,7 @@ async def ingest_chunks_to_graph(
                 "total_chunks": len(chunks),
                 "successful": successful,
                 "failed": failed,
-                "avg_time_per_chunk": round(avg_time, 2),
+                "avg_time_per_chunk": round(avg_time_per_chunk, 2),
                 "success_rate": round((successful / len(chunks)) * 100, 1) if chunks else 0
             }
         )
@@ -395,7 +388,7 @@ async def ingest_chunks_to_graph(
         logger.info(f"   • Successful: {successful}")
         logger.info(f"   • Failed: {failed}")
         logger.info(f"   • Total time: {total_time:.2f}s")
-        logger.info(f"   • Avg time/chunk: {avg_time:.2f}s")
+        logger.info(f"   • Avg time/chunk: {avg_time_per_chunk:.2f}s")
         
         if failed > 0:
             logger.warning(f"⚠️  Ingestion completed with {failed} failures")
