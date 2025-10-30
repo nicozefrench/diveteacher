@@ -58,6 +58,24 @@ const Neo4jSnapshot = ({ uploadId, status, metadata = {} }) => {
     return () => clearInterval(interval);
   }, [autoRefresh, status?.status]);
 
+  // FIX #20: Memoize calculated stats BEFORE early returns
+  // This ensures hooks are called in the same order on every render
+  // Previously, useMemo was after early returns, causing hook order to change
+  const { totalNodes, totalRelationships, graphDensity } = useMemo(() => {
+    // Robust null checks to prevent crashes with empty/undefined stats
+    if (!stats) {
+      return { totalNodes: 0, totalRelationships: 0, graphDensity: '0.00' };
+    }
+    
+    const nodes = stats?.nodes?.total || 0;
+    const relationships = stats?.relationships?.total || 0;
+    
+    // Prevent division by zero and ensure string return for display
+    const density = nodes > 0 ? (relationships / nodes).toFixed(2) : '0.00';
+    
+    return { totalNodes: nodes, totalRelationships: relationships, graphDensity: density };
+  }, [stats]);
+
   // Stat card component
   const StatCard = ({ icon: Icon, label, value, color = 'blue', subtext }) => (
     <div className={cn(
@@ -79,10 +97,8 @@ const Neo4jSnapshot = ({ uploadId, status, metadata = {} }) => {
     </div>
   );
 
-  // FIX #18: EntityBreakdown and RelationshipBreakdown now imported as separate components
-  // Previously defined here as internal functions, causing React Hooks violations
-  // when conditional rendering changed the hook count within Neo4jSnapshot.
-
+  // Early returns are now AFTER all hooks (useState, useEffect, useMemo)
+  // This ensures consistent hook order on every render
   if (loading && !stats) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -110,22 +126,6 @@ const Neo4jSnapshot = ({ uploadId, status, metadata = {} }) => {
       </div>
     );
   }
-
-  // Memoize calculated stats to avoid recalculation on every render
-  const { totalNodes, totalRelationships, graphDensity } = useMemo(() => {
-    // 🔧 FIX: Add robust null checks to prevent crashes with empty/undefined stats
-    if (!stats) {
-      return { totalNodes: 0, totalRelationships: 0, graphDensity: '0.00' };
-    }
-    
-    const nodes = stats?.nodes?.total || 0;
-    const relationships = stats?.relationships?.total || 0;
-    
-    // Prevent division by zero and ensure string return for display
-    const density = nodes > 0 ? (relationships / nodes).toFixed(2) : '0.00';
-    
-    return { totalNodes: nodes, totalRelationships: relationships, graphDensity: density };
-  }, [stats]);
 
   return (
     <div className="space-y-6">
