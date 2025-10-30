@@ -47,6 +47,8 @@ class Settings(BaseSettings):
     
     # Graphiti Configuration
     GRAPHITI_ENABLED: bool = True
+    GRAPHITI_PARALLEL_BATCH_SIZE: int = 5  # Number of chunks to process in parallel (ARIA pattern)
+    GRAPHITI_EMBEDDING_BATCH_SIZE: int = 100  # Batch size for OpenAI embeddings
     
     # File Storage
     UPLOAD_DIR: str = "/uploads"
