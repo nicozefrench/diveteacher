@@ -11,7 +11,7 @@
 > - Performance metrics
 > - Next steps
 
-**Last Updated:** October 30, 2025 09:35 CET - Session 9 - FIX #14 DEPLOYED ✅  
+**Last Updated:** October 30, 2025 11:35 CET - Session 10 - FIX #16 DEPLOYED ⏳  
 **Project:** DiveTeacher - Assistant IA pour Formation Plongée  
 **Repository:** https://github.com/nicozefrench/diveteacher (PRIVÉ)  
 **Domaine Principal:** diveteacher.io (+ diveteacher.app en redirect)
@@ -20,38 +20,154 @@
 
 ## 📍 Current Status
 
-**Phase:** All UI Fixes Complete - Production Ready for Large Document Testing  
-**Session:** 9 (E2E Testing + UI Race Condition Fix)  
+**Phase:** Fix #16 Deployed - Awaiting E2E Test Validation  
+**Session:** 10 (Polling Redesign - Fix #14 Failed)  
 **Environment:** macOS (darwin 24.6.0) - Mac M1 Max, 32GB RAM, Docker Desktop 16GB  
-**Status:** ✅ **100% PRODUCTION READY** - 13 fixes deployed
+**Status:** 🚧 **FIX #16 DEPLOYED** - Awaiting user E2E test
 
 **System State:**
 - ✅ **Backend:** All 12 fixes deployed - HEALTHY
-- ✅ **Frontend:** Fix #14 (Polling Race Condition) deployed - READY
+- 🚧 **Frontend:** Fix #16 (Polling Redesign) deployed - AWAITING TEST
 - ✅ **Neo4j:** Clean (ready for new test)
 - ✅ **Ollama:** Loaded (qwen2.5:7b-instruct-q8_0)
 - ✅ **Docling:** ALL models (Docling + EasyOCR) cached during warmup ✅
 
-**All Fixes (Session 8 + 9 - Complete):**
+**All Fixes (Session 8-10):**
 - ✅ Fix #1-7: E2E blockers + Performance (documented previously)
 - ✅ Fix #8: OCR warmup incomplete → Test conversion now downloads models
 - ✅ Fix #9: Init-E2E script JSON parsing errors → Fixed
 - ✅ Fix #11: UI Progress Feedback - Real-time updates during ingestion
 - ✅ Fix #12: Neo4j Entity/Relation Counts - Now calculated correctly
 - ✅ Fix #13: Multi-Document UI Support - Collapsible cards
-- ✅ **Fix #14:** Polling Race Condition - Final metrics now display (NEW!)
+- ❌ **Fix #14:** Polling Race Condition - "One more poll" strategy FAILED (Test Run #11)
+- ✅ **Fix #15:** Progress Bar Visibility - Remains visible at 100% completion
+- 🚧 **Fix #16:** Polling Redesign - Never stop polling for completed docs (DEPLOYED)
 
 **Development Strategy:**
 - ✅ **Phases 0-1.0:** 100% Local sur Mac M1 Max (Docker) → **Coût: ~$5/mois (APIs)**
 - ✅ **UI Enhancement:** Complete 4-phase implementation with monitoring tools
 - ✅ **Production Monitoring:** CLI tools, init scripts, comprehensive logging
-- **Next:** Complete E2E test with test.pdf to validate entire pipeline
+- 🚧 **Current:** Fix #16 deployed, awaiting E2E test to validate polling redesign
 - ⏸️ **Phase 9:** Production (DigitalOcean GPU + Vercel) → **Coût: ~$170/mois**  
   (Activé UNIQUEMENT quand tout fonctionne en local)
 
 ---
 
-## 🎯 Session 9 Summary (October 30, 2025) ✅ COMPLETE
+## 🎯 Session 10 Summary (October 30, 2025) 🚧 IN PROGRESS
+
+**Duration:** ~1 hour (10:15-11:35 CET) - Analysis + Redesign + Deploy  
+**Focus:** Fix #14 failed - Complete polling redesign required  
+**Status:** 🚧 FIX #16 DEPLOYED - AWAITING E2E TEST
+
+### Session Timeline
+
+**Phase 1: Test Run #11 Analysis (10:15-10:30)**
+- Review Test Run #11 results and user report
+- Cross-reference backend logs with UI screenshots
+- Discover Fix #14 "one more poll" strategy completely failed
+- All metrics still empty, performance badge still stuck
+
+**Phase 2: Root Cause Deep Dive (10:30-10:45)**
+- Analyzed sync/async timing issue in Fix #14
+- Identified fundamental architectural flaw
+- Designed Fix #16: "Never stop polling for completed"
+- Created development plan `Devplan/251030-FIX-16-POLLING-REDESIGN-PLAN.md`
+
+**Phase 3: Implementation (10:45-11:25)**
+- Removed all Fix #14 code (`completedDocsRef` logic)
+- Implemented Fix #16: Only stop polling for failures
+- Added comprehensive comments explaining rationale
+- Rebuilt frontend container
+- Initialized system with `init-e2e-test.sh`
+
+**Phase 4: Bug #17 Investigation (11:00-11:10)**
+- Analyzed `Neo4jSnapshot.jsx` for React Hooks violations
+- ✅ No violations found - all hooks called unconditionally
+- Conclusion: React Hooks error was secondary symptom of Bug #16
+
+**Phase 5: Documentation (11:10-11:35)**
+- Updated `docs/FIXES-LOG.md` with Fix #16
+- Updated `docs/TESTING-LOG.md` status
+- Updated `CURRENT-CONTEXT.md` (this file)
+- Ready for user E2E testing
+
+### Key Findings
+
+**❌ Fix #14 Failed - Why:**
+
+Fix #14's "one more poll" approach had a **fundamental design flaw**:
+
+```javascript
+// Fix #14 (FAILED):
+if (status.status === 'completed') {
+  setDocuments(...status);      // ⚠️ ASYNC (scheduled)
+  if (completedDocsRef.has(id)) {
+    clearInterval(interval);     // ⚠️ SYNC (immediate)
+  } else {
+    completedDocsRef.add(id);
+  }
+}
+```
+
+**The Race Condition:**
+1. Poll N: Backend returns `completed` with metrics
+2. Frontend schedules `setDocuments()` (async)
+3. Frontend adds uploadId to `completedDocsRef`
+4. Poll N+1: Backend returns same data
+5. Frontend sees uploadId in ref → **STOPS POLLING**
+6. `clearInterval()` executes **synchronously**
+7. React's state update still **pending in queue**
+8. React never gets time to render → UI frozen
+
+**✅ Fix #16 Solution:**
+
+```javascript
+// Fix #16 (CORRECT):
+if (status.status === 'failed') {
+  // Only stop for actual failures
+  clearInterval(interval);
+}
+// For 'completed': Continue polling indefinitely
+// Cleanup via useEffect on unmount
+```
+
+**Why This Works:**
+- ✅ Eliminates race condition entirely
+- ✅ React has unlimited time to update
+- ✅ Minimal overhead (~50ms per poll)
+- ✅ Natural cleanup on navigation
+- ✅ Simpler code (-15 lines)
+
+### Files Modified
+
+1. **`frontend/src/components/upload/UploadTab.jsx`**
+   - Removed: `completedDocsRef` declaration (line 15)
+   - Removed: All "one more poll" logic (lines 125, 131-141)
+   - Added: "Never stop polling" logic with comments (lines 127-145)
+   - Net: -15 lines flawed code, +19 lines correct code
+
+2. **Documentation:**
+   - `docs/FIXES-LOG.md` - Added Fix #16 entry
+   - `docs/TESTING-LOG.md` - Updated status
+   - `Devplan/251030-FIX-16-POLLING-REDESIGN-PLAN.md` - Complete dev plan
+   - `Devplan/251030-E2E-TEST-RUN-11-REPORT.md` - Test analysis
+   - `CURRENT-CONTEXT.md` - This summary
+
+### Impact
+
+**Expected After E2E Test:**
+- ✅ All metrics display correctly (file size, pages, chunks, entities, relations)
+- ✅ Performance badge shows completion time
+- ✅ No race condition - guaranteed data display
+- ✅ Simplified codebase - removed complex timing logic
+- ✅ Better UX - metrics always visible
+
+**Lesson Learned:**
+Never make synchronous control flow decisions (like stopping intervals) immediately after scheduling async state updates. Either let async operations complete naturally (our solution) or use React's built-in mechanisms (useEffect).
+
+---
+
+## 🎯 Session 9 Summary (October 30, 2025) ❌ FAILED - See Session 10
 
 **Duration:** ~1.5 hours (08:00-09:35 CET) - E2E Test + Analysis + Fix!  
 **Focus:** Validate UI fixes + Identify remaining bugs + Fix polling race condition  

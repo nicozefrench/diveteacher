@@ -12,7 +12,6 @@ const UploadTab = () => {
   const [retryAttempts, setRetryAttempts] = useState({}); // Track retry attempts per document
   const pollIntervalsRef = useRef({}); // Track polling intervals
   const isVisibleRef = useRef(true); // Track tab visibility
-  const completedDocsRef = useRef(new Set()); // Track completed docs for one-more-poll fix
 
   const handleFileUpload = async (file) => {
     setIsUploading(true);
@@ -122,24 +121,28 @@ const UploadTab = () => {
             // Clear interval after max retries
             clearInterval(interval);
             delete pollIntervalsRef.current[uploadId];
-            completedDocsRef.current.delete(uploadId);
           }
         }
 
-        // Stop polling if complete or failed (Option C: One more cycle after first detection)
-        if (status.status === 'completed' || status.status === 'failed') {
-          if (completedDocsRef.current.has(uploadId)) {
-            // Second time seeing completed/failed status - NOW stop polling
-            console.log(`Final poll complete for ${uploadId}, stopping`);
-            clearInterval(interval);
-            delete pollIntervalsRef.current[uploadId];
-            completedDocsRef.current.delete(uploadId);
-          } else {
-            // First time seeing completed/failed - mark and continue ONE more cycle
-            console.log(`First completion detected for ${uploadId}, one more poll to ensure data is rendered`);
-            completedDocsRef.current.add(uploadId);
-          }
+        // FIX #16: Never stop polling for 'completed' status to eliminate race condition
+        // Why: React's setDocuments() is async (scheduled), but clearInterval() is sync
+        // The "one more poll" approach (Fix #14) failed because polling stopped before
+        // React finished updating the UI with final metrics.
+        // Solution: Let polling continue indefinitely for completed docs. This:
+        //   - Eliminates race condition entirely
+        //   - Ensures metrics always display (React has unlimited time to update)
+        //   - Has minimal overhead (API is fast ~50ms for completed docs)
+        //   - Cleanup happens naturally on component unmount (useEffect below)
+        
+        // Only stop polling for actual failures (not completion)
+        if (status.status === 'failed') {
+          console.log(`Document ${uploadId} failed, stopping polling`);
+          clearInterval(interval);
+          delete pollIntervalsRef.current[uploadId];
         }
+        
+        // For 'completed' status: Continue polling indefinitely
+        // User can navigate away anytime (polling stops via useEffect cleanup)
       } catch (err) {
         console.error('Status poll error:', err);
         // Continue polling even on error (might be temporary network issue)

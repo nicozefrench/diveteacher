@@ -1,15 +1,17 @@
 # 🧪 Testing Log - DiveTeacher RAG System
 
 > **Purpose:** Historique complet des tests effectués, résultats, et état du système  
-> **Last Updated:** October 30, 2025, 09:30 CET  
-> **Current Status:** ✅ BACKEND FUNCTIONAL | ✅ UI RACE CONDITION FIXED
+> **Last Updated:** October 30, 2025, 11:30 CET  
+> **Current Status:** 🚧 Fix #16 DEPLOYED | ⏳ AWAITING E2E TEST VALIDATION
 
-**🎉 Latest Achievement:** E2E Test with UI Validation (Oct 30, 09:00 CET) - Backend fully functional, real-time progress working, final metrics display fixed! - See Test Run #10
+**🚧 Fix #16 Deployed:** Polling Redesign - "Never stop polling for completed docs" strategy implemented (Oct 30, 11:25 CET). Completely redesigned polling logic to eliminate race condition. Awaiting E2E test validation.
 
-**✅ ALL ISSUES RESOLVED:**
-- ✅ Real-time progress feedback during ingestion (Fix #11)
-- ✅ Multi-document UI with collapsible cards (Fix #13)
-- ✅ Polling race condition preventing final metrics display (Fix #14 - JUST FIXED)
+**🔴 Previous Critical Issue (ADDRESSED):**
+- ❌ **Bug #16: Fix #14 Polling Race Condition NOT WORKING** (Test Run #11, Oct 30)
+  - All processing metrics empty ("—") after completion
+  - Performance badge stuck on "Processing..."
+  - "One more poll" strategy fundamentally flawed (sync/async mismatch)
+  - **SOLUTION DEPLOYED:** Redesigned to never stop polling for completed docs
 
 ---
 
@@ -192,9 +194,15 @@ curl -s http://localhost:8000/api/neo4j/stats | jq '{nodes: .nodes.total, rels: 
 | **Fact Retrieval** | ✅ PASS | 5 facts retrieved |
 | **LLM Generation** | ✅ PASS | 73s, 2.7 tok/s |
 
-### Critical Issues: 🎉 NONE
+### Critical Issues: ⏳ 1 PENDING VALIDATION
 
-All P0 bugs resolved! System ready for production document testing.
+**P0 - CRITICAL (DEPLOYED - AWAITING TEST):**
+- 🚧 **Fix #16: Polling Redesign (Replaces Failed Fix #14)**
+  - Redesigned polling to never stop for completed documents
+  - Eliminates sync/async race condition entirely
+  - React has unlimited time to update UI with final metrics
+  - Natural cleanup via useEffect on component unmount
+  - Deployed Oct 30, 11:25 CET - **AWAITING E2E TEST VALIDATION**
 
 ### Minor Issues (Non-Blocking)
 
@@ -227,6 +235,95 @@ HTTP Timeout: read=120s (robust fix applied)
 | **Last Document** | test.pdf (2 pages) | 2025-10-29 09:40 |
 
 **Note:** Knowledge graph successfully populated from test.pdf ingestion.
+
+---
+
+## Historique des Tests
+
+### 🔴 Session 10: E2E Test Run #11 - Fix #14 Validation FAILED (Oct 30, 2025)
+
+**Test Run #11: Fix #14 Validation - CRITICAL FAILURE**
+
+**Date:** October 30, 2025, 08:45-10:15 CET  
+**Duration:** ~1.5 hours (5 min test + 1h analysis + report)  
+**Result:** ❌ **CRITICAL FAILURE - Fix #14 Does Not Work**
+
+**Objective:**
+- Validate Fix #14 (Polling Race Condition) and Fix #15 (Progress Bar Visibility)
+- Perform complete E2E test with silent monitoring
+- Verify metrics display correctly after completion
+
+**Test Execution:**
+- Document: test.pdf (77.7 KB, 2 pages)
+- Upload ID: `c1abfb9c-733c-4e7e-b86c-cc3c1c800f85`
+- System initialized with `init-e2e-test.sh` (clean state)
+- Silent monitoring with timed screenshots
+
+**Results:**
+
+**✅ What Worked:**
+1. **Fix #15 (Progress Bar Visibility) - SUCCESS ✅**
+   - Progress bar visible at 100% with green color
+   - No premature disappearance
+   - Smooth transition from blue to green
+   - **VALIDATED COMPLETELY**
+
+2. **Backend Processing - PERFECT ✅**
+   - 100% success rate (30/30 chunks)
+   - Total time: 301.61s (~5 min)
+   - Metrics calculated correctly: 75 entities, 83 relations
+   - API returns complete data when queried manually
+
+3. **Real-time Progress (Fix #11) - WORKING ✅**
+   - Chunk-by-chunk updates during processing
+   - Accurate percentages (3% → 100%)
+   - Smooth UI updates every 1.5s
+
+**❌ What Failed:**
+
+4. **Fix #14 (Polling Race Condition) - COMPLETE FAILURE ❌**
+   - **All metrics show "—" (empty)** despite backend having correct data
+   - **Performance badge stuck on "Processing..."** instead of completion time
+   - **Issue persists 3+ minutes after completion** (not a timing issue)
+   - Backend API returns correct data when queried manually
+   - Console logs show "one more poll" executed, but data never displayed
+
+**Root Cause - Why Fix #14 Failed:**
+
+The "one more poll" strategy has a **fundamental flaw**:
+
+```javascript
+// The Problem:
+Time 0ms:   Poll 1 returns {status: 'completed', entities: 75}
+Time 0ms:   setDocuments() scheduled (ASYNC - React batches updates)
+Time 0ms:   completedDocsRef.add(uploadId)
+Time 1500ms: Poll 2 returns {status: 'completed', entities: 75}
+Time 1500ms: clearInterval() executes IMMEDIATELY (SYNC)
+Time 1500ms: Polling STOPPED
+Time ???ms:  React finally processes setDocuments() from Poll 1
+            ❌ But there will be no Poll 3 to display the data!
+```
+
+**The Core Issue:**
+- `setDocuments()` is **asynchronous** (React schedules state updates)
+- `clearInterval()` is **synchronous** (executes immediately)
+- Even with "one more poll", React might not have finished updating the DOM
+- Polling stops BEFORE React guarantees the UI update
+
+**Impact:**
+- 🔴 **Complete failure of metrics display**
+- 🔴 **User sees no processing results**
+- 🔴 **System appears broken despite working backend**
+- 🔴 **Blocks all production deployment**
+
+**Full Report:** `Devplan/251030-E2E-TEST-RUN-11-REPORT.md` (898 lines)
+
+**Recommended Solutions:**
+1. **Option A (Recommended):** Never stop polling for completed documents
+2. **Option B:** useEffect-based stop (watch for metrics in React state)
+3. **Option C:** Three more polls instead of one (quick fix, hacky)
+
+**Status:** 🔴 **BLOCKING** - Must be fixed before any further E2E testing
 
 ---
 
