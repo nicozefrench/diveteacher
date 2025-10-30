@@ -1,8 +1,8 @@
 # 🔧 Fixes Log - DiveTeacher RAG System
 
 > **Purpose:** Track all bugs fixed, problems resolved, and system improvements  
-> **Last Updated:** October 30, 2025, 18:05 CET  
-> **Status:** Session 10 COMPLETE (Fix #19 Deployed - Props Mismatch RESOLVED ✅)
+> **Last Updated:** October 30, 2025, 18:35 CET  
+> **Status:** Session 10 COMPLETE (Fix #19 VALIDATED ✅ - Metrics Display Working!)
 
 ---
 
@@ -17,13 +17,138 @@
 
 ## Active Fixes
 
-### ✅ FIX #19 - METRICSPANEL PROPS MISMATCH - Final Metrics Not Displayed - RÉSOLU
+### 🟡 FIX #20 - REACT HOOKS VIOLATION - Neo4jSnapshot Hook Order - EN COURS
 
-**Status:** ✅ FIXED & DEPLOYED  
+**Status:** 🟡 OPEN - READY TO FIX  
+**Opened:** October 30, 2025, 18:26 CET (Discovered in Test Run #13)  
+**Priority:** P2 - HIGH (Non-Blocking but should be fixed)  
+**Impact:** Console error only, app fully functional
+
+**Context:**
+Discovered during Test Run #13 (Fix #19 validation). Despite Fix #19 working perfectly (metrics display correctly), a React Hooks error persists in the browser console.
+
+**Problem:**
+```
+Warning: React has detected a change in the order of Hooks called by Neo4jSnapshot
+Error: Rendered more hooks than during the previous render
+
+Previous render: useState(x4) + useEffect(x2) = 6 hooks
+Next render: useState(x4) + useEffect(x2) + useMemo(x1) = 7 hooks
+```
+
+**Root Cause:**
+🚨 **HOOK ORDER VIOLATION - Early Returns Skip useMemo**
+
+In `Neo4jSnapshot.jsx`, the `useMemo` hook is called AFTER early return statements, causing the hook count to change between renders:
+
+```jsx
+// CURRENT (BROKEN):
+const Neo4jSnapshot = ({ uploadId, status, metadata }) => {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  
+  // useEffect hooks...
+  
+  if (loading && !stats) {
+    return <div>Loading...</div>;  // ← EARLY RETURN (skips useMemo below)
+  }
+  
+  if (error) {
+    return <div>Error...</div>;    // ← EARLY RETURN (skips useMemo below)
+  }
+  
+  // ❌ useMemo ONLY called if no early return above
+  const { totalNodes, totalRelationships, graphDensity } = useMemo(() => {
+    // ... calculation
+  }, [stats]);
+```
+
+**The Bug Timeline:**
+1. First render: `stats = null, loading = true`
+   - Early return at line 86 → useMemo NOT called
+   - Hook count: 6 (useState x4 + useEffect x2)
+
+2. Second render: `stats = {...}, loading = false`
+   - No early return → useMemo IS called
+   - Hook count: 7 (useState x4 + useEffect x2 + useMemo x1)
+
+3. React detects: Hook order changed (6 → 7)
+   - Error: "Rendered more hooks than during previous render"
+
+**Why This Matters:**
+- Violates React's Rules of Hooks
+- Could cause issues in future React versions
+- Creates console noise (makes debugging harder)
+- Indicates code quality issue
+
+**Why It's Non-Blocking:**
+- App works perfectly despite the error
+- All features functional (metrics display, progress, etc.)
+- No data loss, no crashes
+- User experience unaffected
+
+**Solution:**
+Move `useMemo` BEFORE early returns so it's always called:
+
+```jsx
+// FIXED:
+const Neo4jSnapshot = ({ uploadId, status, metadata }) => {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  
+  // useEffect hooks...
+  
+  // ✅ useMemo BEFORE early returns (always called)
+  const { totalNodes, totalRelationships, graphDensity } = useMemo(() => {
+    if (!stats) {
+      return { totalNodes: 0, totalRelationships: 0, graphDensity: '0.00' };
+    }
+    const nodes = stats?.nodes?.total || 0;
+    const relationships = stats?.relationships?.total || 0;
+    const density = nodes > 0 ? (relationships / nodes).toFixed(2) : '0.00';
+    return { totalNodes: nodes, totalRelationships: relationships, graphDensity: density };
+  }, [stats]);
+  
+  // NOW safe to early return (all hooks already called)
+  if (loading && !stats) {
+    return <div>Loading...</div>;
+  }
+  
+  if (error) {
+    return <div>Error...</div>;
+  }
+```
+
+**Files to Change:**
+- `frontend/src/components/upload/Neo4jSnapshot.jsx` (move lines 115-128 to before line 86)
+
+**Estimated Time:** 10 minutes
+
+**Expected Impact:**
+- ✅ Eliminates React Hooks error
+- ✅ Clean console (no warnings)
+- ✅ 100% React best practices compliance
+- ✅ **PRODUCTION-READY** (100%)
+
+**Testing:**
+- Upload test.pdf again
+- Verify no console errors
+- Confirm metrics still display correctly
+
+---
+
+### ✅ FIX #19 - METRICSPANEL PROPS MISMATCH - Final Metrics Not Displayed - VALIDÉ ✅
+
+**Status:** ✅ FIXED, DEPLOYED & VALIDATED  
 **Opened:** October 30, 2025, 17:00 CET  
 **Fixed:** October 30, 2025, 17:35 CET  
+**Validated:** October 30, 2025, 18:26 CET (Test Run #13)  
 **Priority:** P0 - CRITICAL (Root cause of Fix #14, #15, #16 failures)  
-**Impact:** Final metrics displayed correctly, 3 previous incorrect fixes eliminated
+**Impact:** Final metrics displayed correctly (75 entities, 85 relations), 3 previous incorrect fixes eliminated
 
 **Context:**
 After 3 failed fix attempts (Fix #14, #15, #16) over 4 hours, user requested deep code analysis WITHOUT new tests. Analysis revealed the bug was NOT a race condition, but a simple **props mismatch** between components.
@@ -88,17 +213,29 @@ const MetricsPanel = ({ uploadId, status, metadata = {} }) => {
 - **Total:** -101 / +6 lines (net: -95 lines simpler code)
 
 **Testing:**
-- ⏳ Awaiting E2E test with test.pdf to validate metrics display
+- ✅ **VALIDATED in Test Run #13** (Oct 30, 18:26 CET)
+- ✅ **PROOF:** UI displays "75 found" and "85 found" (not "—")
+- ✅ **SUCCESS:** First successful metric display in 4 tests
+
+**Test Results (Run #13):**
+- ✅ Entities displayed: **75 found** (Backend: 75, UI: 75 ✅)
+- ✅ Relations displayed: **85 found** (Backend: 85, UI: 85 ✅)
+- ✅ All other metrics working (file size, pages, chunks)
+- ✅ Progress bar visible at 100% (green)
+- ✅ Performance badge shows "Acceptable"
+- ✅ Real-time updates smooth (1/30 → 30/30)
+- ✅ Backend: 100% success (30/30 chunks, 266.63s)
 
 **Impact:**
 - ✅ Eliminates need for complex polling logic (Fix #14, #16)
 - ✅ Removes 100+ lines of debug logging
-- ✅ Simpler, cleaner code
+- ✅ Simpler, cleaner code (-95 lines net)
 - ✅ Fixed same issue in Neo4jSnapshot (preventive)
+- ✅ **PRODUCTION-READY** (95% - minor React Hooks issue remains)
 
-**Confidence:** 95% - Direct fix of identified root cause
+**Confidence:** 100% - Validated with E2E test, metrics display perfectly
 
-**Duration:** 35 minutes (analysis + implementation)
+**Duration:** 35 minutes (analysis + implementation) + 7 minutes (validation test)
 
 ---
 ```
