@@ -6,18 +6,6 @@ export default function DocumentCard({ document, onRetry }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState('metrics');
 
-  // 🔍 DEBUG: Phase 1 Investigation - Track props received
-  console.log(`[DocumentCard] Rendering for ${document.id}:`, {
-    timestamp: new Date().toISOString(),
-    status: document.status,
-    metrics: JSON.parse(JSON.stringify(document.metrics || {})),
-    metadata: JSON.parse(JSON.stringify(document.metadata || {})),
-    metrics_entities: document.metrics?.entities,
-    metrics_relations: document.metrics?.relations,
-    metadata_entities: document.metadata?.entities,
-    metadata_relations: document.metadata?.relations
-  });
-
   // Import tabs dynamically to avoid circular dependencies
   const MetricsPanel = React.lazy(() => import('./MetricsPanel'));
   const LogViewer = React.lazy(() => import('./LogViewer'));
@@ -86,17 +74,20 @@ export default function DocumentCard({ document, onRetry }) {
             <React.Suspense fallback={<div className="text-center py-4 text-gray-500">Loading...</div>}>
               {activeTab === 'metrics' && (
                 <MetricsPanel 
-                  document={document}
-                  status={document.status}
-                  metrics={document.metrics}
-                  metadata={document.metadata}
+                  uploadId={document.id}
+                  status={document}
+                  metadata={document.metadata || {}}
                 />
               )}
               {activeTab === 'logs' && (
                 <LogViewer uploadId={document.id} />
               )}
               {activeTab === 'neo4j' && (
-                <Neo4jSnapshot uploadId={document.id} />
+                <Neo4jSnapshot 
+                  uploadId={document.id}
+                  status={document}
+                  metadata={document.metadata || {}}
+                />
               )}
             </React.Suspense>
           </div>

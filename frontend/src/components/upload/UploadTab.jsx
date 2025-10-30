@@ -55,45 +55,31 @@ const UploadTab = () => {
       try {
         const status = await getUploadStatus(uploadId);
         
-        setDocuments(prev => 
-          prev.map(doc => 
-            doc.id === uploadId 
-              ? {
-                  ...doc,
-                  // Map all enhanced status fields
-                  status: status.status,
-                  stage: status.stage,
-                  sub_stage: status.sub_stage,
-                  progress: status.progress,
-                  progress_detail: status.progress_detail,
-                  ingestion_progress: status.ingestion_progress,  // ← Bug #9 Fix: Real-time chunk progress
-                  metrics: status.metrics || {},
-                  durations: status.durations,
-                  metadata: status.metadata || {},
-                  error: status.error,
-                  started_at: status.started_at,
-                  completed_at: status.completed_at,
-                  failed_at: status.failed_at,
-                  // Preserve original filename and size
-                  filename: doc.filename,
-                  file_size_mb: doc.file_size_mb,
-                  size: doc.size,
-                }
-              : doc
-          )
-        );
-
-        // 🔍 DEBUG: Phase 1 Investigation - Track data flow
-        console.log(`[UploadTab] Updated document ${uploadId}:`, {
-          timestamp: new Date().toISOString(),
-          status: status.status,
-          metrics_from_api: JSON.parse(JSON.stringify(status.metrics || {})),
-          metadata_from_api: JSON.parse(JSON.stringify(status.metadata || {})),
-          metrics_entities: status.metrics?.entities,
-          metrics_relations: status.metrics?.relations,
-          metadata_entities: status.metadata?.entities,
-          metadata_relations: status.metadata?.relations
-        });
+        setDocuments(prev => prev.map(doc => 
+          doc.id === uploadId 
+            ? {
+                ...doc,
+                // Map all enhanced status fields
+                status: status.status,
+                stage: status.stage,
+                sub_stage: status.sub_stage,
+                progress: status.progress,
+                progress_detail: status.progress_detail,
+                ingestion_progress: status.ingestion_progress,  // ← Bug #9 Fix: Real-time chunk progress
+                metrics: status.metrics || {},
+                durations: status.durations,
+                metadata: status.metadata || {},
+                error: status.error,
+                started_at: status.started_at,
+                completed_at: status.completed_at,
+                failed_at: status.failed_at,
+                // Preserve original filename and size
+                filename: doc.filename,
+                file_size_mb: doc.file_size_mb,
+                size: doc.size,
+              }
+            : doc
+        ));
 
         // Handle timeout errors with auto-retry (max 2 attempts)
         if (status.status === 'failed' && status.error && status.error.includes('timeout')) {

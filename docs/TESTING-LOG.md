@@ -240,13 +240,74 @@ HTTP Timeout: read=120s (robust fix applied)
 
 ## Historique des Tests
 
-### 🔴 Session 10: E2E Test Run #11 - Fix #14 Validation FAILED (Oct 30, 2025)
+### 🔴 Session 10-11: CRITICAL FAILURE - 3 Failed Fix Attempts (Oct 30, 2025)
 
-**Test Run #11: Fix #14 Validation - CRITICAL FAILURE**
+**Test Runs #11, #12, #13: Complete Analysis - ALL FAILED**
 
-**Date:** October 30, 2025, 08:45-10:15 CET  
-**Duration:** ~1.5 hours (5 min test + 1h analysis + report)  
-**Result:** ❌ **CRITICAL FAILURE - Fix #14 Does Not Work**
+**Date:** October 30, 2025, 08:45-15:30 CET  
+**Duration:** ~7 hours (3 fix attempts + analysis)  
+**Result:** 🔴 **CATASTROPHIC FAILURE - 6+ HOURS ON BASIC UI-BACKEND CONNECTION**
+
+---
+
+### 📋 Summary of Failure
+
+**Problem:** Display backend metrics (entities, relations) in frontend UI after processing completes.
+
+**Reality:** 3 consecutive fix attempts, ALL FAILED:
+- **Fix #14** (09:30): "One more poll" strategy → ❌ FAILED
+- **Fix #16** (11:25): "Never stop polling" strategy → ❌ FAILED + REGRESSION (React crash)
+- **Fix #18+19** (13:05): Component extraction + memo removal → ⏳ STATUS UNKNOWN
+
+**Time Wasted:** 6+ hours on what should be a simple data display task.
+
+**Critical Analysis:** `Devplan/251030-CRITICAL-ANALYSIS-HELP-NEEDED.md` (complete breakdown)
+
+---
+
+### 🔴 Test Run #13: Fix #18+19 Validation - STATUS UNKNOWN
+
+**Date:** October 30, 2025, 15:30 CET  
+**Result:** ⏳ **TEST NOT PERFORMED - USER INTERVENTION REQUIRED**
+
+**Fixes Deployed:**
+- Fix #18: Extracted EntityBreakdown and RelationshipBreakdown to separate files
+- Fix #19: Removed React.memo() from MetricsPanel
+
+**Status:** Awaiting test with comprehensive debug logging to identify actual root cause.
+
+---
+
+### 🔴 Test Run #12: Fix #16 Validation - CRITICAL FAILURE + REGRESSION
+
+**Date:** October 30, 2025, 11:25-14:00 CET  
+**Duration:** ~2.5 hours  
+**Result:** ❌ **FAILED - Metrics Still Empty + NEW React Hooks Error**
+
+**Fix Deployed:**
+- Fix #16: "Never stop polling" for completed documents
+- Removed completedDocsRef logic
+- Polling continues indefinitely
+
+**Expected:** Metrics display correctly  
+**Actual:** 
+- ❌ Metrics still show "—" (empty)
+- ❌ NEW React Hooks violation in Neo4jSnapshot
+- ❌ Complete UI crash with blank screen
+
+**Error:**
+```
+Warning: React has detected a change in the order of Hooks called by Neo4jSnapshot.
+Error: Rendered more hooks than during the previous render.
+```
+
+**Impact:** Made situation WORSE - now have TWO bugs instead of one.
+
+**Full Report:** `Devplan/251030-E2E-TEST-RUN-12-FIX-16-VALIDATION.md`
+
+---
+
+### 🔴 Test Run #11: Fix #14 Validation - CRITICAL FAILURE
 
 **Objective:**
 - Validate Fix #14 (Polling Race Condition) and Fix #15 (Progress Bar Visibility)
@@ -324,6 +385,74 @@ Time ???ms:  React finally processes setDocuments() from Poll 1
 3. **Option C:** Three more polls instead of one (quick fix, hacky)
 
 **Status:** 🔴 **BLOCKING** - Must be fixed before any further E2E testing
+
+**Full Report:** `Devplan/251030-E2E-TEST-RUN-11-REPORT.md`
+
+---
+
+### 💀 ROOT CAUSE ANALYSIS - WHY 3 FIXES FAILED
+
+**The Core Problem:**
+All 3 fixes made **ASSUMPTIONS** without **VERIFICATION**:
+
+1. **Fix #14 Assumption:** "Polling stops too early"
+   - Changed: Added "one more poll" delay
+   - Result: ❌ FAILED - Metrics still empty
+   - **Never verified:** Does the data even reach the frontend?
+
+2. **Fix #16 Assumption:** "One more poll not enough"
+   - Changed: Never stop polling at all
+   - Result: ❌ FAILED - Metrics still empty + React crash
+   - **Never verified:** Is polling the actual problem?
+
+3. **Fix #18+19 Assumption:** "Hooks violation + memo() blocks render"
+   - Changed: Extract components + remove memo()
+   - Result: ⏳ UNKNOWN - Not tested yet
+   - **Never verified:** Where does the data actually disappear?
+
+**The Pattern:**
+```
+GUESS → CODE → DEPLOY → TEST → FAIL → REPEAT
+```
+
+**What Was Missing:**
+```
+DEBUG → VERIFY → UNDERSTAND → FIX → TEST → SUCCESS
+```
+
+**Critical Missing Step:**
+NO debug logging was EVER added to trace where data disappears:
+- ❌ No log in getUploadStatus() to verify API response
+- ❌ No log in setDocuments() to verify state update
+- ❌ No log in DocumentCard to verify props received
+- ❌ No log in MetricsPanel to verify data available
+
+**Result:** 6+ hours of blind guessing.
+
+---
+
+### 🆘 CURRENT STATUS & NEXT STEPS
+
+**System State:**
+- ✅ Backend: 100% working (metrics calculated correctly)
+- ✅ API: 100% working (returns complete data)
+- ❌ Frontend: Broken (data not displayed)
+- 🔴 Time Wasted: 6+ hours
+
+**Immediate Action Required:**
+1. Add comprehensive debug logging to trace data flow
+2. Upload test.pdf and read console logs
+3. Identify EXACT point where data disappears
+4. Fix THAT specific issue (not guessing anymore)
+
+**Full Analysis:** `Devplan/251030-CRITICAL-ANALYSIS-HELP-NEEDED.md`
+- Complete technology stack breakdown
+- All 3 fixes analyzed in detail
+- Potential root causes listed (unverified)
+- Debug logging strategy proposed
+- Questions for React experts prepared
+
+**Decision:** STOP guessing. START systematic debugging.
 
 ---
 
