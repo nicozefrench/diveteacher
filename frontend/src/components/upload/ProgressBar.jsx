@@ -35,7 +35,7 @@ export default function UploadProgressBar({ progress, ingestion_progress, stage,
         <div
           className={`
             h-full rounded-full transition-all duration-500 ease-out
-            ${stage === 'completed' ? 'bg-green-500' : 'bg-blue-500'}
+            ${stage === 'completed' ? 'bg-green-500 shadow-sm' : 'bg-blue-500'}
           `}
           style={{ width: `${displayProgress}%` }}
         />

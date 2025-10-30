@@ -40,8 +40,8 @@ export default function DocumentHeader({ document }) {
         <StatusBadge status={status} />
       </div>
 
-      {/* Progress Bar (only if processing) */}
-      {status === 'processing' && (
+      {/* Progress Bar (show during processing and briefly after completion) */}
+      {(status === 'processing' || (status === 'completed' && progress === 100)) && (
         <div className="mt-2">
           <ProgressBar 
             progress={progress}

@@ -678,22 +678,45 @@ if (status.status === 'completed' || status.status === 'failed') {
 
 ### 🟡 PRIORITY 2: Fix Progress Bar Disappearing (MEDIUM)
 
-**Action Items:**
-1. Keep progress bar visible at 100% when status = "completed"
-2. Change color to green for completed state
-3. Add transition animation
+**Status:** ✅ **FIXED - Fix #15**
 
-**Estimated Time:** 30 minutes
+**Action Items:**
+1. ✅ Keep progress bar visible at 100% when status = "completed"
+2. ✅ Change color to green for completed state (already implemented)
+3. ✅ Add shadow for visual polish
+
+**Implementation:**
+- Modified `DocumentHeader.jsx` to show progress bar for completed status
+- Enhanced `ProgressBar.jsx` with green color + shadow for completion
+- Smooth transition animation already in place
+
+**Files Changed:**
+- `frontend/src/components/upload/DocumentHeader.jsx`
+- `frontend/src/components/upload/ProgressBar.jsx`
+
+**Duration:** 15 minutes
 
 ---
 
 ### 🟢 PRIORITY 3: Investigate Episode Count Zero (LOW)
 
-**Action Items:**
-1. Query Neo4j for node labels to see what episodes are called
-2. Update stats query if needed
+**Status:** ✅ **RESOLVED - Not a Bug**
 
-**Estimated Time:** 15 minutes
+**Investigation Results:**
+- ✅ Backend correctly queries all labels dynamically
+- ✅ Graphiti uses label "Episodic" (not "Episode")
+- ✅ Stats API returns all nodes by label correctly
+- ✅ Frontend displays all labels dynamically
+
+**Conclusion:**
+This is NOT a bug. The test report showed "episodes: 0" because it was looking for nodes with label "Episode" (singular), but Graphiti uses "Episodic" (with 'ic' suffix). The backend and frontend both work correctly by displaying all labels dynamically from `nodes.by_label`.
+
+**No Changes Required:**
+- Backend: ✅ Already returns complete `by_label` object
+- Frontend: ✅ Already displays all labels dynamically
+- Data: ✅ 30 Episodic nodes created successfully
+
+**Duration:** 10 minutes (investigation only)
 
 ---
 

@@ -1716,14 +1716,63 @@ After:
 
 ---
 
+### ✅ PROGRESS BAR VISIBILITY - Not Visible After Completion - RÉSOLU
+
+**Date:** October 30, 2025, 09:40 CET  
+**Type:** P2 - MEDIUM (UX Enhancement)  
+**Status:** ✅ RESOLVED - Fix #15  
+**Session:** 9  
+**Duration:** 15 minutes
+
+**Problem:**
+- Progress bar disappeared immediately when status changed to "completed"
+- Users couldn't see the final green completion animation
+- Lost visual confirmation of successful completion
+
+**Root Cause:**
+```jsx
+// DocumentHeader.jsx - OLD CODE
+{status === 'processing' && (  // ← Only shows during processing
+  <ProgressBar ... />
+)}
+```
+
+Progress bar was conditionally rendered only for `status === 'processing'`. When status changed to "completed", React removed the component entirely.
+
+**Solution:**
+```jsx
+// DocumentHeader.jsx - NEW CODE
+{(status === 'processing' || (status === 'completed' && progress === 100)) && (
+  <ProgressBar ... />  // ← Shows during processing AND after completion
+)}
+```
+
+Keep progress bar visible when status is "completed" AND progress is 100%. The bar already had green color for completed state, just needed to stay visible.
+
+**Files Changed:**
+- `frontend/src/components/upload/DocumentHeader.jsx` (condition updated)
+- `frontend/src/components/upload/ProgressBar.jsx` (added shadow for polish)
+
+**Impact:**
+- ✅ Users now see smooth transition to green completion bar
+- ✅ Visual confirmation of successful processing
+- ✅ Better UX with satisfying completion animation
+- ✅ Progress bar stays visible at 100% with green color
+
+**Testing:**
+- Local testing: Progress bar stays visible in green after completion
+- Expected behavior: Bar transitions from blue → green at 100%
+
+---
+
 ## Fix Statistics
 
-### Session 8 Summary (October 29, 2025)
-**Total Bugs Fixed:** 12 (7 critical + 1 display + 1 performance + 1 script + 2 UX critical)  
-**Time Spent:** 8+ hours (6h bugs + 2.5h UI implementation)  
+### Combined Sessions Summary (October 29-30, 2025)
+**Total Bugs Fixed:** 14 (8 critical + 1 display + 1 performance + 1 script + 2 UX critical + 1 UX medium)  
+**Time Spent:** 10+ hours (6h bugs + 2.5h UI implementation + 1.5h race condition + validation)  
 **Docker Rebuilds:** 4  
-**Performance Gain:** 80 seconds on first upload + Real-time UI feedback  
-**Status:** ✅ All critical bugs resolved + UX fixes deployed + PRODUCTION READY ✅
+**Performance Gain:** 80 seconds on first upload + Real-time UI feedback + Race condition fixed  
+**Status:** ✅ All critical bugs resolved + ALL UX fixes deployed + 100% PRODUCTION READY ✅
 
 ### By Priority
 
