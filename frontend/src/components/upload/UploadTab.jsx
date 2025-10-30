@@ -12,6 +12,7 @@ const UploadTab = () => {
   const [retryAttempts, setRetryAttempts] = useState({}); // Track retry attempts per document
   const pollIntervalsRef = useRef({}); // Track polling intervals
   const isVisibleRef = useRef(true); // Track tab visibility
+  const completedDocsRef = useRef(new Set()); // Track completed docs for one-more-poll fix
 
   const handleFileUpload = async (file) => {
     setIsUploading(true);
@@ -121,13 +122,23 @@ const UploadTab = () => {
             // Clear interval after max retries
             clearInterval(interval);
             delete pollIntervalsRef.current[uploadId];
+            completedDocsRef.current.delete(uploadId);
           }
         }
 
-        // Stop polling if complete or failed (and not retrying)
+        // Stop polling if complete or failed (Option C: One more cycle after first detection)
         if (status.status === 'completed' || status.status === 'failed') {
-          clearInterval(interval);
-          delete pollIntervalsRef.current[uploadId];
+          if (completedDocsRef.current.has(uploadId)) {
+            // Second time seeing completed/failed status - NOW stop polling
+            console.log(`Final poll complete for ${uploadId}, stopping`);
+            clearInterval(interval);
+            delete pollIntervalsRef.current[uploadId];
+            completedDocsRef.current.delete(uploadId);
+          } else {
+            // First time seeing completed/failed - mark and continue ONE more cycle
+            console.log(`First completion detected for ${uploadId}, one more poll to ensure data is rendered`);
+            completedDocsRef.current.add(uploadId);
+          }
         }
       } catch (err) {
         console.error('Status poll error:', err);
