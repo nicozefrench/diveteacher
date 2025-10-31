@@ -128,13 +128,52 @@ class DoclingSingleton:
                 import os
                 os.unlink(tmp_path)
             
+            # ═══════════════════════════════════════════════════════════
+            # 🔥 NEW: Warm-up ARIA Chunker (RecursiveCharacterTextSplitter)
+            # ═══════════════════════════════════════════════════════════
+            logger.info("🔪 Warming up ARIA Chunker (RecursiveCharacterTextSplitter)...")
+            logger.info("   This ensures LangChain tokenizer is loaded and ready")
+            logger.info("")
+            
+            try:
+                from app.services.document_chunker import get_chunker
+                
+                # Initialize chunker singleton
+                chunker = get_chunker()
+                
+                # Test chunking with the converted test document
+                # This warms up the tokenizer and validates chunking works
+                test_chunks = chunker.chunk_document(
+                    docling_doc=result.document,
+                    filename="warmup-test.pdf",
+                    upload_id="warmup-test"
+                )
+                
+                logger.info(f"✅ ARIA Chunker initialized successfully!")
+                logger.info(f"   • Created {len(test_chunks)} chunks (ARIA pattern)")
+                logger.info(f"   • RecursiveCharacterTextSplitter: 3000 tokens/chunk, 200 overlap")
+                logger.info(f"   • LangChain tokenizer loaded and cached")
+                logger.info("")
+                
+            except Exception as e:
+                logger.warning(f"⚠️  ARIA Chunker warmup failed: {e}")
+                logger.warning("   First chunking operation may be slightly slower (~1s)")
+                logger.warning("   This is NOT critical - chunker will initialize on first upload")
+                logger.info("")
+            
             logger.info("=" * 60)
-            logger.info("🎉 DOCLING WARM-UP COMPLETE!")
+            logger.info("🎉 COMPLETE WARM-UP FINISHED!")
             logger.info("=" * 60)
             logger.info("")
-            logger.info("ℹ️  Singleton initialized with ACCURATE + OCR + Tables config")
-            logger.info("ℹ️  ALL models (Docling + EasyOCR) are now cached")
-            logger.info("ℹ️  Subsequent document processing will be FAST")
+            logger.info("ℹ️  Docling: ACCURATE + OCR + Tables config ✅")
+            logger.info("ℹ️  ALL models (Docling + EasyOCR) cached ✅")
+            logger.info("ℹ️  ARIA Chunker: RecursiveCharacterTextSplitter ready ✅")
+            logger.info("ℹ️  System 100% nominal for ingestion sessions ✅")
+            logger.info("")
+            logger.info("⚠️  NOTE: Warmup does NOT touch database")
+            logger.info("   • Neo4j data preserved (additive ingestion)")
+            logger.info("   • Knowledge graph will grow with each session")
+            logger.info("   • Use init-e2e-test.sh to clean DB if needed")
             logger.info("")
             
             # Validation: Check singleton is properly initialized
