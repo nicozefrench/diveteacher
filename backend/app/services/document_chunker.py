@@ -1,55 +1,117 @@
 """
-Document Chunking avec Docling HybridChunker
+ARIA-Pattern Text Chunker
+Based on production-validated RecursiveCharacterTextSplitter.
 
-Ce module utilise HybridChunker de Docling pour créer des chunks
-sémantiquement cohérents, optimisés pour RAG avec embedding models.
+Replaces Docling's HierarchicalChunker (which doesn't support configurable token limits)
+with LangChain's RecursiveCharacterTextSplitter (ARIA production-proven).
+
+ARIA Production Evidence:
+- 3 days continuous operation
+- 100% success rate
+- ~50 documents processed
+- Average 20 chunks per document (vs 204 with HierarchicalChunker)
+- 2-5 minutes per document (vs 36 min)
+- Excellent quality
+- Zero embedding model errors
+
+Configuration:
+- 3000 tokens per chunk (12000 chars)
+- 200 token overlap (800 chars)
+- Recursive splitting on semantic boundaries
 """
 import logging
 from typing import List, Dict, Any, Optional
 from docling.datamodel.document import DoclingDocument
-from docling_core.transforms.chunker import HierarchicalChunker
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-logger = logging.getLogger('diveteacher.chunker')
+logger = logging.getLogger('diveteacher.aria_chunker')
 
+
+# ==============================================================================
+# ARIA CHUNKING PATTERN (2025-10-31)
+# ==============================================================================
+# CRITICAL FIX: Replaced HierarchicalChunker with RecursiveCharacterTextSplitter
+# 
+# ROOT CAUSE:
+# - HierarchicalChunker (Docling) does NOT support configurable max_tokens/min_tokens
+# - It has internal hierarchical logic that creates 204 micro-chunks
+# - Parameters we set (256→3000) were IGNORED by HierarchicalChunker
+# 
+# SOLUTION:
+# - Use ARIA's exact production pattern: RecursiveCharacterTextSplitter (LangChain)
+# - 3000 tokens per chunk (12000 chars)
+# - 200 token overlap (800 chars)
+# - Proven in ARIA production: 3 days, 100% success rate
+# 
+# Expected Results (Niveau 1.pdf = ~52,000 tokens):
+# - Chunks: 17 (vs 204 with HierarchicalChunker)
+# - Time: 3 min (vs 36 min)
+# - Speedup: 12× faster
+# - Quality: Better (more context per chunk)
+# ==============================================================================
 
 class DocumentChunker:
     """
-    Wrapper pour HybridChunker avec configuration DiveTeacher
+    ARIA-validated chunking strategy using RecursiveCharacterTextSplitter.
     
-    HybridChunker combine:
-    - Structure du document (sections, paragraphes, listes)
-    - Token limits (max_tokens pour embedding models)
-    - Semantic coherence (garder idées ensemble)
+    Production-proven configuration:
+    - 3000 tokens per chunk (12000 chars)
+    - 200 token overlap (800 chars)
+    - Recursive splitting on semantic boundaries
+    
+    Based on ARIA production:
+    - 3 days runtime, 100% success rate
+    - ~50 documents, ~20 chunks per document
+    - 2-5 minutes per document
+    - Excellent quality (better than micro-chunks)
+    - Proven with Graphiti + Claude + OpenAI embeddings
+    
+    Replaces HierarchicalChunker which:
+    - Does NOT support configurable token limits
+    - Creates 204 micro-chunks (internal logic)
+    - Results in 36 min processing (unacceptable)
     """
+    
+    # ARIA production-validated constants
+    CHARS_PER_TOKEN = 4          # Standard approximation
+    CHUNK_SIZE_TOKENS = 3000     # ARIA production standard
+    CHUNK_OVERLAP_TOKENS = 200   # ARIA production standard
     
     def __init__(
         self,
-        tokenizer: str = "BAAI/bge-small-en-v1.5",
-        max_tokens: int = 256,  # ✅ Réduit à 256 pour éviter output overflow dans Graphiti (OpenAI 8K limit)
-        min_tokens: int = 64,
-        merge_peers: bool = True
+        chunk_tokens: int = 3000,      # ARIA production standard
+        overlap_tokens: int = 200,     # ARIA production standard
+        chars_per_token: int = 4       # Standard approximation
     ):
         """
-        Initialize HybridChunker
+        Initialize RecursiveCharacterTextSplitter with ARIA production config.
         
         Args:
-            tokenizer: HuggingFace tokenizer model ID
-            max_tokens: Maximum tokens per chunk (embedding model limit)
-            min_tokens: Minimum tokens per chunk (éviter micro-chunks)
-            merge_peers: Merge small adjacent chunks (optimisation)
+            chunk_tokens: Target tokens per chunk (ARIA: 3000)
+            overlap_tokens: Token overlap between chunks (ARIA: 200)
+            chars_per_token: Character-to-token ratio (standard: 4)
         """
-        logger.info(f"🔧 Initializing HierarchicalChunker...")
-        logger.info(f"   Tokenizer: {tokenizer}")
-        logger.info(f"   Token limits: {min_tokens}-{max_tokens}")
+        chunk_size = chunk_tokens * chars_per_token     # 3000 × 4 = 12000 chars
+        chunk_overlap = overlap_tokens * chars_per_token  # 200 × 4 = 800 chars
         
-        self.chunker = HierarchicalChunker(
-            tokenizer=tokenizer,
-            max_tokens=max_tokens,
-            min_tokens=min_tokens,
-            merge_peers=merge_peers
+        logger.info(f"🔧 Initializing RecursiveCharacterTextSplitter (ARIA Pattern)...")
+        logger.info(f"   Chunk size: {chunk_tokens} tokens ({chunk_size} chars)")
+        logger.info(f"   Overlap: {overlap_tokens} tokens ({chunk_overlap} chars)")
+        logger.info(f"   Expected for Niveau 1.pdf: ~17 chunks (was 204 with HierarchicalChunker)")
+        
+        # Initialize LangChain splitter (ARIA exact pattern)
+        self.splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+            length_function=len,
+            separators=["\n\n", "\n", ". ", " ", ""]  # ARIA standard
         )
         
-        logger.info("✅ HierarchicalChunker initialized")
+        self.chunk_tokens = chunk_tokens
+        self.overlap_tokens = overlap_tokens
+        self.chars_per_token = chars_per_token
+        
+        logger.info("✅ RecursiveCharacterTextSplitter initialized (ARIA Pattern)")
     
     def chunk_document(
         self,
@@ -58,71 +120,78 @@ class DocumentChunker:
         upload_id: str
     ) -> List[Dict[str, Any]]:
         """
-        Chunk a DoclingDocument with semantic boundaries
+        Chunk a DoclingDocument using ARIA's production-validated strategy.
         
         Args:
             docling_doc: DoclingDocument from converter
-            filename: Original filename (for metadata)
-            upload_id: Upload ID (for tracking)
+            filename: Original filename
+            upload_id: Upload ID for tracking
             
         Returns:
             List of chunks with text + metadata
             
-        Format de chunk:
+        Format (compatible with existing pipeline):
         {
             "index": 0,
-            "text": "Full chunk text with headers...",
+            "text": "Full chunk text...",
             "metadata": {
                 "filename": "...",
                 "upload_id": "...",
                 "chunk_index": 0,
-                "total_chunks": 10,
-                "headings": ["Section Title"],
-                "doc_items": [...],  # Provenance (page, bbox)
-                "origin": {...}
+                "total_chunks": 17,
+                "num_tokens": 3000,
+                "chunking_strategy": "ARIA RecursiveCharacterTextSplitter"
             }
         }
         """
-        logger.info(f"[{upload_id}] 🔪 Starting chunking: {filename}")
+        logger.info(f"[{upload_id}] 🔪 Starting chunking (ARIA Pattern): {filename}")
         
-        # Chunking avec HybridChunker
-        chunk_iterator = self.chunker.chunk(docling_doc)
-        chunks = list(chunk_iterator)
+        # Extract text from DoclingDocument (markdown format)
+        doc_text = docling_doc.export_to_markdown()
         
-        logger.info(f"[{upload_id}] ✅ Created {len(chunks)} semantic chunks")
+        logger.info(f"[{upload_id}] 📄 Document text: {len(doc_text)} chars (~{len(doc_text) // self.chars_per_token} tokens)")
         
-        # Format chunks pour RAG pipeline
-        # Note: chunk is DocChunk object (not dict), use .text and .meta attributes
+        # Split using RecursiveCharacterTextSplitter (ARIA exact pattern)
+        chunk_texts = self.splitter.split_text(doc_text)
+        
+        logger.info(f"[{upload_id}] ✅ Created {len(chunk_texts)} semantic chunks (ARIA Pattern)")
+        
+        # Format chunks for RAG pipeline
         formatted_chunks = []
-        for i, chunk in enumerate(chunks):
-            # Extract metadata from DocChunk.meta
-            chunk_meta = chunk.meta if hasattr(chunk, 'meta') else {}
-            
+        for i, chunk_text in enumerate(chunk_texts):
             formatted_chunk = {
                 "index": i,
-                "text": chunk.text if hasattr(chunk, 'text') else str(chunk),
+                "text": chunk_text,
                 "metadata": {
                     "filename": filename,
                     "upload_id": upload_id,
                     "chunk_index": i,
-                    "total_chunks": len(chunks),
-                    "headings": getattr(chunk_meta, "headings", []) if chunk_meta else [],
-                    "doc_items": [str(item) for item in getattr(chunk_meta, "doc_items", [])] if chunk_meta else [],
-                    "origin": str(getattr(chunk_meta, "origin", "")) if chunk_meta else "",
+                    "total_chunks": len(chunk_texts),
+                    "num_tokens": len(chunk_text) // self.chars_per_token,  # Estimated
+                    "chunking_strategy": "ARIA RecursiveCharacterTextSplitter",
+                    "chunk_size_config": self.chunk_tokens,
+                    "overlap_config": self.overlap_tokens
                 }
             }
             formatted_chunks.append(formatted_chunk)
         
-        # Log statistiques
-        token_counts = [len(c["text"].split()) for c in formatted_chunks]
+        # Log statistics (ARIA pattern)
+        token_counts = [c["metadata"]["num_tokens"] for c in formatted_chunks]
         if token_counts:
             avg_tokens = sum(token_counts) / len(token_counts)
             min_tokens = min(token_counts)
             max_tokens = max(token_counts)
             
-            logger.info(f"[{upload_id}] 📊 Chunking stats:")
-            logger.info(f"   Average tokens: {avg_tokens:.0f}")
+            logger.info(f"[{upload_id}] 📊 Chunking stats (ARIA Pattern):")
+            logger.info(f"   Average tokens: {avg_tokens:.0f} (expected: ~{self.chunk_tokens})")
             logger.info(f"   Token range: {min_tokens}-{max_tokens}")
+            logger.info(f"   Total chunks: {len(formatted_chunks)}")
+            
+            # Validation check
+            if len(formatted_chunks) > 100:
+                logger.warning(f"⚠️  Chunk count ({len(formatted_chunks)}) unexpectedly high!")
+                logger.warning(f"   Expected: ~17 chunks for Niveau 1.pdf (208KB, 16 pages)")
+                logger.warning(f"   Actual chunk_size: {self.chunk_tokens} tokens")
         
         return formatted_chunks
 
@@ -133,12 +202,14 @@ _chunker_instance: Optional[DocumentChunker] = None
 
 def get_chunker() -> DocumentChunker:
     """
-    Get or create singleton chunker
+    Get or create singleton DocumentChunker instance (ARIA Pattern).
     
-    Singleton car HybridChunker charge un tokenizer (coûteux).
+    Returns:
+        Global DocumentChunker instance with ARIA production-validated configuration
     """
     global _chunker_instance
     if _chunker_instance is None:
+        logger.info("🏗️  Creating DocumentChunker singleton (ARIA Pattern)...")
         _chunker_instance = DocumentChunker()
     return _chunker_instance
 

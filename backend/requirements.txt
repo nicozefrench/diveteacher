@@ -20,7 +20,11 @@ graphiti-core[anthropic]==0.17.0
 docling==2.5.1
 docling-core[chunking]==2.3.0
 
-# Docling Chunking Dependencies
+# Chunking (ARIA Pattern)
+langchain==0.3.7                # RecursiveCharacterTextSplitter (ARIA production-validated)
+langchain-text-splitters==0.3.2 # Text splitting utilities
+
+# Docling Chunking Dependencies (deprecated - using LangChain instead)
 sentence-transformers==3.3.1   # Tokenizer pour HybridChunker
 transformers==4.48.3           # HuggingFace transformers
 
