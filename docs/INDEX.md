@@ -1,15 +1,21 @@
 # 📚 DiveTeacher - Documentation Index
 
-> **Version:** Phase 1.0 + UI Progress Feedback + Performance Optimization COMPLETE  
-> **Last Updated:** October 29, 2025, 22:00 CET  
+> **Version:** ARIA v2.0.0 + ARIA Chunking COMPLETE  
+> **Last Updated:** October 31, 2025, 19:00 CET  
 > **Environment:** Local Development (Mac M1 Max)  
-> **Status:** 🟢 Production-Ready (100%) - All Systems Operational + UI Enhanced
+> **Status:** 🟢 Production-Ready (100%) - ARIA Chunking Validated (9.3× Faster!)
 
 ---
 
 ## 🎯 Quick Navigation
 
 ### 🚀 Getting Started
+- **[USER-GUIDE.md](USER-GUIDE.md)** - ⭐ **START HERE** - Simple AI prompts & commands ✨ **NEW**
+  - E2E testing commands ("prep e2e")
+  - Production ingestion commands ("prep ingestion")
+  - Monitoring commands ("monitor queue")
+  - Common workflows & mistakes to avoid
+  - Quick reference cheat sheet
 - **[SETUP.md](SETUP.md)** - Local development setup (Phase 0 complete guide)
   - Prerequisites & installation
   - Docker services configuration
@@ -26,13 +32,14 @@
   - Database schemas
 
 ### 📄 Document Processing
-- **[DOCLING.md](DOCLING.md)** - Advanced document processing ✅ **UPDATED (Oct 29)**
+- **[DOCLING.md](DOCLING.md)** - Advanced document processing ✅ **UPDATED (Oct 31)**
   - Docling integration & configuration
   - `PdfPipelineOptions` (OCR, TableFormer)
-  - `HierarchicalChunker` semantic chunking
+  - ~~`HierarchicalChunker`~~ → **REPLACED with ARIA RecursiveCharacterTextSplitter** ✨
+  - **ARIA Chunking Pattern:** 3000 tokens/chunk, 200 overlap (9.3× faster!)
   - Metadata extraction
-  - **🆕 Enhanced Warmup System** - Test conversion for OCR model caching
-  - Performance optimization (+80s improvement)
+  - **🆕 Enhanced Warmup System** - Docling + ARIA Chunker initialization
+  - Performance optimization (68× fewer chunks, +17% entities, +50% relations)
   - Common issues & solutions
 
 ### 🔗 Knowledge Graph & RAG
@@ -77,24 +84,33 @@
   - Deployment instructions
 
 ### 🔍 Monitoring & Testing ✅ PRODUCTION-READY
-- **[MONITORING.md](MONITORING.md)** - Comprehensive monitoring & debugging ✅ **UPDATED**
-  - **🆕 Unified Monitoring Suite** - `diveteacher-monitor` CLI (18 commands)
+- **[MONITORING.md](MONITORING.md)** - Comprehensive monitoring & debugging ✅ **UPDATED (Oct 31)**
+  - **🆕 ARIA v2.0.0 Monitoring Tools** - Queue + Ingestion + Upload monitoring
+  - **🆕 DocumentQueue Monitor** - `monitor-queue.sh` (real-time queue status)
+  - **🆕 Enhanced Ingestion Monitor** - Updated for ARIA chunking keywords
+  - **🆕 Upload Monitor** - `monitor-upload.sh` (track to completion)
+  - **🆕 Backend Queue Test** - `test-backend-queue.sh` (integration test)
+  - Unified Monitoring Suite - `diveteacher-monitor` CLI (18 commands)
   - Neo4j management (stats, query, export, health, clear)
   - Graphiti monitoring (status, metrics, validate)
   - Docling monitoring (verify, cache, performance)
   - System monitoring (health, resources, docker)
-  - Scripts historiques (monitor_ingestion.sh, monitor_ollama.sh, etc.)
-  - [Complete Suite Documentation](../scripts/monitoring/README.md)
-- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED**
-  - **🆕 E2E Test Initialization** - `init-e2e-test.sh` automated script ✨ **NEW**
-  - **🆕 Pre-Test Cleanup Procedure** - 4 methods (Automated, API, CLI, Direct)
-  - État actuel du système
-  - 8 sessions de test documentées (E2E Test Run #8 complete)
+  - [Scripts Usage Guide](../scripts/SCRIPTS-USAGE-GUIDE.md) ✨ **NEW**
+- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED (Oct 31)**
+  - **🆕 Test Run #19** - ARIA Chunking validation (3 chunks, 3.9 min) ✨ **SPECTACULAR**
+  - **🆕 Test Run #17-18** - Production architecture validation
+  - E2E Test Initialization - `init-e2e-test.sh` automated script
+  - Pre-Test Cleanup vs Production Warmup (clearly separated)
+  - 11 sessions de test documentées
+  - Performance metrics (9.3× faster with ARIA)
   - Known issues & resolutions
   - Success criteria & metrics
-- **[FIXES-LOG.md](FIXES-LOG.md)** - Tracker de bugs et fixes ✅ **UPDATED**
-  - Root cause analysis
-  - Solutions implemented
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Tracker de bugs et fixes ✅ **UPDATED (Oct 31)**
+  - **🆕 Fix #21** - ARIA Chunking Pattern (CRITICAL - 9.3× speedup)
+  - 17 bugs fixed total (Session 8-11)
+  - Root cause analysis (HierarchicalChunker incompatible)
+  - Solutions implemented (RecursiveCharacterTextSplitter)
+  - Mathematical validation (52K÷3000=17 chunks)
   - Tradeoffs & decisions
   - Future roadmap items
 - **[PRODUCTION-READINESS.md](PRODUCTION-READINESS.md)** - Production checklist ✅ **NEW**
