@@ -45,10 +45,12 @@ class Settings(BaseSettings):
     NEO4J_PASSWORD: str = "change_me_in_production"
     NEO4J_DATABASE: str = "neo4j"
     
-    # Graphiti Configuration
+    # Graphiti Configuration (Production-Ready v2.0.0)
     GRAPHITI_ENABLED: bool = True
-    GRAPHITI_PARALLEL_BATCH_SIZE: int = 5  # Number of chunks to process in parallel (ARIA pattern)
-    GRAPHITI_EMBEDDING_BATCH_SIZE: int = 100  # Batch size for OpenAI embeddings
+    GRAPHITI_SAFE_QUEUE_ENABLED: bool = True  # Token-aware rate limiting
+    GRAPHITI_RATE_LIMIT_TOKENS_PER_MIN: int = 4_000_000  # Anthropic limit
+    GRAPHITI_SAFETY_BUFFER_PCT: float = 0.80  # 80% of limit (3.2M tokens/min)
+    GRAPHITI_ESTIMATED_TOKENS_PER_CHUNK: int = 3_000  # Conservative estimate
     
     # File Storage
     UPLOAD_DIR: str = "/uploads"
