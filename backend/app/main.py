@@ -24,6 +24,7 @@ from app.integrations.neo4j import neo4j_client
 from app.integrations.graphiti import close_graphiti_client
 from app.integrations.sentry import init_sentry
 from app.integrations.neo4j_indexes import create_rag_indexes, verify_indexes
+from app.services.document_queue import shutdown_document_queue
 
 # Initialize structured logging
 setup_structured_logging(level=getattr(settings, 'LOG_LEVEL', 'INFO'))
@@ -92,6 +93,9 @@ async def startup_event():
 async def shutdown_event():
     """Cleanup on shutdown"""
     print("🛑 Shutting down RAG Knowledge Graph API...")
+    
+    # Shutdown document queue (finish current doc, stop processing)
+    await shutdown_document_queue()
     
     # Close Neo4j connection
     neo4j_client.close()
