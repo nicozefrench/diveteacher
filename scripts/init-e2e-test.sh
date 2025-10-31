@@ -1,26 +1,51 @@
 #!/bin/bash
 # init-e2e-test.sh - Initialize system for End-to-End testing
 #
+# ⚠️  CRITICAL DIFFERENCE FROM WARMUP:
+# - THIS SCRIPT: Cleans DB for TESTING (fresh start for E2E tests)
+# - WARMUP: Prepares models for PRODUCTION (preserves DB for ingestion sessions)
+#
 # This script prepares the RAG system for a clean E2E test by:
 # 1. Checking current Neo4j state
-# 2. Cleaning Neo4j + Graphiti database (optional)
-# 3. Warming up Docling models
+# 2. ⚠️  CLEANING Neo4j + Graphiti database (DEFAULT - can skip with --skip-cleanup)
+# 3. Warming up Docling + ARIA Chunker models
 # 4. Verifying all services are ready
+#
+# ══════════════════════════════════════════════════════════════════════
+# USE CASES:
+# ══════════════════════════════════════════════════════════════════════
+#
+# E2E TESTING (clean slate):
+#   ./scripts/init-e2e-test.sh
+#   → Cleans DB + Warms up models
+#   → Ready for test with empty Neo4j
+#
+# PRODUCTION INGESTION (preserve DB):
+#   docker-compose up -d
+#   → Warmup runs automatically (models ready, DB untouched)
+#   → Ready for multi-document ingestion sessions
+#
+# ══════════════════════════════════════════════════════════════════════
 #
 # Usage:
 #   ./scripts/init-e2e-test.sh [options]
 #
 # Options:
-#   --skip-cleanup    Skip Neo4j cleanup (keep existing data)
+#   --skip-cleanup    Skip Neo4j cleanup (keep existing data) - USE FOR PRODUCTION
 #   --force-cleanup   Force cleanup even if database is already empty
-#   --skip-warmup     Skip Docling warm-up
+#   --skip-warmup     Skip Docling warm-up (models already cached)
 #   --quiet           Minimal output
 #   --help            Show this help message
 #
 # Examples:
-#   ./scripts/init-e2e-test.sh                    # Full preparation (cleanup + warmup)
-#   ./scripts/init-e2e-test.sh --skip-cleanup    # Only warmup, keep data
+#   ./scripts/init-e2e-test.sh                    # E2E TEST: Full cleanup + warmup
+#   ./scripts/init-e2e-test.sh --skip-cleanup    # PRODUCTION: Only warmup, keep DB
 #   ./scripts/init-e2e-test.sh --skip-warmup     # Only cleanup, skip warmup
+#
+# ⚠️  IMPORTANT:
+# - Default behavior: CLEANS DATABASE (for E2E testing)
+# - Production use: Add --skip-cleanup to preserve data
+# - Warmup alone: Just restart backend (warmup runs automatically)
 
 set -e
 
@@ -275,20 +300,40 @@ warmup_docling() {
   fi
   
   # Check if warm-up was successful
-  if echo "$WARMUP_OUTPUT" | grep -q "WARM-UP COMPLETE"; then
+  if echo "$WARMUP_OUTPUT" | grep -q "COMPLETE WARM-UP FINISHED"; then
     log_success "Docling warm-up completed successfully"
+    
+    # Check for ARIA Chunker warmup
+    if echo "$WARMUP_OUTPUT" | grep -q "ARIA Chunker initialized successfully"; then
+      log_success "ARIA Chunker (RecursiveCharacterTextSplitter) warmed up"
+    else
+      log_warning "ARIA Chunker warmup not confirmed (will init on first upload)"
+    fi
+    
+    # Check for System nominal status
+    if echo "$WARMUP_OUTPUT" | grep -q "System 100% nominal"; then
+      log_success "System 100% nominal for ingestion sessions"
+    fi
+    
+    # Verify DB preservation message
+    if echo "$WARMUP_OUTPUT" | grep -q "does NOT touch database"; then
+      if [ "$QUIET" = false ]; then
+        echo ""
+        echo -e "${CYAN}ℹ️  Warmup preserved database (as designed)${NC}"
+      fi
+    fi
     
     if [ "$QUIET" = false ]; then
       echo ""
       echo "Key events:"
-      echo "$WARMUP_OUTPUT" | grep -E "(Starting|Warming|Initialized|Complete|VALIDATION)" | head -8
+      echo "$WARMUP_OUTPUT" | grep -E "(Starting|Warming|Initialized|Complete|VALIDATION|ARIA Chunker)" | head -12
     fi
   else
     log_warning "Warm-up completed but validation unclear"
     if [ "$QUIET" = false ]; then
       echo ""
       echo "Output:"
-      echo "$WARMUP_OUTPUT" | tail -10
+      echo "$WARMUP_OUTPUT" | tail -15
     fi
   fi
 }
@@ -330,6 +375,29 @@ verify_services() {
     log_warning "Neo4j: Status unclear (status: $NEO4J_STATUS)"
   fi
   
+  # Check DocumentQueue (ARIA v2.0.0)
+  log_info "Checking DocumentQueue status..."
+  QUEUE_STATUS=$(curl -s http://localhost:8000/api/queue/status 2>/dev/null)
+  if [ -n "$QUEUE_STATUS" ]; then
+    QUEUE_SIZE=$(echo "$QUEUE_STATUS" | jq -r '.queue_size // "?"')
+    PROCESSING=$(echo "$QUEUE_STATUS" | jq -r '.processing // "?"')
+    COMPLETED=$(echo "$QUEUE_STATUS" | jq -r '.completed_count // "?"')
+    
+    if [ "$QUEUE_SIZE" = "0" ] && [ "$PROCESSING" = "false" ]; then
+      log_success "DocumentQueue: Ready (empty, idle)"
+    else
+      log_warning "DocumentQueue: Active (${QUEUE_SIZE} queued, processing: ${PROCESSING}, completed: ${COMPLETED})"
+      if [ "$QUIET" = false ]; then
+        echo ""
+        echo -e "${YELLOW}   ⚠️  Queue is not empty or currently processing${NC}"
+        echo -e "${YELLOW}   This may affect E2E test results${NC}"
+        echo -e "${YELLOW}   Consider waiting for queue to finish${NC}"
+      fi
+    fi
+  else
+    log_warning "DocumentQueue: Cannot check status (endpoint not responding)"
+  fi
+  
   # Check Frontend (optional)
   if docker ps --format '{{.Names}}' | grep -q "^rag-frontend$"; then
     log_info "Checking frontend..."
@@ -355,10 +423,17 @@ display_summary() {
   FINAL_NODES=$(echo "$NEO4J_STATS" | jq -r '.nodes.total' 2>/dev/null || echo "?")
   FINAL_RELS=$(echo "$NEO4J_STATS" | jq -r '.relationships.total' 2>/dev/null || echo "?")
   
+  # Get DocumentQueue status
+  QUEUE_DATA=$(curl -s http://localhost:8000/api/queue/status 2>/dev/null)
+  QUEUE_SIZE=$(echo "$QUEUE_DATA" | jq -r '.queue_size // "?"')
+  QUEUE_COMPLETED=$(echo "$QUEUE_DATA" | jq -r '.completed_count // "?"')
+  
   echo ""
   echo -e "${BOLD}System Status:${NC}"
   echo "  • Neo4j Database: $FINAL_NODES nodes, $FINAL_RELS relationships"
   echo "  • Docling Models: $([ "$SKIP_WARMUP" = true ] && echo "Not warmed up" || echo "Warmed up and ready")"
+  echo "  • ARIA Chunker: $([ "$SKIP_WARMUP" = true ] && echo "Not warmed up" || echo "RecursiveCharacterTextSplitter ready (3000 tokens/chunk)")"
+  echo "  • DocumentQueue: ${QUEUE_SIZE} queued, ${QUEUE_COMPLETED} completed"
   echo "  • Backend API: Healthy"
   echo "  • Ollama LLM: Ready"
   echo ""
@@ -378,11 +453,26 @@ display_summary() {
   echo "  4. Monitor progress in real-time"
   echo "  5. Verify completion and check Neo4j stats"
   echo ""
-  echo -e "${BOLD}Monitoring Commands:${NC}"
-  echo "  • Backend logs:  docker logs -f rag-backend"
+  echo -e "${BOLD}Monitoring Commands (ARIA v2.0.0):${NC}"
+  echo "  • Queue status:  ./scripts/monitor-queue.sh"
+  echo "  • Backend logs:  ./scripts/monitor_ingestion.sh [upload_id]"
+  echo "  • Upload status: ./scripts/monitor-upload.sh <upload_id>"
   echo "  • Neo4j stats:   curl -s http://localhost:8000/api/neo4j/stats | jq"
-  echo "  • Upload status: curl -s http://localhost:8000/api/upload/<upload_id>/status | jq"
   echo ""
+  
+  if [ "$SKIP_CLEANUP" = true ]; then
+    echo -e "${YELLOW}⚠️  DATABASE NOT CLEANED (--skip-cleanup flag used)${NC}"
+    echo -e "${YELLOW}   • Current data: ${FINAL_NODES} nodes, ${FINAL_RELS} relationships${NC}"
+    echo -e "${YELLOW}   • Mode: PRODUCTION INGESTION (additive)${NC}"
+    echo -e "${YELLOW}   • New uploads will ADD to existing knowledge graph${NC}"
+    echo ""
+  else
+    echo -e "${GREEN}✅ DATABASE CLEANED for E2E testing${NC}"
+    echo -e "${GREEN}   • Fresh start: 0 nodes, 0 relationships${NC}"
+    echo -e "${GREEN}   • Mode: E2E TESTING${NC}"
+    echo -e "${GREEN}   • Ready for clean test run${NC}"
+    echo ""
+  fi
   
   log_success "System initialized and ready for E2E testing!"
 }
