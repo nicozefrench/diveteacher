@@ -1,0 +1,25 @@
+# Manuel: Ouvrez http://localhost:5173
+# Ouvrez http://localhost:7475
+# Login: neo4j / diveteacher_dev_2025
+
+⚠️ Performance is low (.4 tok/s) in the quick test - this is because the test ran from inside Docker which adds overhead
+
+Problem: Naive text splitting breaks semantic meaning
+Solution: HybridChunker respects paragraphs, sections, tables
+Benefit: Better RAG performance with coherent chunks
+code exemple : @04_hybrid_chunking.py 
+docling documentation : https://docling-project.github.io/docling/ https://docling-project.github.io/docling/examples/hybrid_chunking/ https://docling-project.github.io/docling/examples/advanced_chunking_and_serialization/#setup 
+docling repo : https://github.com/docling-project/docling 
+special note: @251101-docling-graphiti-production-guide.md 
+
+please motivate answer . i'm not a
+
+
+
+Prep le system pour une end to end test avec ini script, biensur ca inclu le warm up et tu vérifier que tout est nominal 
+
+
+ok je fais le test, et toi tu comme d'habitude tu observe / monitor ce qui se passe dans la backend avec l'outil de monitoring real time, mais tu fais rien que observer. quand je te dis "check" to grab un screen de l'etat de la ui et c'est tout on parle pas sinon on va ratté des points. on parlera juste a la fin du end to end test pour debrieffé. compris ? pret ? C'est bon ? Tu veux capturer autre chose ??
+
+
+Test is done. Merci de revoir tous les log de back end et les croisé avec les capture de la UI. De preparer un rapport de test dans 
