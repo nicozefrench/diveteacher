@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     OPENAI_API_KEY: Optional[str] = None
     OPENAI_MODEL: str = "gpt-4o"
     CLAUDE_MODEL: str = "claude-sonnet-4-20250514"
+    OPENROUTER_API_KEY: Optional[str] = None  # For Mistral via OpenRouter (Graphiti)
+    GEMINI_API_KEY: Optional[str] = None  # For Gemini 2.5 Flash-Lite (Graphiti LLM operations)
     
     # RAG Configuration
     RAG_TOP_K: int = 5  # Number of facts to retrieve from knowledge graph
@@ -45,12 +47,12 @@ class Settings(BaseSettings):
     NEO4J_PASSWORD: str = "change_me_in_production"
     NEO4J_DATABASE: str = "neo4j"
     
-    # Graphiti Configuration (Production-Ready v2.0.0)
+    # Graphiti Configuration (Gemini 2.5 Flash-Lite - ARIA Pattern)
     GRAPHITI_ENABLED: bool = True
-    GRAPHITI_SAFE_QUEUE_ENABLED: bool = True  # Token-aware rate limiting
-    GRAPHITI_RATE_LIMIT_TOKENS_PER_MIN: int = 4_000_000  # Anthropic limit
-    GRAPHITI_SAFETY_BUFFER_PCT: float = 0.80  # 80% of limit (3.2M tokens/min)
+    GRAPHITI_LLM_MODEL: str = "gemini-2.5-flash-lite"  # Google Gemini 2.5 Flash-Lite (~$1-2/year!)
+    GRAPHITI_LLM_TEMPERATURE: float = 0.0  # Deterministic for entity extraction
     GRAPHITI_ESTIMATED_TOKENS_PER_CHUNK: int = 3_000  # Conservative estimate
+    GRAPHITI_SEMAPHORE_LIMIT: int = 10  # Concurrent LLM calls (4K RPM = safe)
     
     # File Storage
     UPLOAD_DIR: str = "/uploads"

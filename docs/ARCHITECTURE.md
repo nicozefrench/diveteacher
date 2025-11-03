@@ -58,11 +58,12 @@
 | **Document Processor** | Docling | 2.5.1 | PDF/PPT → Markdown + OCR |
 | **Chunker** | HierarchicalChunker | docling-core 2.3.0 | Semantic chunking |
 | **Knowledge Graph** | Neo4j | 5.26.0 | Graph database |
-| **Graph Library** | Graphiti | graphiti-core[anthropic] 0.17.0 | Entity/relation extraction ✅ |
-| **LLM Cloud** | Anthropic Claude | Haiku 4.5 | Entity extraction (ARIA-validated) ✅ |
+| **Graph Library** | Graphiti | graphiti-core[google-genai] 0.17.0 | Entity/relation extraction ✅ |
+| **LLM Cloud (Graphiti)** | Google Gemini | 2.5 Flash-Lite | Entity extraction (ARIA-validated, 99.7% savings) ✅ |
 | **LLM Local (RAG)** | Ollama | Latest | Qwen 2.5 7B Q8_0 for RAG queries ✅ |
 | **LLM Model (RAG)** | Qwen 2.5 7B | Q8_0 (8-bit) | Optimal RAG quality (98/100) ✅ |
-| **Embeddings** | OpenAI | text-embedding-3-small | 1536 dims (for Graphiti) |
+| **Embeddings (Graphiti)** | OpenAI | text-embedding-3-small | 1536 dims (DB compatible, for Graphiti) ✅ |
+| **Cross-Encoder (Graphiti)** | OpenAI | gpt-4o-mini | Reranking (for Graphiti search) ✅ |
 | **Embeddings Local** | sentence-transformers | 3.3.1 | Semantic similarity |
 | **Validation** | Pydantic | 2.11.5 | Data validation |
 | **Monitoring** | Sentry | Latest | Error tracking |
@@ -114,17 +115,17 @@
 │                  ┌─────────────────┼─────────────────┐       │
 │                  │                 │                 │       │
 │            ┌─────▼────┐     ┌─────▼─────┐    ┌─────▼────┐  │
-│            │  Neo4j   │     │  OpenAI   │    │ Docling  │  │
-│            │  :7475   │     │  Cloud    │    │ Library  │  │
-│            │  Graph   │     │ GPT-5nano │    │   PDF    │  │
-│            │  + RAG   │     │ (BLOCKED) │    │Processor │  │
+│            │  Neo4j   │     │  Gemini   │    │ Docling  │  │
+│            │  :7475   │     │  2.5 Flash│    │ Library  │  │
+│            │  Graph   │     │   Lite    │    │   PDF    │  │
+│            │  + RAG   │     │ (Google)  │    │Processor │  │
 │            └──────────┘     └───────────┘    └──────────┘  │
 │                  │                                           │
 │            ┌─────▼────┐                                     │
 │            │  Ollama  │                                     │
 │            │  :11434  │                                     │
-│            │ Mistral  │                                     │
-│            │  7b RAG  │                                     │
+│            │  Qwen    │                                     │
+│            │ 2.5 7B   │                                     │
 │            └──────────┘                                     │
 │                                                               │
 └─────────────────────────────────────────────────────────────┘

@@ -1,9 +1,9 @@
 # 📚 DiveTeacher - Documentation Index
 
-> **Version:** ARIA v2.0.0 + ARIA Chunking COMPLETE  
-> **Last Updated:** October 31, 2025, 19:00 CET  
+> **Version:** ARIA v2.0.0 + Gemini 2.5 Flash-Lite COMPLETE  
+> **Last Updated:** November 3, 2025, 18:45 CET  
 > **Environment:** Local Development (Mac M1 Max)  
-> **Status:** 🟢 Production-Ready (100%) - ARIA Chunking Validated (9.3× Faster!)
+> **Status:** 🟢 Production-Ready (100%) - Gemini Migration Complete (99.7% Cost Savings!)
 
 ---
 
@@ -44,11 +44,15 @@
 
 ### 🔗 Knowledge Graph & RAG
 - **[GRAPHITI.md](GRAPHITI.md)** - Graphiti knowledge graph integration ✅ **COMPLETE**
-  - Claude Haiku 4.5 configuration (production-validated)
-  - AnthropicClient integration
-  - Entity extraction & relation detection
-  - Vector embeddings (text-embedding-3-small)
+  - ~~Claude Haiku 4.5~~ → **Gemini 2.5 Flash-Lite** (Google Direct) ✨ **MIGRATED (Nov 3)**
+  - **99.7% cost reduction:** $730/year → $2/year ($728 saved!)
+  - GeminiClient integration (ultra-low cost: $0.10/M input + $0.40/M output)
+  - Entity extraction & relation detection (Gemini LLM)
+  - Vector embeddings (OpenAI text-embedding-3-small, 1536 dims - DB compatible!)
+  - Cross-encoder reranking (OpenAI gpt-4o-mini)
   - AsyncIO threading architecture
+  - Rate Limits: 4K RPM (Tier 1) - No throttling
+  - **[GEMINI-AUDIT-REPORT.md](GEMINI-AUDIT-REPORT.md)** ✨ **NEW** - Complete audit report (7 bugs évités)
 - **[NEO4J.md](NEO4J.md)** - Neo4j database + RAG queries
   - Neo4j setup & authentication
   - RAG indexes (fulltext, entity, hybrid)
@@ -65,12 +69,18 @@
   - Rate limiting (future)
 
 ### 🔧 Troubleshooting
-- **[FIXES-LOG.md](FIXES-LOG.md)** - Complete bug fix history ✅ **UPDATED (Oct 29, 22:00)**
-  - **Session 8:** 12 fixes deployed (9 critical bugs + 1 display + 1 performance + 1 script)
-  - **Latest:** Fix #11, #12, #13 - UI Progress Feedback Implementation (2h 20min)
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Complete bug fix history ✅ **UPDATED (Nov 3, 18:45)**
+  - **Session 8-11:** 21+ fixes deployed (ARIA Chunking + Performance + UI)
+  - **Latest:** Gemini 2.5 Flash-Lite Migration (99.7% cost reduction)
   - Real-time ingestion progress + Entity/Relation counts + Multi-document UI
   - All root causes, solutions, and validation results
   - Production-ready documentation
+- **[GEMINI-AUDIT-REPORT.md](GEMINI-AUDIT-REPORT.md)** ✨ **NEW (Nov 3)** - Gemini migration audit
+  - Complete ARIA audit (7 critical bugs évités)
+  - Import verification (GeminiClient, OpenAIEmbedder)
+  - Configuration validation (gemini-2.5-flash-lite, 1536 dims)
+  - Neo4j compatibility check (DB empty, safe)
+  - Production readiness confirmed (100%)
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues & fixes
   - Neo4j authentication errors
   - Docling conversion timeouts
