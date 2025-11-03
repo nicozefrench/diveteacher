@@ -453,8 +453,10 @@ mv test_anthropic_graphiti.py test_deepseek_graphiti.py
 
 **Vérifier présence de:**
 ```bash
-OPENROUTER_API_KEY=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
+OPENROUTER_API_KEY=sk-or-v1-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
+
+**⚠️ SECURITY NOTE:** The actual API key was removed from this document for security reasons. Use the key from your `.env` file.
 
 **Optionnel - Ajuster SEMAPHORE_LIMIT:**
 ```bash
