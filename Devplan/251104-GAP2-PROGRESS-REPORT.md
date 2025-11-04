@@ -8,7 +8,7 @@
 
 ## 📋 IMPLEMENTATION STATUS
 
-### ✅ COMPLETED (Days 1-2)
+### ✅ COMPLETED (Days 1-2 + Warmup Fix)
 
 **DAY 1: Setup & Model Integration**
 - ✅ Day 1.1: Created `backend/app/core/reranker.py` (198 lines)
@@ -29,7 +29,7 @@
   
 - ✅ Day 1.4: Rebuilt Docker backend container
   - Build successful (~106s)
-  - Model will download on first use (~100MB)
+  - Model now loads during warmup (not first query)
   - Container size increased by ~100MB as expected
 
 **DAY 2: RAG Pipeline Integration**
@@ -54,9 +54,25 @@
   - Enhanced logging with reranking status
   - Updated endpoint documentation
 
+**WARMUP FIX (Critical Fix)**
+- ✅ Modified `backend/app/warmup.py` (+92 lines)
+  - Added STEP 2: Cross-Encoder Reranker warmup
+  - Model loads during container startup (not first query)
+  - Test reranking to ensure model fully loaded
+  - Logs show '✅ Reranker: Ready' status
+  
+- ✅ Fixed `backend/app/core/llm.py` (+4 lines)
+  - Fixed ModuleNotFoundError for anthropic/openai
+  - Made imports conditional (only when provider used)
+  - Uses TYPE_CHECKING + runtime imports
+
 **Docker Status:**
 - ✅ Backend rebuilt and restarted
 - ✅ Services healthy (backend, neo4j, ollama)
+- ✅ **Warmup validation successful:**
+  - Docling: Ready ✅
+  - Reranker: Ready ✅
+  - Model: `cross-encoder/ms-marco-MiniLM-L-6-v2`
 - ✅ Ready for integration testing
 
 ---
