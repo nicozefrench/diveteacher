@@ -65,3 +65,6 @@ tmp/
 temp/
 .tmp/
 
+TestPDF/plongee-plaisir-niveau-1.pdf
+TestPDF/plongee-plaisir-niveau-1-noocr.pdf
+TestPDF/*.pdf

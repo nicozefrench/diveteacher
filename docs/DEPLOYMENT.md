@@ -46,6 +46,8 @@ User Browser
 | **Backend API** | DigitalOcean GPU | SFO3/NYC3 | $100-150/month |
 | **Neo4j Graph** | Docker on DO GPU | Same droplet | Included |
 | **Ollama + Qwen 2.5 7B Q8_0** | Docker on DO GPU | Same droplet | Included ✅ |
+| **Graphiti LLM (Gemini 2.5 Flash-Lite)** | Google AI Direct | Cloud API | ~$2/year ✅ |
+| **Graphiti Embeddings (OpenAI)** | OpenAI Cloud | Cloud API | ~$0.20/year ✅ |
 | **PostgreSQL** | Supabase Cloud | AWS us-east-1 | Free (< 500MB) |
 | **Auth** | Supabase Cloud | AWS us-east-1 | Free (< 50k users) |
 | **Monitoring** | Sentry Cloud | Global | Free (< 5k events) |

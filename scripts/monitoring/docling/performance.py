@@ -22,7 +22,7 @@ def get_performance_metrics(upload_id: str) -> Optional[Dict[str, Any]]:
     """
     try:
         response = httpx.get(
-            f"{API_BASE}/status/{upload_id}",
+            f"{API_BASE}/{upload_id}/status",
             timeout=TIMEOUT
         )
         response.raise_for_status()

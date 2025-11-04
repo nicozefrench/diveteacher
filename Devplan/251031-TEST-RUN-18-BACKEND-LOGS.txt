@@ -1,0 +1,1082 @@
+{"timestamp": "2025-10-31T13:47:44.515026Z", "level": "INFO", "logger": "diveteacher.upload", "message": "✅ Generated upload_id: e5347c64-254f-4b24-aed7-89e4d3ed7d4b"}
+{"timestamp": "2025-10-31T13:47:44.517322Z", "level": "INFO", "logger": "diveteacher.upload", "message": "✅ File saved to: /uploads/e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf"}
+[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] Enqueueing to DocumentQueue...
+{"timestamp": "2025-10-31T13:47:44.517392Z", "level": "INFO", "logger": "diveteacher.upload", "message": "[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] Adding document to queue"}
+{"timestamp": "2025-10-31T13:47:44.517554Z", "level": "INFO", "logger": "diveteacher.queue", "message": "📥 Document queued: e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b"}
+{"timestamp": "2025-10-31T13:47:44.517726Z", "level": "INFO", "logger": "diveteacher.upload", "message": "[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] ✅ Document enqueued"}
+[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] ✅ Enqueued (position: 1)
+{"timestamp": "2025-10-31T13:47:44.517928Z", "level": "INFO", "logger": "diveteacher.upload", "message": "[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] ✅ Status dict initialized (queued)"}
+{"timestamp": "2025-10-31T13:47:44.518362Z", "level": "INFO", "logger": "diveteacher.queue", "message": "   Filename: e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf"}
+{"timestamp": "2025-10-31T13:47:44.518379Z", "level": "INFO", "logger": "diveteacher.queue", "message": "   Upload ID: e5347c64-254f-4b24-aed7-89e4d3ed7d4b"}
+{"timestamp": "2025-10-31T13:47:44.518674Z", "level": "INFO", "logger": "diveteacher.processor", "message": "🔄 Starting initialization", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "initialization", "sub_stage": "started", "metrics": {"filename": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf", "file_size_mb": 0.2, "metadata": {"filename": "Niveau 1.pdf", "size_bytes": 207991, "content_type": "application/pdf"}}}
+{"timestamp": "2025-10-31T13:47:44.518780Z", "level": "INFO", "logger": "diveteacher.processor", "message": "🔄 Starting conversion", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "conversion", "sub_stage": "started", "metrics": {}}
+{"timestamp": "2025-10-31T13:47:44.519268Z", "level": "INFO", "logger": "diveteacher.validator", "message": "Validation OK: e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf (0.2MB)"}
+{"timestamp": "2025-10-31T13:47:44.519380Z", "level": "INFO", "logger": "diveteacher.docling", "message": "🔄 Starting Docling conversion", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "conversion", "sub_stage": "validation_passed", "metrics": {"filename": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf", "file_size_mb": 0.2}}
+[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] 🔄 START conversion: e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf
+[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] ✅ Converter obtained
+[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] 🚀 Starting conversion...
+INFO:     172.66.40.150:26461 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:47:44.718281Z", "level": "INFO", "logger": "docling.pipeline.base_pipeline", "message": "Processing document e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf"}
+INFO:     172.66.40.150:45362 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55281 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:18759 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37240 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37423 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22958 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20671 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24679 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27499 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32811 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62142 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48023 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55123 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44774 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:53845 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32363 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32800 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29833 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29157 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:48:24.838495Z", "level": "INFO", "logger": "docling.document_converter", "message": "Finished converting document e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf in 40.31 sec."}
+[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] ✅ Conversion complete
+{"timestamp": "2025-10-31T13:48:24.843034Z", "level": "INFO", "logger": "diveteacher.docling", "message": "✅ Conversion successful", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "conversion", "sub_stage": "complete", "metrics": {"filename": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf", "pages": 16, "tables": 5, "pictures": 71, "file_size_mb": 0.2}, "duration": 40.32}
+{"timestamp": "2025-10-31T13:48:24.844227Z", "level": "INFO", "logger": "diveteacher.processor", "message": "✅ conversion complete", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "conversion", "sub_stage": "completed", "metrics": {"pages": 16, "file_size_mb": 0.2}, "duration": 40.325236797332764}
+{"timestamp": "2025-10-31T13:48:24.844541Z", "level": "INFO", "logger": "diveteacher.processor", "message": "🔄 Starting chunking", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "chunking", "sub_stage": "started", "metrics": {}}
+{"timestamp": "2025-10-31T13:48:24.845548Z", "level": "INFO", "logger": "diveteacher.chunker", "message": "[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] 🔪 Starting chunking: e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf"}
+{"timestamp": "2025-10-31T13:48:24.872608Z", "level": "INFO", "logger": "diveteacher.chunker", "message": "[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] ✅ Created 204 semantic chunks"}
+{"timestamp": "2025-10-31T13:48:24.878852Z", "level": "INFO", "logger": "diveteacher.chunker", "message": "[e5347c64-254f-4b24-aed7-89e4d3ed7d4b] 📊 Chunking stats:"}
+{"timestamp": "2025-10-31T13:48:24.878991Z", "level": "INFO", "logger": "diveteacher.processor", "message": "✅ chunking complete", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "chunking", "sub_stage": "completed", "metrics": {"num_chunks": 204, "avg_chunk_size": 105.0, "total_tokens": 0}, "duration": 0.03386330604553223}
+{"timestamp": "2025-10-31T13:48:24.879026Z", "level": "INFO", "logger": "diveteacher.processor", "message": "🔄 Starting ingestion", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "started", "metrics": {"num_chunks": 204}}
+{"timestamp": "2025-10-31T13:48:24.879352Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "🔄 Starting graphiti_ingestion", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "graphiti_ingestion", "sub_stage": "started", "metrics": {"total_chunks": 204, "filename": "Niveau 1.pdf", "group_id": "default", "processing_mode": "sequential + token-aware rate limiting", "architecture": "ARIA v2.0.0"}}
+INFO:     172.66.40.150:32078 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20220 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17836 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:48:30.953635Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 0 ingested (1/204 - 0%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 0, "chunks_completed": 1, "chunks_total": 204, "elapsed": 6.073955535888672, "token_window_utilization": 0}, "duration": 6.07}
+INFO:     172.66.40.150:16215 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:23934 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:34542 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57028 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:48:39.391850Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 1 ingested (2/204 - 0%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 1, "chunks_completed": 2, "chunks_total": 204, "elapsed": 8.43788480758667, "token_window_utilization": 0}, "duration": 8.44}
+INFO:     172.66.40.150:35936 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:18005 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58334 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:48:45.616049Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 2 ingested (3/204 - 1%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 2, "chunks_completed": 3, "chunks_total": 204, "elapsed": 6.22408390045166, "token_window_utilization": 0}, "duration": 6.22}
+INFO:     172.66.40.150:25706 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:38775 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32769 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:48:51.630968Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 3 ingested (4/204 - 1%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 3, "chunks_completed": 4, "chunks_total": 204, "elapsed": 6.014845609664917, "token_window_utilization": 0}, "duration": 6.01}
+INFO:     172.66.40.150:19157 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63206 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29416 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:48:58.024179Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 4 ingested (5/204 - 2%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 4, "chunks_completed": 5, "chunks_total": 204, "elapsed": 6.393133163452148, "token_window_utilization": 0}, "duration": 6.39}
+INFO:     172.66.40.150:16960 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19925 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22115 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:49:04.122199Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 5 ingested (6/204 - 2%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 5, "chunks_completed": 6, "chunks_total": 204, "elapsed": 6.097951650619507, "token_window_utilization": 0}, "duration": 6.1}
+INFO:     172.66.40.150:31981 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46269 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50992 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48778 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:49:11.343286Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 6 ingested (7/204 - 3%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 6, "chunks_completed": 7, "chunks_total": 204, "elapsed": 7.220990180969238, "token_window_utilization": 0}, "duration": 7.22}
+INFO:     172.66.40.150:17546 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31450 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:61754 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42813 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56525 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:49:21.319661Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 7 ingested (8/204 - 3%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 7, "chunks_completed": 8, "chunks_total": 204, "elapsed": 9.976220607757568, "token_window_utilization": 0}, "duration": 9.98}
+INFO:     172.66.40.150:25226 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19158 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25433 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:49:28.439767Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 8 ingested (9/204 - 4%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 8, "chunks_completed": 9, "chunks_total": 204, "elapsed": 7.119596242904663, "token_window_utilization": 0}, "duration": 7.12}
+INFO:     172.66.40.150:46617 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50836 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36869 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63792 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55026 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:49:38.348048Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 9 ingested (10/204 - 4%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 9, "chunks_completed": 10, "chunks_total": 204, "elapsed": 9.907678127288818, "token_window_utilization": 0}, "duration": 9.91}
+INFO:     172.66.40.150:62083 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:38975 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28502 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32233 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:53666 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:49:48.093704Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 10 ingested (11/204 - 5%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 10, "chunks_completed": 11, "chunks_total": 204, "elapsed": 9.745574951171875, "token_window_utilization": 0}, "duration": 9.75}
+INFO:     172.66.40.150:30853 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20593 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47681 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:23818 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:49:55.898933Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 11 ingested (12/204 - 5%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 11, "chunks_completed": 12, "chunks_total": 204, "elapsed": 7.805150747299194, "token_window_utilization": 0}, "duration": 7.81}
+INFO:     172.66.40.150:24996 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35640 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54940 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32256 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44480 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:50:06.364241Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 12 ingested (13/204 - 6%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 12, "chunks_completed": 13, "chunks_total": 204, "elapsed": 10.465171575546265, "token_window_utilization": 0}, "duration": 10.47}
+INFO:     172.66.40.150:39552 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49836 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:50:10.172506Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 13 ingested (14/204 - 6%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 13, "chunks_completed": 14, "chunks_total": 204, "elapsed": 3.8082079887390137, "token_window_utilization": 0}, "duration": 3.81}
+INFO:     172.66.40.150:24201 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22665 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58947 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36384 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:21754 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:50:21.471115Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 14 ingested (15/204 - 7%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 14, "chunks_completed": 15, "chunks_total": 204, "elapsed": 11.298534154891968, "token_window_utilization": 0}, "duration": 11.3}
+INFO:     172.66.40.150:32040 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:26051 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39159 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40931 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:50:29.630340Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 15 ingested (16/204 - 7%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 15, "chunks_completed": 16, "chunks_total": 204, "elapsed": 8.159137964248657, "token_window_utilization": 0}, "duration": 8.16}
+INFO:     172.66.40.150:54385 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40745 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47327 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39229 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46997 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:50:39.973093Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 16 ingested (17/204 - 8%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 16, "chunks_completed": 17, "chunks_total": 204, "elapsed": 10.342641592025757, "token_window_utilization": 0}, "duration": 10.34}
+INFO:     172.66.40.150:64306 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22205 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24390 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29044 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:50:48.698304Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 17 ingested (18/204 - 8%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 17, "chunks_completed": 18, "chunks_total": 204, "elapsed": 8.725149393081665, "token_window_utilization": 0}, "duration": 8.73}
+INFO:     172.66.40.150:51373 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22864 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51400 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47289 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17360 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19550 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:51:00.388348Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 18 ingested (19/204 - 9%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 18, "chunks_completed": 19, "chunks_total": 204, "elapsed": 11.689979314804077, "token_window_utilization": 0}, "duration": 11.69}
+INFO:     172.66.40.150:47452 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42910 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19461 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52750 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28766 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:51:09.663089Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 19 ingested (20/204 - 9%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 19, "chunks_completed": 20, "chunks_total": 204, "elapsed": 9.274615287780762, "token_window_utilization": 0}, "duration": 9.27}
+INFO:     172.66.40.150:64691 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29051 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56678 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:23123 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36460 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50250 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57824 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:53929 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:51:25.892647Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 20 ingested (21/204 - 10%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 20, "chunks_completed": 21, "chunks_total": 204, "elapsed": 16.22945261001587, "token_window_utilization": 0}, "duration": 16.23}
+INFO:     172.66.40.150:21186 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64252 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:16183 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45018 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54127 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:51:37.249855Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 21 ingested (22/204 - 10%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 21, "chunks_completed": 22, "chunks_total": 204, "elapsed": 11.357113122940063, "token_window_utilization": 0}, "duration": 11.36}
+INFO:     172.66.40.150:63893 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40509 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57432 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47359 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24445 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:51:46.185063Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 22 ingested (23/204 - 11%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 22, "chunks_completed": 23, "chunks_total": 204, "elapsed": 8.935116052627563, "token_window_utilization": 0}, "duration": 8.94}
+INFO:     172.66.40.150:30739 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31515 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24446 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27483 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:51:56.069265Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 23 ingested (24/204 - 11%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 23, "chunks_completed": 24, "chunks_total": 204, "elapsed": 9.884135723114014, "token_window_utilization": 0}, "duration": 9.88}
+INFO:     172.66.40.150:30701 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32670 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50751 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58599 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:52:03.839876Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 24 ingested (25/204 - 12%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 24, "chunks_completed": 25, "chunks_total": 204, "elapsed": 7.770531415939331, "token_window_utilization": 0}, "duration": 7.77}
+INFO:     172.66.40.150:23914 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:21203 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50938 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35278 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:52:11.070193Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 25 ingested (26/204 - 12%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 25, "chunks_completed": 26, "chunks_total": 204, "elapsed": 7.230187892913818, "token_window_utilization": 0}, "duration": 7.23}
+INFO:     172.66.40.150:41136 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25444 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:33244 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35668 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:52:18.765774Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 26 ingested (27/204 - 13%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 26, "chunks_completed": 27, "chunks_total": 204, "elapsed": 7.695523977279663, "token_window_utilization": 0}, "duration": 7.7}
+INFO:     172.66.40.150:25348 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:65202 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64596 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:52:26.488138Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 27 ingested (28/204 - 13%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 27, "chunks_completed": 28, "chunks_total": 204, "elapsed": 7.7222771644592285, "token_window_utilization": 0}, "duration": 7.72}
+INFO:     172.66.40.150:44238 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45000 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31790 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42481 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:52:33.806675Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 28 ingested (29/204 - 14%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 28, "chunks_completed": 29, "chunks_total": 204, "elapsed": 7.318407773971558, "token_window_utilization": 0}, "duration": 7.32}
+INFO:     172.66.40.150:42494 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30194 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24512 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25726 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:52:42.375426Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 29 ingested (30/204 - 14%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 29, "chunks_completed": 30, "chunks_total": 204, "elapsed": 8.568652153015137, "token_window_utilization": 0}, "duration": 8.57}
+INFO:     172.66.40.150:45559 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57736 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:52:46.797129Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 30 ingested (31/204 - 15%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 30, "chunks_completed": 31, "chunks_total": 204, "elapsed": 4.421617269515991, "token_window_utilization": 0}, "duration": 4.42}
+INFO:     172.66.40.150:38074 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27681 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56434 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60731 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51472 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:52:55.531022Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 31 ingested (32/204 - 15%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 31, "chunks_completed": 32, "chunks_total": 204, "elapsed": 8.733814716339111, "token_window_utilization": 0}, "duration": 8.73}
+INFO:     172.66.40.150:63168 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42270 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:26702 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:53:03.468054Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 32 ingested (33/204 - 16%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 32, "chunks_completed": 33, "chunks_total": 204, "elapsed": 7.936933994293213, "token_window_utilization": 0}, "duration": 7.94}
+INFO:     172.66.40.150:48967 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:23177 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60096 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25086 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19272 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:53:13.037867Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 33 ingested (34/204 - 16%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 33, "chunks_completed": 34, "chunks_total": 204, "elapsed": 9.569708585739136, "token_window_utilization": 0}, "duration": 9.57}
+INFO:     172.66.40.150:28156 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22754 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57656 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55031 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:53:21.066264Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 34 ingested (35/204 - 17%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 34, "chunks_completed": 35, "chunks_total": 204, "elapsed": 8.028281688690186, "token_window_utilization": 0}, "duration": 8.03}
+INFO:     172.66.40.150:29301 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:23623 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39598 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28737 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30065 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55609 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:53:33.647451Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 35 ingested (36/204 - 17%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 35, "chunks_completed": 36, "chunks_total": 204, "elapsed": 12.581090927124023, "token_window_utilization": 0}, "duration": 12.58}
+INFO:     172.66.40.150:28733 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:43045 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36068 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58068 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51729 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48041 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:53:44.823480Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 36 ingested (37/204 - 18%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 36, "chunks_completed": 37, "chunks_total": 204, "elapsed": 11.1759672164917, "token_window_utilization": 0}, "duration": 11.18}
+INFO:     172.66.40.150:34457 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52734 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24305 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42713 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63765 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:53:56.688334Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 37 ingested (38/204 - 18%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 37, "chunks_completed": 38, "chunks_total": 204, "elapsed": 11.864721298217773, "token_window_utilization": 0}, "duration": 11.86}
+INFO:     172.66.40.150:18104 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:16657 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:16365 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62548 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41926 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30731 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51532 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:21386 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:54:11.956209Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 38 ingested (39/204 - 19%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 38, "chunks_completed": 39, "chunks_total": 204, "elapsed": 15.267727375030518, "token_window_utilization": 0}, "duration": 15.27}
+INFO:     172.66.40.150:21075 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64197 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56753 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58921 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:33742 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45567 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22726 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:54:27.081457Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 39 ingested (40/204 - 19%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 39, "chunks_completed": 40, "chunks_total": 204, "elapsed": 15.12512993812561, "token_window_utilization": 0}, "duration": 15.13}
+INFO:     172.66.40.150:37358 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:65187 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:21602 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47798 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57546 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64925 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:54:38.049342Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 40 ingested (41/204 - 20%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 40, "chunks_completed": 41, "chunks_total": 204, "elapsed": 10.967785835266113, "token_window_utilization": 0}, "duration": 10.97}
+INFO:     172.66.40.150:27809 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24487 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:53387 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49075 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:54:46.240954Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 41 ingested (42/204 - 20%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 41, "chunks_completed": 42, "chunks_total": 204, "elapsed": 8.191542863845825, "token_window_utilization": 0}, "duration": 8.19}
+INFO:     172.66.40.150:31529 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:38969 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41190 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48524 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:54:55.239577Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 42 ingested (43/204 - 21%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 42, "chunks_completed": 43, "chunks_total": 204, "elapsed": 8.998549938201904, "token_window_utilization": 0}, "duration": 9.0}
+INFO:     172.66.40.150:48959 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51086 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:53253 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42518 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:61557 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58837 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:55:07.771415Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 43 ingested (44/204 - 21%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 43, "chunks_completed": 44, "chunks_total": 204, "elapsed": 12.53173828125, "token_window_utilization": 0}, "duration": 12.53}
+INFO:     172.66.40.150:36471 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20058 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:55:11.645400Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 44 ingested (45/204 - 22%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 44, "chunks_completed": 45, "chunks_total": 204, "elapsed": 3.8738739490509033, "token_window_utilization": 0}, "duration": 3.87}
+INFO:     172.66.40.150:54151 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28613 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30660 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52445 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:38405 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:55:20.724115Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 45 ingested (46/204 - 22%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 45, "chunks_completed": 46, "chunks_total": 204, "elapsed": 9.078653335571289, "token_window_utilization": 0}, "duration": 9.08}
+INFO:     172.66.40.150:43637 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60699 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41370 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55420 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:43567 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63512 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46348 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:55:36.803697Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 46 ingested (47/204 - 23%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 46, "chunks_completed": 47, "chunks_total": 204, "elapsed": 16.07942295074463, "token_window_utilization": 0}, "duration": 16.08}
+INFO:     172.66.40.150:19261 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29784 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:59885 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52775 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20907 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:53516 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:61623 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:55:50.154355Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 47 ingested (48/204 - 23%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 47, "chunks_completed": 48, "chunks_total": 204, "elapsed": 13.350520610809326, "token_window_utilization": 0}, "duration": 13.35}
+INFO:     172.66.40.150:57941 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62259 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55067 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51526 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42454 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:61513 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:56:03.040381Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 48 ingested (49/204 - 24%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 48, "chunks_completed": 49, "chunks_total": 204, "elapsed": 12.885875701904297, "token_window_utilization": 0}, "duration": 12.89}
+INFO:     172.66.40.150:33949 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29607 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29043 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62883 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30079 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:56:11.953296Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 49 ingested (50/204 - 24%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 49, "chunks_completed": 50, "chunks_total": 204, "elapsed": 8.91275429725647, "token_window_utilization": 0}, "duration": 8.91}
+INFO:     172.66.40.150:50379 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35686 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37194 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64496 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49062 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48990 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29646 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31063 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:56:29.692497Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 50 ingested (51/204 - 25%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 50, "chunks_completed": 51, "chunks_total": 204, "elapsed": 17.739026308059692, "token_window_utilization": 0}, "duration": 17.74}
+INFO:     172.66.40.150:36801 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63429 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62367 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25794 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57064 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:56:38.552041Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 51 ingested (52/204 - 25%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 51, "chunks_completed": 52, "chunks_total": 204, "elapsed": 8.859370470046997, "token_window_utilization": 0}, "duration": 8.86}
+INFO:     172.66.40.150:21110 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30863 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58418 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58356 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29050 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:56:49.980794Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 52 ingested (53/204 - 25%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 52, "chunks_completed": 53, "chunks_total": 204, "elapsed": 11.428643465042114, "token_window_utilization": 0}, "duration": 11.43}
+INFO:     172.66.40.150:22617 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54238 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46558 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:38039 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51290 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:57:00.396422Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 53 ingested (54/204 - 26%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 53, "chunks_completed": 54, "chunks_total": 204, "elapsed": 10.415467023849487, "token_window_utilization": 0}, "duration": 10.42}
+INFO:     172.66.40.150:57091 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50058 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57218 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37574 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20235 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63012 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:57:12.399672Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 54 ingested (55/204 - 26%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 54, "chunks_completed": 55, "chunks_total": 204, "elapsed": 12.003113985061646, "token_window_utilization": 0}, "duration": 12.0}
+INFO:     172.66.40.150:44478 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:57:14.989970Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 55 ingested (56/204 - 27%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 55, "chunks_completed": 56, "chunks_total": 204, "elapsed": 2.5902111530303955, "token_window_utilization": 0}, "duration": 2.59}
+INFO:     172.66.40.150:53204 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29435 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49283 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27026 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35299 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58280 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:57:27.071821Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 56 ingested (57/204 - 27%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 56, "chunks_completed": 57, "chunks_total": 204, "elapsed": 12.08171558380127, "token_window_utilization": 0}, "duration": 12.08}
+INFO:     172.66.40.150:17233 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41388 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:57:29.907835Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 57 ingested (58/204 - 28%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 57, "chunks_completed": 58, "chunks_total": 204, "elapsed": 2.8359298706054688, "token_window_utilization": 0}, "duration": 2.84}
+INFO:     172.66.40.150:20318 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29413 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51777 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:57:36.826624Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 58 ingested (59/204 - 28%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 58, "chunks_completed": 59, "chunks_total": 204, "elapsed": 6.918689489364624, "token_window_utilization": 0}, "duration": 6.92}
+INFO:     172.66.40.150:20750 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48072 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24173 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47984 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:57:44.655650Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 59 ingested (60/204 - 29%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 59, "chunks_completed": 60, "chunks_total": 204, "elapsed": 7.828952789306641, "token_window_utilization": 0}, "duration": 7.83}
+INFO:     172.66.40.150:17449 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:57:50.773738Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 60 ingested (61/204 - 29%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 60, "chunks_completed": 61, "chunks_total": 204, "elapsed": 6.1180338859558105, "token_window_utilization": 0}, "duration": 6.12}
+{"timestamp": "2025-10-31T13:57:53.520534Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 61 ingested (62/204 - 30%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 61, "chunks_completed": 62, "chunks_total": 204, "elapsed": 2.7467408180236816, "token_window_utilization": 0}, "duration": 2.75}
+INFO:     172.66.40.150:42103 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:58:00.344217Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 62 ingested (63/204 - 30%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 62, "chunks_completed": 63, "chunks_total": 204, "elapsed": 6.823593854904175, "token_window_utilization": 0}, "duration": 6.82}
+{"timestamp": "2025-10-31T13:58:09.148518Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 63 ingested (64/204 - 31%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 63, "chunks_completed": 64, "chunks_total": 204, "elapsed": 8.80411148071289, "token_window_utilization": 0}, "duration": 8.8}
+INFO:     172.66.40.150:53585 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:53177 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50309 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32218 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:58:32.980565Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 64 ingested (65/204 - 31%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 64, "chunks_completed": 65, "chunks_total": 204, "elapsed": 23.831852436065674, "token_window_utilization": 0}, "duration": 23.83}
+INFO:     172.66.40.150:57132 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:58:39.110954Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 65 ingested (66/204 - 32%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 65, "chunks_completed": 66, "chunks_total": 204, "elapsed": 6.130247592926025, "token_window_utilization": 0}, "duration": 6.13}
+INFO:     172.66.40.150:21925 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:61116 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:58:49.801207Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 66 ingested (67/204 - 32%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 66, "chunks_completed": 67, "chunks_total": 204, "elapsed": 10.690085411071777, "token_window_utilization": 0}, "duration": 10.69}
+INFO:     172.66.40.150:19449 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42614 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:58:56.653152Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 67 ingested (68/204 - 33%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 67, "chunks_completed": 68, "chunks_total": 204, "elapsed": 6.851816654205322, "token_window_utilization": 0}, "duration": 6.85}
+INFO:     172.66.40.150:57635 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63349 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:59:08.206780Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 68 ingested (69/204 - 33%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 68, "chunks_completed": 69, "chunks_total": 204, "elapsed": 11.553511142730713, "token_window_utilization": 0}, "duration": 11.55}
+INFO:     172.66.40.150:43698 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52416 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39082 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:59:21.893851Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 69 ingested (70/204 - 34%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 69, "chunks_completed": 70, "chunks_total": 204, "elapsed": 13.686777591705322, "token_window_utilization": 0}, "duration": 13.69}
+INFO:     172.66.40.150:31474 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:59:29.608642Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 70 ingested (71/204 - 34%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 70, "chunks_completed": 71, "chunks_total": 204, "elapsed": 7.714686393737793, "token_window_utilization": 0}, "duration": 7.71}
+INFO:     172.66.40.150:26398 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42460 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:59:35.831244Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 71 ingested (72/204 - 35%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 71, "chunks_completed": 72, "chunks_total": 204, "elapsed": 6.2225048542022705, "token_window_utilization": 0}, "duration": 6.22}
+INFO:     172.66.40.150:16400 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:59:44.843790Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 72 ingested (73/204 - 35%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 72, "chunks_completed": 73, "chunks_total": 204, "elapsed": 9.012451648712158, "token_window_utilization": 0}, "duration": 9.01}
+INFO:     172.66.40.150:31906 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:59:47.382175Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 73 ingested (74/204 - 36%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 73, "chunks_completed": 74, "chunks_total": 204, "elapsed": 2.5383317470550537, "token_window_utilization": 0}, "duration": 2.54}
+INFO:     172.66.40.150:19582 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17110 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T13:59:59.570934Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 74 ingested (75/204 - 36%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 74, "chunks_completed": 75, "chunks_total": 204, "elapsed": 12.188616275787354, "token_window_utilization": 0}, "duration": 12.19}
+INFO:     172.66.40.150:25389 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:26584 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:00:10.478447Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 75 ingested (76/204 - 37%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 75, "chunks_completed": 76, "chunks_total": 204, "elapsed": 10.907407760620117, "token_window_utilization": 0}, "duration": 10.91}
+INFO:     172.66.40.150:32494 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20263 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:00:20.776640Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 76 ingested (77/204 - 37%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 76, "chunks_completed": 77, "chunks_total": 204, "elapsed": 10.2981116771698, "token_window_utilization": 0}, "duration": 10.3}
+INFO:     172.66.40.150:33261 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24129 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:00:30.745728Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 77 ingested (78/204 - 38%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 77, "chunks_completed": 78, "chunks_total": 204, "elapsed": 9.968752145767212, "token_window_utilization": 0}, "duration": 9.97}
+INFO:     172.66.40.150:36117 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64011 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28282 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:00:42.050424Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 78 ingested (79/204 - 38%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 78, "chunks_completed": 79, "chunks_total": 204, "elapsed": 11.304298162460327, "token_window_utilization": 0}, "duration": 11.3}
+INFO:     172.66.40.150:36010 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:23771 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:00:51.428798Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 79 ingested (80/204 - 39%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 79, "chunks_completed": 80, "chunks_total": 204, "elapsed": 9.378271341323853, "token_window_utilization": 0}, "duration": 9.38}
+INFO:     172.66.40.150:51154 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37199 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63938 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:01:09.051147Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 80 ingested (81/204 - 39%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 80, "chunks_completed": 81, "chunks_total": 204, "elapsed": 17.62222933769226, "token_window_utilization": 0}, "duration": 17.62}
+INFO:     172.66.40.150:55772 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24719 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:01:19.456673Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 81 ingested (82/204 - 40%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 81, "chunks_completed": 82, "chunks_total": 204, "elapsed": 10.405419826507568, "token_window_utilization": 0}, "duration": 10.41}
+INFO:     172.66.40.150:47058 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19329 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:01:26.645847Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 82 ingested (83/204 - 40%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 82, "chunks_completed": 83, "chunks_total": 204, "elapsed": 7.189083099365234, "token_window_utilization": 0}, "duration": 7.19}
+INFO:     172.66.40.150:43407 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25271 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:01:40.442860Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 83 ingested (84/204 - 41%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 83, "chunks_completed": 84, "chunks_total": 204, "elapsed": 13.796915769577026, "token_window_utilization": 0}, "duration": 13.8}
+INFO:     172.66.40.150:53924 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17194 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:01:48.349591Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 84 ingested (85/204 - 41%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 84, "chunks_completed": 85, "chunks_total": 204, "elapsed": 7.90663743019104, "token_window_utilization": 0}, "duration": 7.91}
+INFO:     172.66.40.150:26584 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:18310 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:02:01.135616Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 85 ingested (86/204 - 42%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 85, "chunks_completed": 86, "chunks_total": 204, "elapsed": 12.785661220550537, "token_window_utilization": 0}, "duration": 12.79}
+INFO:     172.66.40.150:39797 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28035 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:02:10.109937Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 86 ingested (87/204 - 42%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 86, "chunks_completed": 87, "chunks_total": 204, "elapsed": 8.974148035049438, "token_window_utilization": 0}, "duration": 8.97}
+INFO:     172.66.40.150:51953 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29504 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:02:20.823246Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 87 ingested (88/204 - 43%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 87, "chunks_completed": 88, "chunks_total": 204, "elapsed": 10.71321964263916, "token_window_utilization": 0}, "duration": 10.71}
+INFO:     172.66.40.150:43940 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:21389 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:02:30.514178Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 88 ingested (89/204 - 43%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 88, "chunks_completed": 89, "chunks_total": 204, "elapsed": 9.690824747085571, "token_window_utilization": 0}, "duration": 9.69}
+INFO:     172.66.40.150:23844 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40733 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51210 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:02:44.457893Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 89 ingested (90/204 - 44%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 89, "chunks_completed": 90, "chunks_total": 204, "elapsed": 13.943530321121216, "token_window_utilization": 0}, "duration": 13.94}
+INFO:     172.66.40.150:34277 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:33894 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40879 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44716 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31765 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:03:08.659097Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 90 ingested (91/204 - 44%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 90, "chunks_completed": 91, "chunks_total": 204, "elapsed": 24.201086282730103, "token_window_utilization": 0}, "duration": 24.2}
+INFO:     172.66.40.150:49549 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30024 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27729 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:03:22.946220Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 91 ingested (92/204 - 45%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 91, "chunks_completed": 92, "chunks_total": 204, "elapsed": 14.28697919845581, "token_window_utilization": 0}, "duration": 14.29}
+{"timestamp": "2025-10-31T14:03:24.808921Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 92 ingested (93/204 - 45%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 92, "chunks_completed": 93, "chunks_total": 204, "elapsed": 1.862605094909668, "token_window_utilization": 0}, "duration": 1.86}
+INFO:     172.66.40.150:52533 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20528 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30339 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:03:36.149560Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 93 ingested (94/204 - 46%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 93, "chunks_completed": 94, "chunks_total": 204, "elapsed": 11.340516090393066, "token_window_utilization": 0}, "duration": 11.34}
+INFO:     172.66.40.150:48730 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48746 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25719 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47077 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57210 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:03:58.200308Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 94 ingested (95/204 - 46%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 94, "chunks_completed": 95, "chunks_total": 204, "elapsed": 22.05067777633667, "token_window_utilization": 0}, "duration": 22.05}
+INFO:     172.66.40.150:56180 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46659 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:04:11.675514Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 95 ingested (96/204 - 47%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 95, "chunks_completed": 96, "chunks_total": 204, "elapsed": 13.475078821182251, "token_window_utilization": 0}, "duration": 13.48}
+INFO:     172.66.40.150:20147 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57446 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51768 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:04:24.420424Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 96 ingested (97/204 - 47%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 96, "chunks_completed": 97, "chunks_total": 204, "elapsed": 12.744786739349365, "token_window_utilization": 0}, "duration": 12.74}
+INFO:     172.66.40.150:61044 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20085 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37971 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:04:38.910162Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 97 ingested (98/204 - 48%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 97, "chunks_completed": 98, "chunks_total": 204, "elapsed": 14.489578247070312, "token_window_utilization": 0}, "duration": 14.49}
+INFO:     172.66.40.150:33503 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54559 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:65204 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35230 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:04:49.133067Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 98 ingested (99/204 - 48%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 98, "chunks_completed": 99, "chunks_total": 204, "elapsed": 10.222814798355103, "token_window_utilization": 0}, "duration": 10.22}
+INFO:     172.66.40.150:28774 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51193 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30586 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46262 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30026 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29420 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24684 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56360 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62433 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:05:11.763780Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 99 ingested (100/204 - 49%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 99, "chunks_completed": 100, "chunks_total": 204, "elapsed": 22.630520582199097, "token_window_utilization": 0}, "duration": 22.63}
+INFO:     172.66.40.150:19130 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51951 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51656 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:26402 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54222 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:05:24.072039Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 100 ingested (101/204 - 49%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 100, "chunks_completed": 101, "chunks_total": 204, "elapsed": 12.308071374893188, "token_window_utilization": 0}, "duration": 12.31}
+INFO:     172.66.40.150:16029 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64387 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60479 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:16898 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:05:34.469224Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 101 ingested (102/204 - 50%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 101, "chunks_completed": 102, "chunks_total": 204, "elapsed": 10.397023916244507, "token_window_utilization": 0}, "duration": 10.4}
+INFO:     172.66.40.150:48071 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51524 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51321 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57586 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:05:45.213963Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 102 ingested (103/204 - 50%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 102, "chunks_completed": 103, "chunks_total": 204, "elapsed": 10.74459457397461, "token_window_utilization": 0}, "duration": 10.74}
+INFO:     172.66.40.150:26767 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:05:47.815218Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 103 ingested (104/204 - 50%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 103, "chunks_completed": 104, "chunks_total": 204, "elapsed": 2.6011855602264404, "token_window_utilization": 0}, "duration": 2.6}
+INFO:     172.66.40.150:24099 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28357 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:65074 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:65285 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25112 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:06:00.099448Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 104 ingested (105/204 - 51%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 104, "chunks_completed": 105, "chunks_total": 204, "elapsed": 12.284179449081421, "token_window_utilization": 0}, "duration": 12.28}
+INFO:     172.66.40.150:40997 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:06:03.314815Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 105 ingested (106/204 - 51%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 105, "chunks_completed": 106, "chunks_total": 204, "elapsed": 3.215318202972412, "token_window_utilization": 0}, "duration": 3.22}
+INFO:     172.66.40.150:57468 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54012 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58315 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57660 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:06:11.972982Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 106 ingested (107/204 - 52%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 106, "chunks_completed": 107, "chunks_total": 204, "elapsed": 8.65812349319458, "token_window_utilization": 0}, "duration": 8.66}
+INFO:     172.66.40.150:44760 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40523 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35897 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:06:19.352723Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 107 ingested (108/204 - 52%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 107, "chunks_completed": 108, "chunks_total": 204, "elapsed": 7.37958550453186, "token_window_utilization": 0}, "duration": 7.38}
+INFO:     172.66.40.150:22338 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29881 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39986 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58379 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40000 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:06:31.755136Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 108 ingested (109/204 - 53%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 108, "chunks_completed": 109, "chunks_total": 204, "elapsed": 12.402271509170532, "token_window_utilization": 0}, "duration": 12.4}
+INFO:     172.66.40.150:21741 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19509 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:34172 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62124 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31567 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48798 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:06:48.194206Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 109 ingested (110/204 - 53%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 109, "chunks_completed": 110, "chunks_total": 204, "elapsed": 16.43896245956421, "token_window_utilization": 0}, "duration": 16.44}
+INFO:     172.66.40.150:42235 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46529 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62613 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58336 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50738 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47467 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:07:01.542372Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 110 ingested (111/204 - 54%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 110, "chunks_completed": 111, "chunks_total": 204, "elapsed": 13.348061561584473, "token_window_utilization": 0}, "duration": 13.35}
+INFO:     172.66.40.150:36248 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24825 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51964 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:07:10.702595Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 111 ingested (112/204 - 54%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 111, "chunks_completed": 112, "chunks_total": 204, "elapsed": 9.160125017166138, "token_window_utilization": 0}, "duration": 9.16}
+INFO:     172.66.40.150:52338 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:59938 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64475 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42195 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63553 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27175 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:16339 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:38228 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:07:30.049582Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 112 ingested (113/204 - 55%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 112, "chunks_completed": 113, "chunks_total": 204, "elapsed": 19.346898555755615, "token_window_utilization": 0}, "duration": 19.35}
+INFO:     172.66.40.150:33148 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44154 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55432 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:59066 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:07:39.985112Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 113 ingested (114/204 - 55%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 113, "chunks_completed": 114, "chunks_total": 204, "elapsed": 9.935441970825195, "token_window_utilization": 0}, "duration": 9.94}
+INFO:     172.66.40.150:27806 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42380 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:34318 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:33757 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44560 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49431 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:07:56.322869Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 114 ingested (115/204 - 56%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 114, "chunks_completed": 115, "chunks_total": 204, "elapsed": 16.33754825592041, "token_window_utilization": 0}, "duration": 16.34}
+INFO:     172.66.40.150:62824 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31929 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22541 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:26251 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:08:04.732985Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 115 ingested (116/204 - 56%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 115, "chunks_completed": 116, "chunks_total": 204, "elapsed": 8.409929752349854, "token_window_utilization": 0}, "duration": 8.41}
+INFO:     172.66.40.150:52627 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58948 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:53875 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44046 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:08:15.286240Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 116 ingested (117/204 - 57%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 116, "chunks_completed": 117, "chunks_total": 204, "elapsed": 10.553123474121094, "token_window_utilization": 0}, "duration": 10.55}
+INFO:     172.66.40.150:37200 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32434 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36994 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45741 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:08:25.778377Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 117 ingested (118/204 - 57%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 117, "chunks_completed": 118, "chunks_total": 204, "elapsed": 10.49198031425476, "token_window_utilization": 0}, "duration": 10.49}
+INFO:     172.66.40.150:52828 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47534 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:61907 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:08:33.505193Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 118 ingested (119/204 - 58%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 118, "chunks_completed": 119, "chunks_total": 204, "elapsed": 7.7266387939453125, "token_window_utilization": 0}, "duration": 7.73}
+INFO:     172.66.40.150:46399 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51264 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17846 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47147 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:08:42.723790Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 119 ingested (120/204 - 58%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 119, "chunks_completed": 120, "chunks_total": 204, "elapsed": 9.218435287475586, "token_window_utilization": 0}, "duration": 9.22}
+{"timestamp": "2025-10-31T14:08:45.029317Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 120 ingested (121/204 - 59%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 120, "chunks_completed": 121, "chunks_total": 204, "elapsed": 2.3053596019744873, "token_window_utilization": 0}, "duration": 2.31}
+INFO:     172.66.40.150:39301 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42572 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35742 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:34312 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54258 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:08:56.265700Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 121 ingested (122/204 - 59%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 121, "chunks_completed": 122, "chunks_total": 204, "elapsed": 11.236261129379272, "token_window_utilization": 0}, "duration": 11.24}
+INFO:     172.66.40.150:58968 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24441 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46309 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29822 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51128 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57521 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:09:10.910528Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 122 ingested (123/204 - 60%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 122, "chunks_completed": 123, "chunks_total": 204, "elapsed": 14.644717693328857, "token_window_utilization": 0}, "duration": 14.64}
+INFO:     172.66.40.150:16497 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62389 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25048 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:09:18.964262Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 123 ingested (124/204 - 60%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 123, "chunks_completed": 124, "chunks_total": 204, "elapsed": 8.053637742996216, "token_window_utilization": 0}, "duration": 8.05}
+INFO:     172.66.40.150:61268 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37839 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:09:23.248229Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 124 ingested (125/204 - 61%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 124, "chunks_completed": 125, "chunks_total": 204, "elapsed": 4.283896446228027, "token_window_utilization": 0}, "duration": 4.28}
+INFO:     172.66.40.150:43662 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51895 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17349 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45404 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44021 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:61531 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46415 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:09:41.835305Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 125 ingested (126/204 - 61%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 125, "chunks_completed": 126, "chunks_total": 204, "elapsed": 18.586954593658447, "token_window_utilization": 0}, "duration": 18.59}
+INFO:     172.66.40.150:35317 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45835 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:21202 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:09:49.420581Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 126 ingested (127/204 - 62%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 126, "chunks_completed": 127, "chunks_total": 204, "elapsed": 7.585155487060547, "token_window_utilization": 0}, "duration": 7.59}
+INFO:     172.66.40.150:40131 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20271 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:23831 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42398 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39016 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42336 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:10:05.125771Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 127 ingested (128/204 - 62%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 127, "chunks_completed": 128, "chunks_total": 204, "elapsed": 15.705017328262329, "token_window_utilization": 0}, "duration": 15.71}
+INFO:     172.66.40.150:41656 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:61780 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58610 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40073 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:10:16.060533Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 128 ingested (129/204 - 63%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 128, "chunks_completed": 129, "chunks_total": 204, "elapsed": 10.934653282165527, "token_window_utilization": 0}, "duration": 10.93}
+INFO:     172.66.40.150:27596 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20615 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:59245 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28939 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:26942 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63318 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24414 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:43646 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:10:36.129076Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 129 ingested (130/204 - 63%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 129, "chunks_completed": 130, "chunks_total": 204, "elapsed": 20.068427085876465, "token_window_utilization": 0}, "duration": 20.07}
+INFO:     172.66.40.150:51201 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54160 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48218 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47607 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:10:43.435749Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 130 ingested (131/204 - 64%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 130, "chunks_completed": 131, "chunks_total": 204, "elapsed": 7.306586742401123, "token_window_utilization": 0}, "duration": 7.31}
+INFO:     172.66.40.150:48505 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55769 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28673 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51928 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27148 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58419 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:10:59.963908Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 131 ingested (132/204 - 64%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 131, "chunks_completed": 132, "chunks_total": 204, "elapsed": 16.52807927131653, "token_window_utilization": 0}, "duration": 16.53}
+INFO:     172.66.40.150:24550 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32281 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55742 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50234 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:11:08.506740Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 132 ingested (133/204 - 65%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 132, "chunks_completed": 133, "chunks_total": 204, "elapsed": 8.542703866958618, "token_window_utilization": 0}, "duration": 8.54}
+INFO:     172.66.40.150:24714 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63588 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60628 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47540 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:11:18.672015Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 133 ingested (134/204 - 65%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 133, "chunks_completed": 134, "chunks_total": 204, "elapsed": 10.165156364440918, "token_window_utilization": 0}, "duration": 10.17}
+INFO:     172.66.40.150:59340 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42133 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:11:26.157980Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 134 ingested (135/204 - 66%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 134, "chunks_completed": 135, "chunks_total": 204, "elapsed": 7.485815525054932, "token_window_utilization": 0}, "duration": 7.49}
+INFO:     172.66.40.150:61130 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46146 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47019 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19496 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22270 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56813 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42975 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60255 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:11:46.721602Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 135 ingested (136/204 - 66%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 135, "chunks_completed": 136, "chunks_total": 204, "elapsed": 20.563481092453003, "token_window_utilization": 0}, "duration": 20.56}
+INFO:     172.66.40.150:60908 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55432 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17912 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24807 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:43954 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:11:58.037043Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 136 ingested (137/204 - 67%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 136, "chunks_completed": 137, "chunks_total": 204, "elapsed": 11.315311908721924, "token_window_utilization": 0}, "duration": 11.32}
+INFO:     172.66.40.150:48803 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:53921 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17195 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:12:04.179087Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 137 ingested (138/204 - 67%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 137, "chunks_completed": 138, "chunks_total": 204, "elapsed": 6.141958713531494, "token_window_utilization": 0}, "duration": 6.14}
+INFO:     172.66.40.150:63208 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27603 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32674 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:12:12.077347Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 138 ingested (139/204 - 68%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 138, "chunks_completed": 139, "chunks_total": 204, "elapsed": 7.898150444030762, "token_window_utilization": 0}, "duration": 7.9}
+INFO:     172.66.40.150:54993 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42565 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32700 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:12:19.457387Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 139 ingested (140/204 - 68%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 139, "chunks_completed": 140, "chunks_total": 204, "elapsed": 7.379929304122925, "token_window_utilization": 0}, "duration": 7.38}
+INFO:     172.66.40.150:30104 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19034 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60256 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:12:28.367762Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 140 ingested (141/204 - 69%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 140, "chunks_completed": 141, "chunks_total": 204, "elapsed": 8.910216331481934, "token_window_utilization": 0}, "duration": 8.91}
+INFO:     172.66.40.150:23748 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44937 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60809 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:12:35.368597Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 141 ingested (142/204 - 69%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 141, "chunks_completed": 142, "chunks_total": 204, "elapsed": 7.000645875930786, "token_window_utilization": 0}, "duration": 7.0}
+INFO:     172.66.40.150:38333 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56434 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64831 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28170 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57852 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60562 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:12:52.059197Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 142 ingested (143/204 - 70%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 142, "chunks_completed": 143, "chunks_total": 204, "elapsed": 16.69046187400818, "token_window_utilization": 0}, "duration": 16.69}
+INFO:     172.66.40.150:19702 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:18278 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63823 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28251 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:65174 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:13:02.942564Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 143 ingested (144/204 - 70%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 143, "chunks_completed": 144, "chunks_total": 204, "elapsed": 10.88312554359436, "token_window_utilization": 0}, "duration": 10.88}
+INFO:     172.66.40.150:55027 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:13:05.349280Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 144 ingested (145/204 - 71%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 144, "chunks_completed": 145, "chunks_total": 204, "elapsed": 2.406637191772461, "token_window_utilization": 0}, "duration": 2.41}
+INFO:     172.66.40.150:45662 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52847 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20936 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30818 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56290 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56342 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49350 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52313 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42630 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49312 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:26370 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29600 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28497 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24525 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51319 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30604 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30762 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:13:48.983838Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 145 ingested (146/204 - 71%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 145, "chunks_completed": 146, "chunks_total": 204, "elapsed": 43.63444805145264, "token_window_utilization": 0}, "duration": 43.63}
+INFO:     172.66.40.150:52237 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:65069 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50302 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:26285 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:13:57.819493Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 146 ingested (147/204 - 72%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 146, "chunks_completed": 147, "chunks_total": 204, "elapsed": 8.835518836975098, "token_window_utilization": 0}, "duration": 8.84}
+INFO:     172.66.40.150:37823 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51209 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27982 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58622 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:14:07.920225Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 147 ingested (148/204 - 72%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 147, "chunks_completed": 148, "chunks_total": 204, "elapsed": 10.100616693496704, "token_window_utilization": 0}, "duration": 10.1}
+INFO:     172.66.40.150:49186 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40571 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45773 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:14:16.556611Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 148 ingested (149/204 - 73%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 148, "chunks_completed": 149, "chunks_total": 204, "elapsed": 8.636247634887695, "token_window_utilization": 0}, "duration": 8.64}
+INFO:     172.66.40.150:25268 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45366 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:16570 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:26639 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:14:25.234126Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 149 ingested (150/204 - 73%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 149, "chunks_completed": 150, "chunks_total": 204, "elapsed": 8.677430391311646, "token_window_utilization": 0}, "duration": 8.68}
+INFO:     172.66.40.150:65306 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44720 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:53416 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:59714 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:14:35.326893Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 150 ingested (151/204 - 74%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 150, "chunks_completed": 151, "chunks_total": 204, "elapsed": 10.092666149139404, "token_window_utilization": 0}, "duration": 10.09}
+INFO:     172.66.40.150:65120 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41387 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32613 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41587 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:14:45.417454Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 151 ingested (152/204 - 74%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 151, "chunks_completed": 152, "chunks_total": 204, "elapsed": 10.090466976165771, "token_window_utilization": 0}, "duration": 10.09}
+{"timestamp": "2025-10-31T14:14:47.733679Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 152 ingested (153/204 - 75%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 152, "chunks_completed": 153, "chunks_total": 204, "elapsed": 2.3161325454711914, "token_window_utilization": 0}, "duration": 2.32}
+INFO:     172.66.40.150:37436 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44273 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49453 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48459 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:14:57.326402Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 153 ingested (154/204 - 75%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 153, "chunks_completed": 154, "chunks_total": 204, "elapsed": 9.59262466430664, "token_window_utilization": 0}, "duration": 9.59}
+INFO:     172.66.40.150:29093 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:18640 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35231 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35774 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52183 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39920 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17032 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64538 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:15:15.687260Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 154 ingested (155/204 - 75%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 154, "chunks_completed": 155, "chunks_total": 204, "elapsed": 18.360729217529297, "token_window_utilization": 0}, "duration": 18.36}
+INFO:     172.66.40.150:30851 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22824 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36490 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44735 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:15:26.728891Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 155 ingested (156/204 - 76%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 155, "chunks_completed": 156, "chunks_total": 204, "elapsed": 11.04153299331665, "token_window_utilization": 0}, "duration": 11.04}
+INFO:     172.66.40.150:53615 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31433 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58744 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:51545 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57283 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50225 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20411 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31546 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:15:46.521489Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 156 ingested (157/204 - 76%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 156, "chunks_completed": 157, "chunks_total": 204, "elapsed": 19.792476654052734, "token_window_utilization": 0}, "duration": 19.79}
+INFO:     172.66.40.150:53691 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40168 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39761 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:65038 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32492 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37309 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:16:02.354997Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 157 ingested (158/204 - 77%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 157, "chunks_completed": 158, "chunks_total": 204, "elapsed": 15.833170652389526, "token_window_utilization": 0}, "duration": 15.83}
+INFO:     172.66.40.150:63570 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49524 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62787 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31403 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:16:13.341111Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 158 ingested (159/204 - 77%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 158, "chunks_completed": 159, "chunks_total": 204, "elapsed": 10.985944747924805, "token_window_utilization": 0}, "duration": 10.99}
+INFO:     172.66.40.150:27943 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22062 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31752 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54334 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:16:23.245414Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 159 ingested (160/204 - 78%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 159, "chunks_completed": 160, "chunks_total": 204, "elapsed": 9.904223442077637, "token_window_utilization": 0}, "duration": 9.9}
+INFO:     172.66.40.150:16151 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47782 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39168 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47466 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:16:32.291155Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 160 ingested (161/204 - 78%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 160, "chunks_completed": 161, "chunks_total": 204, "elapsed": 9.045628309249878, "token_window_utilization": 0}, "duration": 9.05}
+INFO:     172.66.40.150:44821 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35073 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52488 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25409 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25284 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54318 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64476 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56011 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42793 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56623 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36811 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44392 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:17:03.276155Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 161 ingested (162/204 - 79%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 161, "chunks_completed": 162, "chunks_total": 204, "elapsed": 30.984901428222656, "token_window_utilization": 0}, "duration": 30.98}
+INFO:     172.66.40.150:22709 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35830 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60463 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24215 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:17:12.187577Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 162 ingested (163/204 - 79%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 162, "chunks_completed": 163, "chunks_total": 204, "elapsed": 8.911339282989502, "token_window_utilization": 0}, "duration": 8.91}
+INFO:     172.66.40.150:40017 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:17:14.682594Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 163 ingested (164/204 - 80%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 163, "chunks_completed": 164, "chunks_total": 204, "elapsed": 2.4949405193328857, "token_window_utilization": 0}, "duration": 2.49}
+INFO:     172.66.40.150:62018 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22634 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25350 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41111 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41262 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:17:27.200727Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 164 ingested (165/204 - 80%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 164, "chunks_completed": 165, "chunks_total": 204, "elapsed": 12.518013954162598, "token_window_utilization": 0}, "duration": 12.52}
+INFO:     172.66.40.150:24390 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19571 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41764 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:17:34.889088Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 165 ingested (166/204 - 81%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 165, "chunks_completed": 166, "chunks_total": 204, "elapsed": 7.688282012939453, "token_window_utilization": 0}, "duration": 7.69}
+INFO:     172.66.40.150:43320 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54204 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31166 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:17:43.951821Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 166 ingested (167/204 - 81%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 166, "chunks_completed": 167, "chunks_total": 204, "elapsed": 9.062638282775879, "token_window_utilization": 0}, "duration": 9.06}
+INFO:     172.66.40.150:21499 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25309 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35891 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57535 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:43915 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:17:56.249825Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 167 ingested (168/204 - 82%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 167, "chunks_completed": 168, "chunks_total": 204, "elapsed": 12.297780752182007, "token_window_utilization": 0}, "duration": 12.3}
+INFO:     172.66.40.150:37237 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28869 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17687 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63907 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27736 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:34038 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39326 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:62919 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:18:15.928872Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 168 ingested (169/204 - 82%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 168, "chunks_completed": 169, "chunks_total": 204, "elapsed": 19.678893089294434, "token_window_utilization": 0}, "duration": 19.68}
+INFO:     172.66.40.150:19753 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63343 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32798 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24319 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24072 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:18:30.080757Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 169 ingested (170/204 - 83%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 169, "chunks_completed": 170, "chunks_total": 204, "elapsed": 14.151694059371948, "token_window_utilization": 0}, "duration": 14.15}
+INFO:     172.66.40.150:48663 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35120 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39587 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45799 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:34967 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:18:40.261003Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 170 ingested (171/204 - 83%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 170, "chunks_completed": 171, "chunks_total": 204, "elapsed": 10.180115699768066, "token_window_utilization": 0}, "duration": 10.18}
+INFO:     172.66.40.150:42309 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:48159 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27417 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19622 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:18:50.250455Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 171 ingested (172/204 - 84%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 171, "chunks_completed": 172, "chunks_total": 204, "elapsed": 9.989368438720703, "token_window_utilization": 0}, "duration": 9.99}
+INFO:     172.66.40.150:55288 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45321 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41776 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64000 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:19:02.965640Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 172 ingested (173/204 - 84%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 172, "chunks_completed": 173, "chunks_total": 204, "elapsed": 12.71509599685669, "token_window_utilization": 0}, "duration": 12.72}
+INFO:     172.66.40.150:16614 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56376 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49725 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:29758 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:19:13.070524Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 173 ingested (174/204 - 85%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 173, "chunks_completed": 174, "chunks_total": 204, "elapsed": 10.10477900505066, "token_window_utilization": 0}, "duration": 10.1}
+INFO:     172.66.40.150:45682 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30635 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37336 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27986 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:19:22.948436Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 174 ingested (175/204 - 85%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 174, "chunks_completed": 175, "chunks_total": 204, "elapsed": 9.877825260162354, "token_window_utilization": 0}, "duration": 9.88}
+INFO:     172.66.40.150:22820 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63170 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60082 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58504 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:19:31.291794Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 175 ingested (176/204 - 86%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 175, "chunks_completed": 176, "chunks_total": 204, "elapsed": 8.343278646469116, "token_window_utilization": 0}, "duration": 8.34}
+INFO:     172.66.40.150:39861 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:30455 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:28922 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46132 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:19:43.286459Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 176 ingested (177/204 - 86%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 176, "chunks_completed": 177, "chunks_total": 204, "elapsed": 11.994566679000854, "token_window_utilization": 0}, "duration": 11.99}
+INFO:     172.66.40.150:24211 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:18221 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24073 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36018 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:19:53.073023Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 177 ingested (178/204 - 87%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 177, "chunks_completed": 178, "chunks_total": 204, "elapsed": 9.786500453948975, "token_window_utilization": 0}, "duration": 9.79}
+INFO:     172.66.40.150:17397 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63402 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:19:56.069623Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 178 ingested (179/204 - 87%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 178, "chunks_completed": 179, "chunks_total": 204, "elapsed": 2.9965364933013916, "token_window_utilization": 0}, "duration": 3.0}
+INFO:     172.66.40.150:41865 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49636 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19544 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:59059 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35779 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31169 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41427 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19793 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46732 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:19331 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37636 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:20:24.583181Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 179 ingested (180/204 - 88%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 179, "chunks_completed": 180, "chunks_total": 204, "elapsed": 28.51346778869629, "token_window_utilization": 0}, "duration": 28.51}
+INFO:     172.66.40.150:38862 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:16346 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:20:29.013879Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 180 ingested (181/204 - 88%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 180, "chunks_completed": 181, "chunks_total": 204, "elapsed": 4.430616140365601, "token_window_utilization": 0}, "duration": 4.43}
+INFO:     172.66.40.150:59358 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22544 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54179 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47112 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60589 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:20:41.332349Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 181 ingested (182/204 - 89%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 181, "chunks_completed": 182, "chunks_total": 204, "elapsed": 12.318368911743164, "token_window_utilization": 0}, "duration": 12.32}
+INFO:     172.66.40.150:19286 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:18974 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60048 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:20:50.276920Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 182 ingested (183/204 - 89%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 182, "chunks_completed": 183, "chunks_total": 204, "elapsed": 8.94444227218628, "token_window_utilization": 0}, "duration": 8.94}
+INFO:     172.66.40.150:55815 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:45658 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52202 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:20:58.943384Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 183 ingested (184/204 - 90%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 183, "chunks_completed": 184, "chunks_total": 204, "elapsed": 8.666332721710205, "token_window_utilization": 0}, "duration": 8.67}
+INFO:     172.66.40.150:41486 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:16603 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31346 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35676 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:21:09.082107Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 184 ingested (185/204 - 90%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 184, "chunks_completed": 185, "chunks_total": 204, "elapsed": 10.138617038726807, "token_window_utilization": 0}, "duration": 10.14}
+INFO:     172.66.40.150:19115 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36476 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52841 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:39753 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55969 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:21:19.693411Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 185 ingested (186/204 - 91%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 185, "chunks_completed": 186, "chunks_total": 204, "elapsed": 10.611229181289673, "token_window_utilization": 0}, "duration": 10.61}
+INFO:     172.66.40.150:47150 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32826 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:21:26.357735Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 186 ingested (187/204 - 91%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 186, "chunks_completed": 187, "chunks_total": 204, "elapsed": 6.664229869842529, "token_window_utilization": 0}, "duration": 6.66}
+INFO:     172.66.40.150:23429 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63403 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25284 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:65324 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:33965 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40423 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:21:40.687352Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 187 ingested (188/204 - 92%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 187, "chunks_completed": 188, "chunks_total": 204, "elapsed": 14.329529285430908, "token_window_utilization": 0}, "duration": 14.33}
+INFO:     172.66.40.150:17792 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:37851 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:23319 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:54294 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:44100 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42917 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:21:56.194340Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 188 ingested (189/204 - 92%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 188, "chunks_completed": 189, "chunks_total": 204, "elapsed": 15.506887674331665, "token_window_utilization": 0}, "duration": 15.51}
+INFO:     172.66.40.150:53284 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:21:59.041841Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 189 ingested (190/204 - 93%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 189, "chunks_completed": 190, "chunks_total": 204, "elapsed": 2.847330331802368, "token_window_utilization": 0}, "duration": 2.85}
+INFO:     172.66.40.150:36638 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:64280 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:58793 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:26189 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:23282 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:22:11.821591Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 190 ingested (191/204 - 93%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 190, "chunks_completed": 191, "chunks_total": 204, "elapsed": 12.77967119216919, "token_window_utilization": 0}, "duration": 12.78}
+INFO:     172.66.40.150:31747 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:22:14.391089Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 191 ingested (192/204 - 94%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 191, "chunks_completed": 192, "chunks_total": 204, "elapsed": 2.5694406032562256, "token_window_utilization": 0}, "duration": 2.57}
+INFO:     172.66.40.150:49628 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55014 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:41858 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:22:21.812995Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 192 ingested (193/204 - 94%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 192, "chunks_completed": 193, "chunks_total": 204, "elapsed": 7.421833753585815, "token_window_utilization": 0}, "duration": 7.42}
+INFO:     172.66.40.150:18406 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56520 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49911 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:22:30.210232Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 193 ingested (194/204 - 95%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 193, "chunks_completed": 194, "chunks_total": 204, "elapsed": 8.397136688232422, "token_window_utilization": 0}, "duration": 8.4}
+INFO:     172.66.40.150:64325 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:35748 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:18378 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36168 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:22:39.426835Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 194 ingested (195/204 - 95%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 194, "chunks_completed": 195, "chunks_total": 204, "elapsed": 9.21646785736084, "token_window_utilization": 0}, "duration": 9.22}
+INFO:     172.66.40.150:33965 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:22096 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:47089 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:22:46.921379Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 195 ingested (196/204 - 96%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 195, "chunks_completed": 196, "chunks_total": 204, "elapsed": 7.494389772415161, "token_window_utilization": 0}, "duration": 7.49}
+INFO:     172.66.40.150:47273 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:22:49.886716Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 196 ingested (197/204 - 96%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 196, "chunks_completed": 197, "chunks_total": 204, "elapsed": 2.9652762413024902, "token_window_utilization": 0}, "duration": 2.97}
+INFO:     172.66.40.150:62219 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:50791 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:42886 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63133 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:22:59.667856Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 197 ingested (198/204 - 97%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 197, "chunks_completed": 198, "chunks_total": 204, "elapsed": 9.781043291091919, "token_window_utilization": 0}, "duration": 9.78}
+INFO:     172.66.40.150:61855 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:56366 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:27085 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:21195 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:23:10.609109Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 198 ingested (199/204 - 97%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 198, "chunks_completed": 199, "chunks_total": 204, "elapsed": 10.941133260726929, "token_window_utilization": 0}, "duration": 10.94}
+INFO:     172.66.40.150:16038 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:32462 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:60428 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:49715 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24359 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:52404 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:57230 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:63226 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:23:28.750078Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 199 ingested (200/204 - 98%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 199, "chunks_completed": 200, "chunks_total": 204, "elapsed": 18.140897274017334, "token_window_utilization": 0}, "duration": 18.14}
+INFO:     172.66.40.150:61407 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:46635 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:17353 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:40222 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:33722 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:23:42.205571Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 200 ingested (201/204 - 98%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 200, "chunks_completed": 201, "chunks_total": 204, "elapsed": 13.455381155014038, "token_window_utilization": 0}, "duration": 13.46}
+INFO:     172.66.40.150:31362 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20003 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:25796 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:23:50.106687Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 201 ingested (202/204 - 99%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 201, "chunks_completed": 202, "chunks_total": 204, "elapsed": 7.901006698608398, "token_window_utilization": 0}, "duration": 7.9}
+INFO:     172.66.40.150:43719 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:55654 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:21198 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:24038 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:23:58.837101Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 202 ingested (203/204 - 99%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 202, "chunks_completed": 203, "chunks_total": 204, "elapsed": 8.730319261550903, "token_window_utilization": 0}, "duration": 8.73}
+INFO:     172.66.40.150:34261 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:20364 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:31189 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:61396 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+{"timestamp": "2025-10-31T14:24:08.600258Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ Chunk 203 ingested (204/204 - 100%)", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "chunk_complete", "metrics": {"chunk_index": 203, "chunks_completed": 204, "chunks_total": 204, "elapsed": 9.76288914680481, "token_window_utilization": 0}, "duration": 9.76}
+{"timestamp": "2025-10-31T14:24:08.600852Z", "level": "INFO", "logger": "diveteacher.graphiti", "message": "✅ graphiti_ingestion complete", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "graphiti_ingestion", "sub_stage": "completed", "metrics": {"total_chunks": 204, "successful": 204, "failed": 0, "avg_time_per_chunk": 10.51, "success_rate": 100.0, "total_tokens_used": 612000, "peak_window_utilization_pct": 0}, "duration": 2143.6954324245453}
+{"timestamp": "2025-10-31T14:24:08.601103Z", "level": "INFO", "logger": "diveteacher.processor", "message": "✅ ingestion complete", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "ingestion", "sub_stage": "completed", "metrics": {"chunks_processed": 204}, "duration": 2143.7219758033752}
+{"timestamp": "2025-10-31T14:24:08.601199Z", "level": "INFO", "logger": "diveteacher.processor", "message": "📊 Querying Neo4j for entity/relation counts...", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b"}
+{"timestamp": "2025-10-31T14:24:08.641574Z", "level": "INFO", "logger": "diveteacher.processor", "message": "✅ Neo4j counts: 277 entities, 411 relations", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b"}
+{"timestamp": "2025-10-31T14:24:08.641773Z", "level": "INFO", "logger": "diveteacher.processor", "message": "✅ Processing complete", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "completed", "metrics": {"total_duration": 2184.12, "conversion_duration": 40.33, "chunking_duration": 0.03, "ingestion_duration": 2143.72, "num_chunks": 204, "pages": 16}, "duration": 2184.12}
+{"timestamp": "2025-10-31T14:24:08.641846Z", "level": "INFO", "logger": "diveteacher.processor", "message": "Processing finished: completed", "upload_id": "e5347c64-254f-4b24-aed7-89e4d3ed7d4b", "stage": "finalized"}
+{"timestamp": "2025-10-31T14:24:08.650096Z", "level": "INFO", "logger": "diveteacher.queue", "message": "✅ Document completed: e5347c64-254f-4b24-aed7-89e4d3ed7d4b_Niveau 1.pdf"}
+{"timestamp": "2025-10-31T14:24:08.650114Z", "level": "INFO", "logger": "diveteacher.queue", "message": "   Upload ID: e5347c64-254f-4b24-aed7-89e4d3ed7d4b"}
+INFO:     172.66.40.150:34561 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:36228 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK
+INFO:     172.66.40.150:65191 - "GET /api/upload/e5347c64-254f-4b24-aed7-89e4d3ed7d4b/status HTTP/1.1" 200 OK

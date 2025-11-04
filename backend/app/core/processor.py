@@ -28,7 +28,7 @@ from app.integrations.dockling import (
     convert_document_to_docling, 
     extract_document_metadata
 )
-from app.services.document_chunker import get_chunker
+from app.services.document_chunker import get_chunker  # ARIA production-validated pattern (RecursiveCharacterTextSplitter)
 from app.integrations.graphiti import ingest_chunks_to_graph
 from app.integrations.neo4j import neo4j_client
 import sentry_sdk

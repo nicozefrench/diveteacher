@@ -1,5 +1,16 @@
 """
-File Upload Endpoint - ARIA Pattern (asyncio.create_task)
+File Upload Endpoint - Production-Ready with DocumentQueue (ARIA v2.0.0)
+
+Architecture:
+- DocumentQueue: Sequential FIFO processing
+- SafeIngestionQueue: Token-aware rate limiting (in processor)
+- Background Processing: asyncio-based (no threading)
+
+Changes from v1.0.0:
+- Upload → enqueue to DocumentQueue (not direct processing)
+- DocumentQueue handles sequential processing
+- One document at a time (no concurrent processing)
+- Inter-document delays (60s) for additional rate limit safety
 """
 
 import os
@@ -14,7 +25,8 @@ from fastapi.responses import JSONResponse
 import logging
 
 from app.core.config import settings
-from app.core.processor import process_document, get_processing_status
+from app.core.processor import get_processing_status
+from app.services.document_queue import get_document_queue
 
 router = APIRouter()
 logger = logging.getLogger('diveteacher.upload')
@@ -148,25 +160,51 @@ async def upload_document(
         }
         
         # ═══════════════════════════════════════════════════════════
-        # 🔧 FIX: Initialize status BEFORE creating background task
-        # This ensures status endpoint returns 200 immediately
+        # 🔧 NEW: Production-Ready DocumentQueue (ARIA v2.0.0)
+        # ═══════════════════════════════════════════════════════════
+        # Upload → Enqueue (not direct processing)
+        # Queue handles:
+        # - Sequential processing (one doc at a time)
+        # - FIFO order
+        # - Inter-document delays (60s)
+        # - SafeIngestionQueue inside processor
+        # ═══════════════════════════════════════════════════════════
+        
+        print(f"[{upload_id}] Enqueueing to DocumentQueue...", flush=True)
+        logger.info(f"[{upload_id}] Adding document to queue")
+        
+        # Get global queue singleton
+        queue = get_document_queue()
+        
+        # Enqueue document (async processing handled by queue)
+        queue_entry = queue.enqueue(
+            file_path=file_path,
+            upload_id=upload_id,
+            metadata=metadata
+        )
+        
+        logger.info(f"[{upload_id}] ✅ Document enqueued")
+        logger.info(f"   Queue position: {queue_entry['queue_position']}")
+        logger.info(f"   Queue size: {len(queue.queue)}")
+        print(f"[{upload_id}] ✅ Enqueued (position: {queue_entry['queue_position']})", flush=True)
+        
+        # ═══════════════════════════════════════════════════════════
+        # Initialize status dict for immediate status endpoint response
         # ═══════════════════════════════════════════════════════════
         from app.core.processor import processing_status
         from datetime import datetime
         
-        print(f"[{upload_id}] Initializing status dict...", flush=True)
-        
-        # Pre-initialize status to prevent 404
         processing_status[upload_id] = {
-            "status": "processing",
+            "status": "queued",  # ← Changed from "processing" to "queued"
             "stage": "queued",
-            "sub_stage": "initializing",
+            "sub_stage": "waiting_in_queue",
             "progress": 0,
             "progress_detail": {
                 "current": 0,
                 "total": 4,
                 "unit": "stages"
             },
+            "queue_position": queue_entry['queue_position'],  # ← NEW
             "error": None,
             "started_at": datetime.now().isoformat(),
             "metrics": {
@@ -175,31 +213,14 @@ async def upload_document(
             }
         }
         
-        logger.info(f"[{upload_id}] ✅ Status dict initialized (pre-processing)")
-        print(f"[{upload_id}] ✅ Status initialized in processing_status dict", flush=True)
-        
-        # ═══════════════════════════════════════════════════════════
-        # ✅ NEW APPROACH: asyncio.create_task() (ARIA pattern)
-        # ═══════════════════════════════════════════════════════════
-        print(f"[{upload_id}] Creating async background task...", flush=True)
-        
-        # Create background task in SAME event loop
-        asyncio.create_task(
-            process_document_wrapper(
-                file_path=file_path,
-                upload_id=upload_id,
-                metadata=metadata
-            )
-        )
-        
-        print(f"[{upload_id}] ✅ Processing task created (async)", flush=True)
-        logger.info(f"[{upload_id}] ✅ Background processing task created")
+        logger.info(f"[{upload_id}] ✅ Status dict initialized (queued)")
         
         return JSONResponse(content={
             "upload_id": upload_id,
             "filename": file.filename,
-            "status": "processing",
-            "message": "Document uploaded successfully and processing started"
+            "status": "queued",
+            "queue_position": queue_entry['queue_position'],
+            "message": f"Document uploaded and queued for processing (position: {queue_entry['queue_position']})"
         })
         
     except HTTPException:
@@ -207,47 +228,6 @@ async def upload_document(
     except Exception as e:
         logger.error(f"❌ Upload error: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
-
-
-async def process_document_wrapper(file_path: str, upload_id: str, metadata: dict):
-    """
-    Wrapper for process_document() to handle errors gracefully.
-    
-    Runs in same event loop as FastAPI (no threading).
-    This allows long-running processing without blocking the API.
-    
-    Args:
-        file_path: Path to uploaded file
-        upload_id: Unique upload identifier
-        metadata: File metadata
-    """
-    try:
-        print(f"[{upload_id}] 🚀 Starting background processing (async wrapper)...", flush=True)
-        logger.info(f"[{upload_id}] Background processing wrapper started")
-        
-        print(f"[{upload_id}] 🔍 DEBUG: About to call process_document()...", flush=True)
-        print(f"[{upload_id}] 🔍 DEBUG: file_path={file_path}", flush=True)
-        print(f"[{upload_id}] 🔍 DEBUG: upload_id={upload_id}", flush=True)
-        print(f"[{upload_id}] 🔍 DEBUG: metadata={metadata}", flush=True)
-        
-        # Call process_document (already async)
-        await process_document(
-            file_path=file_path,
-            upload_id=upload_id,
-            metadata=metadata
-        )
-        
-        print(f"[{upload_id}] ✅ Background processing complete", flush=True)
-        logger.info(f"[{upload_id}] ✅ Background processing complete")
-        
-    except Exception as e:
-        print(f"[{upload_id}] ❌ Background processing error: {e}", flush=True)
-        logger.error(f"[{upload_id}] ❌ Background processing error: {e}", exc_info=True)
-        import traceback
-        traceback.print_exc()
-        
-        # Error is already captured in process_document status dict
-        # No need to re-raise (background task completes gracefully)
 
 
 def _sanitize_for_json(obj):
@@ -430,3 +410,79 @@ async def get_upload_logs(
         "sub_stage": sub_stage,
         "progress": status.get("progress", 0)
     })
+
+
+# ════════════════════════════════════════════════════════
+# Document Queue Management Endpoints (ARIA v2.0.0)
+# ════════════════════════════════════════════════════════
+
+@router.get("/queue/status")
+async def get_queue_status():
+    """
+    Get document processing queue status.
+    
+    Returns detailed information about:
+    - Queue size (number of documents waiting)
+    - Current processing state
+    - Current document being processed
+    - Completed/failed document counts
+    - List of queued documents with positions
+    - Statistics (success rate, total enqueued)
+    
+    Returns:
+        Queue status dict
+        
+    Example Response:
+        {
+            "queue_size": 3,
+            "processing": true,
+            "current_document": {
+                "upload_id": "abc123",
+                "filename": "test.pdf",
+                "status": "processing",
+                "started_at": "2025-10-31T12:00:00"
+            },
+            "completed_count": 5,
+            "failed_count": 1,
+            "queued_documents": [
+                {
+                    "upload_id": "def456",
+                    "filename": "doc2.pdf",
+                    "queue_position": 1,
+                    "queued_at": "2025-10-31T12:05:00"
+                },
+                ...
+            ],
+            "stats": {
+                "total_enqueued": 9,
+                "success_rate": 83.3
+            }
+        }
+    """
+    queue = get_document_queue()
+    status = queue.get_status()
+    
+    return JSONResponse(content=status)
+
+
+@router.post("/queue/clear-history")
+async def clear_queue_history():
+    """
+    Clear completed and failed document history from queue.
+    
+    Note:
+        - Does NOT clear active queue (documents waiting)
+        - Does NOT stop current processing
+        - Only clears historical data (completed/failed lists)
+    
+    Returns:
+        Confirmation message
+    """
+    queue = get_document_queue()
+    queue.clear_history()
+    
+    return JSONResponse(content={
+        "message": "Queue history cleared",
+        "status": "success"
+    })
+

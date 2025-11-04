@@ -27,7 +27,7 @@ def get_metrics(upload_id: str, api_base: str = API_BASE) -> Optional[Dict[str, 
     try:
         # Get status which includes metrics
         response = httpx.get(
-            f"{api_base}/status/{upload_id}",
+            f"{api_base}/{upload_id}/status",
             timeout=TIMEOUT
         )
         response.raise_for_status()

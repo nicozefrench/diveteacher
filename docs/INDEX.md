@@ -1,15 +1,21 @@
 # 📚 DiveTeacher - Documentation Index
 
-> **Version:** Phase 1.0 + UI Progress Feedback + Performance Optimization COMPLETE  
-> **Last Updated:** October 29, 2025, 22:00 CET  
+> **Version:** ARIA v2.0.0 + Gemini 2.5 Flash-Lite COMPLETE  
+> **Last Updated:** November 4, 2025, 09:30 CET  
 > **Environment:** Local Development (Mac M1 Max)  
-> **Status:** 🟢 Production-Ready (100%) - All Systems Operational + UI Enhanced
+> **Status:** 🟢 Production-Ready (100%) - Gemini E2E Validated (Test Run #22) + Fix #23 Complete
 
 ---
 
 ## 🎯 Quick Navigation
 
 ### 🚀 Getting Started
+- **[USER-GUIDE.md](USER-GUIDE.md)** - ⭐ **START HERE** - Simple AI prompts & commands ✨ **NEW**
+  - E2E testing commands ("prep e2e")
+  - Production ingestion commands ("prep ingestion")
+  - Monitoring commands ("monitor queue")
+  - Common workflows & mistakes to avoid
+  - Quick reference cheat sheet
 - **[SETUP.md](SETUP.md)** - Local development setup (Phase 0 complete guide)
   - Prerequisites & installation
   - Docker services configuration
@@ -26,22 +32,27 @@
   - Database schemas
 
 ### 📄 Document Processing
-- **[DOCLING.md](DOCLING.md)** - Advanced document processing ✅ **UPDATED (Oct 29)**
+- **[DOCLING.md](DOCLING.md)** - Advanced document processing ✅ **UPDATED (Oct 31)**
   - Docling integration & configuration
   - `PdfPipelineOptions` (OCR, TableFormer)
-  - `HierarchicalChunker` semantic chunking
+  - ~~`HierarchicalChunker`~~ → **REPLACED with ARIA RecursiveCharacterTextSplitter** ✨
+  - **ARIA Chunking Pattern:** 3000 tokens/chunk, 200 overlap (9.3× faster!)
   - Metadata extraction
-  - **🆕 Enhanced Warmup System** - Test conversion for OCR model caching
-  - Performance optimization (+80s improvement)
+  - **🆕 Enhanced Warmup System** - Docling + ARIA Chunker initialization
+  - Performance optimization (68× fewer chunks, +17% entities, +50% relations)
   - Common issues & solutions
 
 ### 🔗 Knowledge Graph & RAG
 - **[GRAPHITI.md](GRAPHITI.md)** - Graphiti knowledge graph integration ✅ **COMPLETE**
-  - Claude Haiku 4.5 configuration (production-validated)
-  - AnthropicClient integration
-  - Entity extraction & relation detection
-  - Vector embeddings (text-embedding-3-small)
+  - ~~Claude Haiku 4.5~~ → **Gemini 2.5 Flash-Lite** (Google Direct) ✨ **MIGRATED (Nov 3)**
+  - **99.7% cost reduction:** $730/year → $2/year ($728 saved!)
+  - GeminiClient integration (ultra-low cost: $0.10/M input + $0.40/M output)
+  - Entity extraction & relation detection (Gemini LLM)
+  - Vector embeddings (OpenAI text-embedding-3-small, 1536 dims - DB compatible!)
+  - Cross-encoder reranking (OpenAI gpt-4o-mini)
   - AsyncIO threading architecture
+  - Rate Limits: 4K RPM (Tier 1) - No throttling
+  - **[GEMINI-AUDIT-REPORT.md](GEMINI-AUDIT-REPORT.md)** ✨ **NEW** - Complete audit report (7 bugs évités)
 - **[NEO4J.md](NEO4J.md)** - Neo4j database + RAG queries
   - Neo4j setup & authentication
   - RAG indexes (fulltext, entity, hybrid)
@@ -58,12 +69,18 @@
   - Rate limiting (future)
 
 ### 🔧 Troubleshooting
-- **[FIXES-LOG.md](FIXES-LOG.md)** - Complete bug fix history ✅ **UPDATED (Oct 29, 22:00)**
-  - **Session 8:** 12 fixes deployed (9 critical bugs + 1 display + 1 performance + 1 script)
-  - **Latest:** Fix #11, #12, #13 - UI Progress Feedback Implementation (2h 20min)
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Complete bug fix history ✅ **UPDATED (Nov 3, 18:45)**
+  - **Session 8-11:** 21+ fixes deployed (ARIA Chunking + Performance + UI)
+  - **Latest:** Gemini 2.5 Flash-Lite Migration (99.7% cost reduction)
   - Real-time ingestion progress + Entity/Relation counts + Multi-document UI
   - All root causes, solutions, and validation results
   - Production-ready documentation
+- **[GEMINI-AUDIT-REPORT.md](GEMINI-AUDIT-REPORT.md)** ✨ **NEW (Nov 3)** - Gemini migration audit
+  - Complete ARIA audit (7 critical bugs évités)
+  - Import verification (GeminiClient, OpenAIEmbedder)
+  - Configuration validation (gemini-2.5-flash-lite, 1536 dims)
+  - Neo4j compatibility check (DB empty, safe)
+  - Production readiness confirmed (100%)
 - **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Common issues & fixes
   - Neo4j authentication errors
   - Docling conversion timeouts
@@ -77,24 +94,37 @@
   - Deployment instructions
 
 ### 🔍 Monitoring & Testing ✅ PRODUCTION-READY
-- **[MONITORING.md](MONITORING.md)** - Comprehensive monitoring & debugging ✅ **UPDATED**
-  - **🆕 Unified Monitoring Suite** - `diveteacher-monitor` CLI (18 commands)
+- **[MONITORING.md](MONITORING.md)** - Comprehensive monitoring & debugging ✅ **UPDATED (Oct 31)**
+  - **🆕 ARIA v2.0.0 Monitoring Tools** - Queue + Ingestion + Upload monitoring
+  - **🆕 DocumentQueue Monitor** - `monitor-queue.sh` (real-time queue status)
+  - **🆕 Enhanced Ingestion Monitor** - Updated for ARIA chunking keywords
+  - **🆕 Upload Monitor** - `monitor-upload.sh` (track to completion)
+  - **🆕 Backend Queue Test** - `test-backend-queue.sh` (integration test)
+  - Unified Monitoring Suite - `diveteacher-monitor` CLI (18 commands)
   - Neo4j management (stats, query, export, health, clear)
   - Graphiti monitoring (status, metrics, validate)
   - Docling monitoring (verify, cache, performance)
   - System monitoring (health, resources, docker)
-  - Scripts historiques (monitor_ingestion.sh, monitor_ollama.sh, etc.)
-  - [Complete Suite Documentation](../scripts/monitoring/README.md)
-- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED**
-  - **🆕 E2E Test Initialization** - `init-e2e-test.sh` automated script ✨ **NEW**
-  - **🆕 Pre-Test Cleanup Procedure** - 4 methods (Automated, API, CLI, Direct)
-  - État actuel du système
-  - 8 sessions de test documentées (E2E Test Run #8 complete)
+  - [Scripts Usage Guide](../scripts/SCRIPTS-USAGE-GUIDE.md) ✨ **NEW**
+- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED (Nov 4, 09:30)**
+  - **🆕 Test Run #22** - Gemini E2E production validation (275s, 249 entities, $0.001 cost) ✨ **SUCCESS**
+  - **🆕 Test Run #21** - Gemini Complete Audit (7 ARIA bugs avoided) ✨ **VALIDATED**
+  - **🆕 Test Run #19** - ARIA Chunking validation (3 chunks, 3.9 min) ✨ **SPECTACULAR**
+  - **🆕 Test Run #17-18** - Production architecture validation
+  - E2E Test Initialization - `init-e2e-test.sh` automated script
+  - Pre-Test Cleanup vs Production Warmup (clearly separated)
+  - 12 sessions de test documentées
+  - Performance metrics (9.3× faster with ARIA)
   - Known issues & resolutions
   - Success criteria & metrics
-- **[FIXES-LOG.md](FIXES-LOG.md)** - Tracker de bugs et fixes ✅ **UPDATED**
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Tracker de bugs et fixes ✅ **UPDATED (Nov 4, 09:15)**
+  - **🆕 Fix #23** - Monitoring Scripts Endpoint Correction (6 files fixed) ✨ **VALIDATED**
+  - **🆕 Fix #22** - Gemini 2.5 Flash-Lite Migration (99.7% cost reduction) ✨ **VALIDATED**
+  - **🆕 Fix #21** - ARIA Chunking Pattern (CRITICAL - 9.3× speedup)
+  - 23 bugs fixed total (Session 8-12)
   - Root cause analysis
   - Solutions implemented
+  - Validation results
   - Tradeoffs & decisions
   - Future roadmap items
 - **[PRODUCTION-READINESS.md](PRODUCTION-READINESS.md)** - Production checklist ✅ **NEW**
