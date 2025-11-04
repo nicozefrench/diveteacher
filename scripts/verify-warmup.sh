@@ -191,7 +191,7 @@ test_conversion_speed() {
     fi
     
     # Check processing status
-    STATUS=$(curl -s "${API_URL}/api/upload/status/${UPLOAD_ID}")
+    STATUS=$(curl -s "${API_URL}/api/upload/${UPLOAD_ID}/status")
     STAGE=$(echo "$STATUS" | grep -o '"stage":"[^"]*"' | cut -d'"' -f4 || echo "unknown")
     
     print_info "Current processing stage: $STAGE"

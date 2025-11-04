@@ -36,7 +36,7 @@ def validate_ingestion(upload_id: str) -> Dict[str, Any]:
     
     # Check 1: Upload status
     try:
-        response = httpx.get(f"{API_BASE_UPLOAD}/status/{upload_id}", timeout=TIMEOUT)
+        response = httpx.get(f"{API_BASE_UPLOAD}/{upload_id}/status", timeout=TIMEOUT)
         response.raise_for_status()
         status_data = response.json()
         
