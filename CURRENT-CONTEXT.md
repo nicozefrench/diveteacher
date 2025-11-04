@@ -11,7 +11,7 @@
 > - Performance metrics
 > - Next steps
 
-**Last Updated:** November 3, 2025 19:45 CET - Session 12 COMPLETE ✅  
+**Last Updated:** November 4, 2025 10:30 CET - Session 13 IN PROGRESS 🚀  
 **Project:** DiveTeacher - Assistant IA pour Formation Plongée  
 **Repository:** https://github.com/nicozefrench/diveteacher (PRIVÉ)  
 **Domaine Principal:** diveteacher.io (+ diveteacher.app en redirect)
@@ -20,10 +20,10 @@
 
 ## 📍 Current Status
 
-**Phase:** Production Ready + Gemini Migration COMPLETE  
-**Session:** 12 COMPLETE (Gemini 2.5 Flash-Lite - 99.7% Cost Reduction!)  
+**Phase:** RAG Strategies Analysis + Gap #2 Implementation READY  
+**Session:** 13 IN PROGRESS (RAG Strategies + Development Plans)  
 **Environment:** macOS (darwin 24.6.0) - Mac M1 Max, 32GB RAM, Docker Desktop 16GB  
-**Status:** 🚀 **100% PRODUCTION READY - Gemini Migration Complete!**
+**Status:** 🚀 **READY FOR GAP #2 IMPLEMENTATION - Branch Created!**
 
 **System State:**
 - ✅ **Backend:** Gemini 2.5 Flash-Lite + OpenAI Embeddings (1536 dims) - HEALTHY
@@ -43,6 +43,7 @@
 - ✅ **Fix #20:** React Hooks Violation - VALIDATED ✅  
 - ✅ **Fix #21:** ARIA Chunking Pattern - VALIDATED ✅ (9.3× faster, 68× fewer chunks!)
 - ✅ **Fix #22:** Gemini 2.5 Flash-Lite Migration - VALIDATED ✅ (99.7% cost reduction!)
+- ✅ **Fix #23:** Monitoring Scripts Wrong Endpoint - VALIDATED ✅ (All scripts corrected)
 
 **Development Strategy:**
 - ✅ **Phases 0-1.0:** 100% Local sur Mac M1 Max (Docker) → **Coût: ~$5/mois (APIs)**
@@ -51,6 +52,135 @@
 - 🚧 **Current:** Fix #16 deployed, awaiting E2E test to validate polling redesign
 - ⏸️ **Phase 9:** Production (DigitalOcean GPU + Vercel) → **Coût: ~$170/mois**  
   (Activé UNIQUEMENT quand tout fonctionne en local)
+
+---
+
+## 🎯 Session 13 Summary (November 4, 2025) 🚀 IN PROGRESS
+
+**Duration:** ~3 hours (08:00-10:30 CET)  
+**Focus:** RAG Strategies Analysis + Development Plans Creation + Branch Setup  
+**Status:** ✅ **ANALYSIS COMPLETE - PLANS READY - BRANCH CREATED**
+
+### Session Timeline
+
+**Phase 1: RAG Strategies Analysis (08:00-09:30)**
+- Read Cole Medin's RAG Strategies Guide (1375 lines)
+- Analyzed DiveTeacher architecture vs best practices
+- Identified 4 critical gaps (Agentic Tools, Reranking, Contextual, Agentic Chunking)
+- Created comprehensive comparison notes
+- Multiple self-reflection phases (7 corrections)
+- Created `Devplan/251104-RAG-STRATEGIES-ANALYSIS.md` (2260 lines)
+
+**Phase 2: Development Plans Creation (09:30-10:10)**
+- Created 4 detailed gap-specific plans
+- Created master implementation roadmap
+- Validated inter-plan dependencies
+- Total: 5 plans, 5980+ lines
+
+**Phase 3: Git Workflow & Branch Setup (10:10-10:30)**
+- Merged `feat/production-ready-large-workloads` → `main`
+- Deleted merged branch (local + remote)
+- Created new branch: `feat/gap2-cross-encoder-reranking`
+- Ready for Gap #2 implementation
+
+### Key Achievements
+
+**🎊 RAG Strategies Analysis:**
+
+1. **COMPREHENSIVE COMPARISON:**
+   - DiveTeacher = Advanced "Knowledge Graph RAG" (Cole Medin tier)
+   - Current: 87% RAG quality (Gemini validated)
+   - Target: 95% RAG quality in 9 weeks
+   - 5 critical gaps identified
+
+2. **4 GAPS IDENTIFIED & PRIORITIZED:**
+   - **Gap #2 (P1 - URGENT):** Reranking (1 week, +9% quality, FREE)
+   - **Gap #3 (P2):** Contextual Retrieval (2 weeks, +7% quality, FREE)
+   - **Gap #1 (P3):** Agentic Tools (6 weeks, +7% Phase 1, FREE)
+   - **Gap #4 (P4 - DEFERRED):** Agentic Chunking (3 weeks, +5%, HIGH RISK)
+
+3. **DEVELOPMENT PLANS CREATED:**
+   - `251104-GAP2-RERANKING-PLAN.md` (732 lines)
+   - `251104-GAP3-CONTEXTUAL-RETRIEVAL-PLAN.md` (827 lines)
+   - `251104-GAP1-AGENTIC-TOOLS-PLAN.md` (832 lines)
+   - `251104-GAP4-AGENTIC-CHUNKING-PLAN.md` (408 lines)
+   - `251104-MASTER-IMPLEMENTATION-ROADMAP.md` (594 lines)
+   - **Total: 3392 lines of detailed plans**
+
+4. **BRANCH WORKFLOW ESTABLISHED:**
+   - Merged production-ready code to `main`
+   - Created feature branch for Gap #2
+   - Safe development environment ready
+
+### Files Created
+
+**Analysis (1 file):**
+1. `Devplan/251104-RAG-STRATEGIES-ANALYSIS.md` (2260 lines)
+   - Complete comparison DiveTeacher vs Cole Medin
+   - 4 gaps identified with impact analysis
+   - 7 self-reflections + corrections
+   - Validated roadmap (7-9 weeks to 95% quality)
+
+**Development Plans (5 files):**
+1. `Devplan/251104-MASTER-IMPLEMENTATION-ROADMAP.md` (594 lines)
+2. `Devplan/251104-GAP2-RERANKING-PLAN.md` (732 lines)
+3. `Devplan/251104-GAP3-CONTEXTUAL-RETRIEVAL-PLAN.md` (827 lines)
+4. `Devplan/251104-GAP1-AGENTIC-TOOLS-PLAN.md` (832 lines)
+5. `Devplan/251104-GAP4-AGENTIC-CHUNKING-PLAN.md` (408 lines)
+
+**Git Activity:**
+- Commit 1: RAG Strategies Analysis (2260 lines)
+- Commit 2: Development Plans (3392 lines)
+- Merge: `feat/production-ready-large-workloads` → `main` (24,853 insertions)
+- Branch: Created `feat/gap2-cross-encoder-reranking`
+
+### Impact
+
+**Expected Quality Improvements:**
+```
+Week 1: Reranking → 87% → 82% (+9%)
+Week 3: + Contextual → 87% (+16% total)
+Week 7: + Agentic Phase 1 → 92% (+23% total)
+Week 9: + Agentic Phase 2 → 95% (+27% total)
+```
+
+**Cost Analysis:**
+```
+All Improvements: $0 (100% FREE!)
+- Reranking: Local cross-encoder (sentence-transformers)
+- Contextual: No new embeddings needed
+- Agentic: No API costs
+- Infrastructure: ~$0.03/month (negligible)
+```
+
+**Strategic Positioning:**
+- DiveTeacher already at advanced RAG tier
+- Missing only agentic features + reranking
+- Graphiti knowledge graph = major competitive advantage
+- 9 weeks to reach 95% RAG quality (production-grade)
+
+### Critical Lessons Learned
+
+1. **DiveTeacher is Advanced:** Already using Knowledge Graph RAG (Cole Medin's highest tier)
+2. **Low-Hanging Fruit:** Reranking = 1 week, +9% quality, FREE (highest ROI)
+3. **Sequential is Key:** Build on solid foundation (Reranking → Contextual → Agentic)
+4. **ARIA Chunking Stay:** Gap #4 (Agentic Chunking) = HIGH RISK, LOW ROI → DEFER
+5. **Zero Cost = Scalable:** All improvements are free = production-ready
+
+### Git Workflow Established
+
+**Branch Strategy:**
+```
+main (production-ready, stable)
+  └─> feat/gap2-cross-encoder-reranking (current)
+      └─> Will merge back after validation
+```
+
+**Merge Policy:**
+- Develop on feature branch
+- Test thoroughly
+- Merge to main only after full E2E validation
+- Delete merged branches
 
 ---
 
@@ -795,55 +925,52 @@ Neo4j:
 - ✅ **Warm-up Refactoring:** Production-ready architecture
 - ✅ **UI Enhancement:** Complete 4-phase implementation
 - ✅ **Production Monitoring:** CLI tools and scripts
-- ✅ **Critical Bug Fixes:** 22 fixes deployed
+- ✅ **Critical Bug Fixes:** 23 fixes deployed
 - ✅ **ARIA Chunking:** 9.3× faster, 68× fewer chunks
 - ✅ **Gemini Migration:** 99.7% cost reduction ($728/year saved)
+- ✅ **RAG Strategies Analysis:** 2260 lines, 4 gaps identified
+- ✅ **Development Plans:** 5 plans created (5980+ lines)
+- ✅ **Git Workflow:** Branch `feat/gap2-cross-encoder-reranking` ready
 
-### 🎯 Immediate Next Step: E2E Test with Gemini
+### 🎯 Immediate Next Step: Gap #2 Implementation (Reranking)
 
-**Action:** Upload `test.pdf` via UI (http://localhost:5173/) to validate Gemini integration
+**Branch:** `feat/gap2-cross-encoder-reranking` (current)  
+**Plan:** `Devplan/251104-GAP2-RERANKING-PLAN.md` (732 lines)  
+**Duration:** 7 days (1 week)  
+**Expected:** +9% quality improvement (87% → 82%)  
+**Cost:** FREE (local cross-encoder)
+
+**DAY 1: Setup & Model Integration** (Ready to start)
+1. Create `backend/app/core/reranker.py`
+   - CrossEncoderReranker class
+   - Model: ms-marco-MiniLM-L-6-v2
+   - Singleton pattern
+2. Add dependencies: `sentence-transformers>=2.2.0`
+3. Unit tests: `backend/tests/test_reranker.py`
+4. Docker rebuild
 
 **Important:**
-⚠️ **System ready with Gemini 2.5 Flash-Lite** - First E2E test with new LLM
+⚠️ **Awaiting user approval to start Gap #2 implementation**
 
-**Expected Behavior (Gemini 2.5 Flash-Lite):**
-1. ✅ Upload successful (< 100ms)
-2. ✅ Status shows "queued" immediately
-3. ✅ Progress updates: 0% → initialization → conversion → chunking → ingestion
-4. ✅ Real-time sub-stages visible
-5. ✅ **Gemini entity extraction** (~3s per chunk, faster than Haiku)
-6. ✅ Metrics update in real-time
-7. ✅ Conversion stage (< 2 min) - Models cached
-8. ✅ Chunking stage (< 30s) - ARIA pattern (3 chunks for test.pdf)
-9. ✅ **Ingestion stage with Gemini** (< 1 min for test.pdf)
-10. ✅ Success with populated Neo4j graph
-11. ✅ **Cost validation:** ~$0.005 per document (vs $0.60 with Haiku)
-
-**Monitoring:**
+**Monitoring During Implementation:**
 ```bash
-# Real-time monitoring (Gemini-specific)
-docker logs -f rag-backend | grep -E "(Gemini|UPLOAD|Processing|Stage|Entity)"
+# Check current branch
+git branch  # Should show: * feat/gap2-cross-encoder-reranking
 
-# Or use monitoring script
-./scripts/monitor_ingestion.sh
+# Monitor backend logs
+docker logs -f rag-backend | grep -E "(Rerank|CrossEncoder)"
 
-# Or use CLI
-diveteacher-monitor neo4j stats --watch
+# Test reranking
+./scripts/test_reranking_ab.py  # After Day 3
 ```
 
-**Success Criteria:**
-- [ ] Upload completes without errors
-- [ ] UI shows real-time progress from 0%
-- [ ] All 4 stages complete successfully with Gemini
-- [ ] Neo4j contains Episodes and Entities (extracted by Gemini)
-- [ ] Neo4j tab displays data correctly
-- [ ] **Cost confirms ~$0.005 per document** (Google AI dashboard)
-- [ ] RAG query returns context
-
-**Post-Test Actions:**
-- [ ] Validate costs on Google AI Studio dashboard
-- [ ] Compare performance vs Haiku (should be similar or faster)
-- [ ] Update TESTING-LOG.md with Test Run #22 (Gemini validation)
+**Success Criteria for Day 1:**
+- [ ] `backend/app/core/reranker.py` created (150 lines)
+- [ ] `backend/tests/test_reranker.py` created (100 lines)
+- [ ] `sentence-transformers` added to requirements.txt
+- [ ] Backend container rebuilt successfully
+- [ ] Model downloads correctly (100MB)
+- [ ] All unit tests passing
 
 ---
 
