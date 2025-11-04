@@ -19,7 +19,7 @@ from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from app.core.config import settings
 from app.core.logging_config import setup_structured_logging
-from app.api import upload, query, health, graph, neo4j
+from app.api import upload, query, health, graph, neo4j, test
 from app.integrations.neo4j import neo4j_client
 from app.integrations.graphiti import close_graphiti_client
 from app.integrations.sentry import init_sentry
@@ -57,6 +57,7 @@ app.include_router(upload.router, prefix="/api", tags=["Upload"])
 app.include_router(query.router, prefix="/api", tags=["Query"])
 app.include_router(graph.router, prefix="/api", tags=["Graph"])
 app.include_router(neo4j.router, prefix="/api", tags=["Neo4j Management"])
+app.include_router(test.router, prefix="/api/test", tags=["Testing"])
 
 
 @app.on_event("startup")
