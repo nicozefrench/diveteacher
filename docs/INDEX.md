@@ -1,9 +1,9 @@
 # 📚 DiveTeacher - Documentation Index
 
 > **Version:** ARIA v2.0.0 + Gemini 2.5 Flash-Lite COMPLETE  
-> **Last Updated:** November 3, 2025, 18:45 CET  
+> **Last Updated:** November 4, 2025, 09:30 CET  
 > **Environment:** Local Development (Mac M1 Max)  
-> **Status:** 🟢 Production-Ready (100%) - Gemini Migration Complete (99.7% Cost Savings!)
+> **Status:** 🟢 Production-Ready (100%) - Gemini E2E Validated (Test Run #22) + Fix #23 Complete
 
 ---
 
@@ -106,21 +106,25 @@
   - Docling monitoring (verify, cache, performance)
   - System monitoring (health, resources, docker)
   - [Scripts Usage Guide](../scripts/SCRIPTS-USAGE-GUIDE.md) ✨ **NEW**
-- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED (Oct 31)**
+- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED (Nov 4, 09:30)**
+  - **🆕 Test Run #22** - Gemini E2E production validation (275s, 249 entities, $0.001 cost) ✨ **SUCCESS**
+  - **🆕 Test Run #21** - Gemini Complete Audit (7 ARIA bugs avoided) ✨ **VALIDATED**
   - **🆕 Test Run #19** - ARIA Chunking validation (3 chunks, 3.9 min) ✨ **SPECTACULAR**
   - **🆕 Test Run #17-18** - Production architecture validation
   - E2E Test Initialization - `init-e2e-test.sh` automated script
   - Pre-Test Cleanup vs Production Warmup (clearly separated)
-  - 11 sessions de test documentées
+  - 12 sessions de test documentées
   - Performance metrics (9.3× faster with ARIA)
   - Known issues & resolutions
   - Success criteria & metrics
-- **[FIXES-LOG.md](FIXES-LOG.md)** - Tracker de bugs et fixes ✅ **UPDATED (Oct 31)**
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Tracker de bugs et fixes ✅ **UPDATED (Nov 4, 09:15)**
+  - **🆕 Fix #23** - Monitoring Scripts Endpoint Correction (6 files fixed) ✨ **VALIDATED**
+  - **🆕 Fix #22** - Gemini 2.5 Flash-Lite Migration (99.7% cost reduction) ✨ **VALIDATED**
   - **🆕 Fix #21** - ARIA Chunking Pattern (CRITICAL - 9.3× speedup)
-  - 17 bugs fixed total (Session 8-11)
-  - Root cause analysis (HierarchicalChunker incompatible)
-  - Solutions implemented (RecursiveCharacterTextSplitter)
-  - Mathematical validation (52K÷3000=17 chunks)
+  - 23 bugs fixed total (Session 8-12)
+  - Root cause analysis
+  - Solutions implemented
+  - Validation results
   - Tradeoffs & decisions
   - Future roadmap items
 - **[PRODUCTION-READINESS.md](PRODUCTION-READINESS.md)** - Production checklist ✅ **NEW**
