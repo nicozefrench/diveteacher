@@ -17,10 +17,13 @@ import json
 import time
 import logging
 from abc import ABC, abstractmethod
-from typing import AsyncGenerator, Optional
+from typing import AsyncGenerator, Optional, TYPE_CHECKING
 import httpx
-from anthropic import AsyncAnthropic
-from openai import AsyncOpenAI
+
+# Conditional imports (only import if provider is used)
+if TYPE_CHECKING:
+    from anthropic import AsyncAnthropic
+    from openai import AsyncOpenAI
 
 from app.core.config import settings
 
@@ -201,6 +204,8 @@ class ClaudeProvider(LLMProvider):
     def __init__(self):
         if not settings.ANTHROPIC_API_KEY:
             raise ValueError("ANTHROPIC_API_KEY not set")
+        # Import only when needed
+        from anthropic import AsyncAnthropic
         self.client = AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
         self.model = settings.CLAUDE_MODEL
     
@@ -230,6 +235,8 @@ class OpenAIProvider(LLMProvider):
     def __init__(self):
         if not settings.OPENAI_API_KEY:
             raise ValueError("OPENAI_API_KEY not set")
+        # Import only when needed
+        from openai import AsyncOpenAI
         self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
         self.model = settings.OPENAI_MODEL
     

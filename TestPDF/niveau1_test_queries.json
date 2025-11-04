@@ -1,0 +1,443 @@
+{
+  "titre": "Dataset de requêtes test - Plongeur Niveau 1 (PE20)",
+  "version": "Mai 2024",
+  "description": "20 requêtes couvrant les différentes compétences et connaissances du niveau 1",
+  "nombre_total_requetes": 20,
+  "categories": {
+    "connaissance_theorique": {
+      "nombre": 5,
+      "requetes": [
+        {
+          "id": "CT-001",
+          "question": "Quels sont les principaux accidents de plongée à éviter pour un plongeur niveau 1 ?",
+          "mots_cles_pertinents": [
+            "barotraumatisme",
+            "surpression pulmonaire",
+            "accident de désaturation",
+            "essoufflement",
+            "noyade",
+            "prévention",
+            "oreille",
+            "sinus",
+            "plaquage de masque"
+          ],
+          "mots_cles_non_pertinents": [
+            "narcose",
+            "niveau 2",
+            "autonomie",
+            "décompression profonde",
+            "recycleur",
+            "trimix"
+          ]
+        },
+        {
+          "id": "CT-002",
+          "question": "Comment utiliser la table de plongée fédérale pour un niveau 1 ?",
+          "mots_cles_pertinents": [
+            "table fédérale",
+            "temps",
+            "profondeur",
+            "palier",
+            "vitesse de remontée",
+            "courbe sans palier",
+            "désaturation",
+            "support pédagogique"
+          ],
+          "mots_cles_non_pertinents": [
+            "plongée tek",
+            "saturation",
+            "plongée profonde",
+            "nitrox",
+            "procédures de décompression avancées"
+          ]
+        },
+        {
+          "id": "CT-003",
+          "question": "Quelles sont les notions de physique importantes pour la flottabilité ?",
+          "mots_cles_pertinents": [
+            "flottabilité",
+            "flottabilité positive",
+            "flottabilité négative",
+            "flottabilité neutre",
+            "lestage",
+            "pression",
+            "volume",
+            "loi de Mariotte",
+            "poumon ballast"
+          ],
+          "mots_cles_non_pertinents": [
+            "loi de Dalton",
+            "toxicité",
+            "hyperoxie",
+            "calcul complexe",
+            "physique avancée"
+          ]
+        },
+        {
+          "id": "CT-004",
+          "question": "Quelles sont les techniques de prévention des barotraumatismes de l'oreille ?",
+          "mots_cles_pertinents": [
+            "Valsalva",
+            "BTV",
+            "Frenzel",
+            "équilibration",
+            "tympan",
+            "prévention",
+            "compensation",
+            "oreille moyenne"
+          ],
+          "mots_cles_non_pertinents": [
+            "surpression pulmonaire",
+            "accident de désaturation",
+            "narcose",
+            "essoufflement au fond"
+          ]
+        },
+        {
+          "id": "CT-005",
+          "question": "Que doit connaître un plongeur N1 sur le respect de l'environnement subaquatique ?",
+          "mots_cles_pertinents": [
+            "Charte internationale du plongeur responsable",
+            "faune",
+            "flore",
+            "respect de la tranquillité",
+            "absence de dégradation",
+            "éco-responsable",
+            "impact",
+            "observation",
+            "stabilisation",
+            "palmage"
+          ],
+          "mots_cles_non_pertinents": [
+            "chasse sous-marine",
+            "prélèvement",
+            "pêche",
+            "collection"
+          ]
+        }
+      ]
+    },
+    "evoluer_dans_eau": {
+      "nombre": 5,
+      "requetes": [
+        {
+          "id": "EE-001",
+          "question": "Comment réaliser un canard pour s'immerger correctement ?",
+          "mots_cles_pertinents": [
+            "canard",
+            "phoque",
+            "immersion",
+            "technique d'immersion",
+            "scaphandre",
+            "plongée libre",
+            "lestage adapté",
+            "équilibre à 3m"
+          ],
+          "mots_cles_non_pertinents": [
+            "remontée",
+            "palier",
+            "sortie de l'eau",
+            "capelage"
+          ]
+        },
+        {
+          "id": "EE-002",
+          "question": "Quelles sont les différentes techniques de palmage en surface ?",
+          "mots_cles_pertinents": [
+            "palmage ventral",
+            "palmage dorsal",
+            "palmage de sustentation",
+            "palmage costal",
+            "PMT",
+            "nage capelée",
+            "efficacité du geste",
+            "surface de la palme"
+          ],
+          "mots_cles_non_pertinents": [
+            "palmage en profondeur uniquement",
+            "vitesse chronométrée",
+            "compétition",
+            "apnée profonde"
+          ]
+        },
+        {
+          "id": "EE-003",
+          "question": "Comment gérer sa ventilation pendant la plongée ?",
+          "mots_cles_pertinents": [
+            "ventilation",
+            "fréquence",
+            "amplitude",
+            "volume courant",
+            "zone de confort",
+            "autocontrôle",
+            "apnée de contrôle",
+            "consommation"
+          ],
+          "mots_cles_non_pertinents": [
+            "hyperventilation",
+            "apnée statique",
+            "record de durée",
+            "compensation"
+          ]
+        },
+        {
+          "id": "EE-004",
+          "question": "Comment s'équilibrer en utilisant le poumon ballast et le gilet ?",
+          "mots_cles_pertinents": [
+            "poumon ballast",
+            "gilet de stabilisation",
+            "inflateur",
+            "purges",
+            "équilibre",
+            "flottabilité neutre",
+            "profondeur stable",
+            "variation de 1 mètre"
+          ],
+          "mots_cles_non_pertinents": [
+            "parachute de palier",
+            "wing",
+            "configuration sidemount",
+            "bouteille de déco"
+          ]
+        },
+        {
+          "id": "EE-005",
+          "question": "Que faire en cas d'entrée d'eau dans le masque ?",
+          "mots_cles_pertinents": [
+            "vidage du masque",
+            "évacuation de l'eau",
+            "air par le nez",
+            "ventilation normale",
+            "contact de l'eau",
+            "sans stress",
+            "situations variées"
+          ],
+          "mots_cles_non_pertinents": [
+            "changement de masque",
+            "remontée d'urgence",
+            "panique",
+            "assistance obligatoire"
+          ]
+        }
+      ]
+    },
+    "equiper_desequiper": {
+      "nombre": 5,
+      "requetes": [
+        {
+          "id": "ED-001",
+          "question": "Comment gréer correctement son équipement de plongée ?",
+          "mots_cles_pertinents": [
+            "gréage",
+            "bouteille",
+            "gilet stabilisateur",
+            "détendeur",
+            "sans erreur",
+            "vérification",
+            "pression de la bouteille",
+            "bon fonctionnement"
+          ],
+          "mots_cles_non_pertinents": [
+            "dégréage uniquement",
+            "recycleur",
+            "configuration tek",
+            "bi-bouteille"
+          ]
+        },
+        {
+          "id": "ED-002",
+          "question": "Quelles vérifications faire avant d'utiliser son matériel ?",
+          "mots_cles_pertinents": [
+            "vérification",
+            "pression de la bouteille",
+            "bon fonctionnement du gilet",
+            "bon fonctionnement du détendeur",
+            "avant utilisation",
+            "sécurité",
+            "contrôle"
+          ],
+          "mots_cles_non_pertinents": [
+            "révision annuelle",
+            "test en profondeur",
+            "maintenance technique",
+            "certificat de conformité"
+          ]
+        },
+        {
+          "id": "ED-003",
+          "question": "Comment s'équiper dans l'eau ?",
+          "mots_cles_pertinents": [
+            "équipement dans l'eau",
+            "capelage",
+            "lestage approprié",
+            "eau douce",
+            "eau salée",
+            "autonome",
+            "sans assistance"
+          ],
+          "mots_cles_non_pertinents": [
+            "équipement au sec uniquement",
+            "aide obligatoire",
+            "grue de mise à l'eau"
+          ]
+        },
+        {
+          "id": "ED-004",
+          "question": "Quelles sont les règles d'entretien du matériel de plongée ?",
+          "mots_cles_pertinents": [
+            "entretien",
+            "hygiène",
+            "rinçage",
+            "désinfection",
+            "signalement d'un dysfonctionnement",
+            "prévention des accidents",
+            "chute de bouteille"
+          ],
+          "mots_cles_non_pertinents": [
+            "réparation complexe",
+            "démontage du détendeur",
+            "révision technique avancée",
+            "épreuve hydraulique"
+          ]
+        },
+        {
+          "id": "ED-005",
+          "question": "Comment choisir son lestage en fonction du milieu ?",
+          "mots_cles_pertinents": [
+            "lestage",
+            "lestage approprié",
+            "eau douce",
+            "eau salée",
+            "matériel",
+            "flottabilité",
+            "équilibre à 3m",
+            "adaptation"
+          ],
+          "mots_cles_non_pertinents": [
+            "sur-lestage volontaire",
+            "lest de compétition",
+            "calcul théorique complexe"
+          ]
+        }
+      ]
+    },
+    "prerogatives_conditions": {
+      "nombre": 5,
+      "requetes": [
+        {
+          "id": "PC-001",
+          "question": "Quelles sont les prérogatives d'un plongeur niveau 1 ?",
+          "mots_cles_pertinents": [
+            "plongée d'exploration",
+            "20 m de profondeur",
+            "palanquée",
+            "guide de palanquée",
+            "GP",
+            "encadré",
+            "organisation sécurisée",
+            "directeur de plongée",
+            "DP",
+            "Code du Sport"
+          ],
+          "mots_cles_non_pertinents": [
+            "autonomie",
+            "40 mètres",
+            "60 mètres",
+            "plongée solo",
+            "sans encadrement"
+          ]
+        },
+        {
+          "id": "PC-002",
+          "question": "Quel est l'âge minimum pour passer le niveau 1 ?",
+          "mots_cles_pertinents": [
+            "12 ans",
+            "âge minimum",
+            "date d'entrée en formation",
+            "date de délivrance du brevet",
+            "autorisation d'un responsable légal",
+            "mineurs"
+          ],
+          "mots_cles_non_pertinents": [
+            "18 ans",
+            "16 ans",
+            "majorité",
+            "14 ans"
+          ]
+        },
+        {
+          "id": "PC-003",
+          "question": "Quels documents sont nécessaires pour entrer en formation niveau 1 ?",
+          "mots_cles_pertinents": [
+            "licence fédérale",
+            "en cours de validité",
+            "certificat médical",
+            "absence de contre-indication",
+            "réglementation fédérale",
+            "baptême de plongée"
+          ],
+          "mots_cles_non_pertinents": [
+            "passeport",
+            "carte d'identité uniquement",
+            "permis bateau",
+            "assurance personnelle"
+          ]
+        },
+        {
+          "id": "PC-004",
+          "question": "Qui peut délivrer le brevet de plongeur niveau 1 ?",
+          "mots_cles_pertinents": [
+            "président du club",
+            "responsable de structure commerciale agréée",
+            "encadrant E3",
+            "BEES1",
+            "DEJEPS",
+            "club affilié",
+            "structure commerciale agréée"
+          ],
+          "mots_cles_non_pertinents": [
+            "moniteur E1 seul",
+            "plongeur niveau 4",
+            "guide de palanquée seul",
+            "directeur de plongée uniquement"
+          ]
+        },
+        {
+          "id": "PC-005",
+          "question": "Dans quel délai doit-on acquérir toutes les compétences du niveau 1 ?",
+          "mots_cles_pertinents": [
+            "15 mois",
+            "délai",
+            "délivrance de la première compétence",
+            "ensemble des compétences",
+            "4 plongées en milieu naturel",
+            "12 mois",
+            "milieu artificiel"
+          ],
+          "mots_cles_non_pertinents": [
+            "6 mois",
+            "24 mois",
+            "pas de limite",
+            "1 an maximum"
+          ]
+        }
+      ]
+    }
+  },
+  "statistiques": {
+    "total_requetes": 20,
+    "repartition": {
+      "connaissance_theorique": 5,
+      "evoluer_dans_eau": 5,
+      "equiper_desequiper": 5,
+      "prerogatives_conditions": 5
+    }
+  },
+  "metadata": {
+    "source": "FFESSM - Manuel de formation technique Plongeur Niveau 1 (PE20)",
+    "version_document": "Mai 2024",
+    "date_creation": "2025-11-04",
+    "langue": "français",
+    "usage": "Test et évaluation de système de recherche sémantique pour documentation de plongée"
+  }
+}
