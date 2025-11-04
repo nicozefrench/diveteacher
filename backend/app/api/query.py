@@ -24,6 +24,10 @@ class QueryRequest(BaseModel):
     max_tokens: Optional[int] = Field(2000, ge=100, le=4000, description="Max response tokens")
     stream: Optional[bool] = Field(True, description="Stream response")
     group_ids: Optional[List[str]] = Field(None, description="Filter by group IDs (multi-tenant)")
+    use_reranking: Optional[bool] = Field(
+        None, 
+        description="Enable cross-encoder reranking (default: from settings). Expected +10-15% precision."
+    )
 
 
 class QueryResponse(BaseModel):
@@ -32,6 +36,7 @@ class QueryResponse(BaseModel):
     answer: str
     num_sources: int
     context: dict
+    reranked: bool = Field(False, description="True if cross-encoder reranking was applied")
 
 
 @router.post("/", response_model=QueryResponse)
@@ -40,25 +45,32 @@ async def query_knowledge_graph(request: QueryRequest):
     Query the knowledge graph (non-streaming)
     
     This endpoint retrieves relevant facts from the Graphiti knowledge graph
-    and generates a grounded answer using Qwen 2.5 7B Q8_0.
+    (optionally reranked using cross-encoder) and generates a grounded answer
+    using Qwen 2.5 7B Q8_0.
     
     Args:
         request: QueryRequest containing the question and parameters
         
     Returns:
         QueryResponse with the answer and context information
+        
+    Note:
+        - If use_reranking=True: retrieves top_k × 4 facts, reranks to top_k
+        - Cross-encoder: ms-marco-MiniLM-L-6-v2 (~100ms for 20 facts)
+        - Expected +10-15% retrieval precision with reranking
     """
     try:
-        logger.info(f"RAG query (non-streaming): {request.question[:50]}...")
+        logger.info(f"RAG query (non-streaming, reranking={'ON' if request.use_reranking else 'AUTO'}): {request.question[:50]}...")
         
         result = await rag_query(
             question=request.question,
             temperature=request.temperature,
             max_tokens=request.max_tokens,
-            group_ids=request.group_ids
+            group_ids=request.group_ids,
+            use_reranking=request.use_reranking
         )
         
-        logger.info(f"RAG query complete: {result['num_sources']} sources used")
+        logger.info(f"RAG query complete: {result['num_sources']} sources used, reranked={result.get('reranked', False)}")
         
         return QueryResponse(**result)
         
@@ -74,15 +86,21 @@ async def query_knowledge_graph_stream(request: QueryRequest):
     
     This endpoint provides real-time streaming of the LLM response using
     Server-Sent Events (SSE) protocol. Each token is sent as it's generated.
+    Facts are retrieved from Graphiti (optionally reranked) before streaming.
     
     Args:
         request: QueryRequest containing the question and parameters
         
     Returns:
         StreamingResponse with SSE format
+        
+    Note:
+        - If use_reranking=True: retrieves top_k × 4 facts, reranks to top_k
+        - Cross-encoder: ms-marco-MiniLM-L-6-v2 (~100ms for 20 facts)
+        - Expected +10-15% retrieval precision with reranking
     """
     try:
-        logger.info(f"RAG stream query: {request.question[:50]}...")
+        logger.info(f"RAG stream query (reranking={'ON' if request.use_reranking else 'AUTO'}): {request.question[:50]}...")
         
         async def event_generator():
             """Generate SSE events"""
@@ -91,7 +109,8 @@ async def query_knowledge_graph_stream(request: QueryRequest):
                     question=request.question,
                     temperature=request.temperature,
                     max_tokens=request.max_tokens,
-                    group_ids=request.group_ids
+                    group_ids=request.group_ids,
+                    use_reranking=request.use_reranking
                 ):
                     # SSE format: data: {token}\n\n
                     yield f"data: {token}\n\n"

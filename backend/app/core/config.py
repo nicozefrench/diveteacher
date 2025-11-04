@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     RAG_STREAM: bool = True  # Enable streaming by default
     RAG_MAX_CONTEXT_LENGTH: int = 4000  # Max context tokens
     
+    # RAG Reranking Configuration (Cross-Encoder - Cole Medin Pattern)
+    RAG_RERANKING_ENABLED: bool = True  # Enable cross-encoder reranking (ms-marco-MiniLM-L-6-v2)
+    RAG_RERANKING_RETRIEVAL_MULTIPLIER: int = 4  # Retrieve top_k × 4 facts, rerank to top_k
+    # Expected: +10-15% retrieval precision with reranking
+    # Performance: ~100ms for 20 facts on CPU
+    # Cost: FREE (local inference, ~200MB RAM for model)
+    
     # Qwen-Specific Configuration
     QWEN_TEMPERATURE: float = 0.7  # Optimal for RAG synthesis
     QWEN_TOP_P: float = 0.9  # Nucleus sampling
