@@ -1,4 +1,4 @@
-# Note Technique - Résolution Problème GPU Ollama (Dev Local Mac → Cloud)
+# Note Technique - Solution GPU Ollama (Dev Local Mac → Cloud GPU)
 
 **Date:** 2025-11-04  
 **Contexte:** Développement système RAG avancé avec migration prévue vers DigitalOcean GPU Droplet  
@@ -6,36 +6,21 @@
 
 ---
 
-## 🚨 PROBLÈME IDENTIFIÉ
+## 🚨 PROBLÈME
 
-### Situation Actuelle
-- **Environnement:** Mac M1 Max avec GPU Metal intégré
-- **Configuration:** Ollama dans Docker via `diveteacher-ollama:latest`
-- **Résultat:** `ollama ps` montre **"100% CPU"** au lieu de **"100% GPU"**
+**Docker Desktop sur Mac ne supporte PAS le GPU Metal.**
 
-### Diagnostic
 ```bash
 docker exec rag-ollama ollama ps
-# OUTPUT: PROCESSOR: 100% CPU ❌
-# ATTENDU: PROCESSOR: 100% GPU ✅
+# Résultat: PROCESSOR: 100% CPU ❌
+# Attendu:  PROCESSOR: 100% GPU ✅
 ```
 
-### Cause Racine
-**Docker Desktop sur Mac ne supporte PAS le GPU passthrough pour Metal.**
-
-C'est une **limitation connue et non-contournable** de Docker Desktop sur macOS:
-- Les containers Docker ne peuvent pas accéder au GPU Metal
-- Aucune configuration Docker ne peut résoudre ce problème
-- Même avec Rosetta, cela reste du CPU
-
-**Impact:**
-- Tests locaux **10-20x plus lents** qu'avec GPU
-- Impossibilité de valider les performances réelles avant déploiement
-- Cycles de développement rallentis
+**Conséquence:** Tests locaux 10-20x plus lents, impossible de valider les perfs réelles.
 
 ---
 
-## ✅ SOLUTION RETENUE: Approche Hybride
+## ✅ SOLUTION: Configuration Hybride
 
 ### Principe
 | Environnement | Ollama | Services RAG | Raison |
@@ -111,73 +96,78 @@ docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
 
 ---
 
-## 🛠️ MISE EN ŒUVRE (Guidelines Génériques)
+## 🛠️ MISE EN ŒUVRE
 
-### Phase 1: Installation Locale
-
-1. **Installer Ollama nativement**
-   ```bash
-   brew install ollama
-   ollama serve  # Lance le serveur sur :11434
-   ollama pull <votre_modele>
-   ```
-
-2. **Vérifier GPU**
-   ```bash
-   ollama ps  # Doit montrer "100% GPU" avec Metal
-   ```
-
-### Phase 2: Adapter Docker Compose
-
-1. **Extraire service Ollama dans un override**
-   - Créer `docker-compose.dev.yml` SANS service Ollama
-   - Créer `docker-compose.prod.yml` AVEC service Ollama + config GPU
-
-2. **Configurer l'accès host depuis Docker (dev)**
-   ```yaml
-   # docker-compose.dev.yml
-   services:
-     backend:  # ou votre service qui appelle Ollama
-       extra_hosts:
-         - "host.docker.internal:host-gateway"
-       environment:
-         - OLLAMA_BASE_URL=http://host.docker.internal:11434
-   ```
-
-3. **Configurer accès container (prod)**
-   ```yaml
-   # docker-compose.prod.yml
-   services:
-     ollama:
-       image: ollama/ollama:latest
-       deploy:
-         resources:
-           reservations:
-             devices:
-               - driver: nvidia
-                 count: all
-                 capabilities: [gpu]
-     
-     backend:
-       environment:
-         - OLLAMA_BASE_URL=http://ollama:11434
-       depends_on:
-         - ollama
-   ```
-
-### Phase 3: Variables d'Environnement
-
-Créer deux fichiers `.env`:
+### Étape 1: Installer Ollama Nativement (Mac)
 
 ```bash
-# .env.dev (local)
-OLLAMA_BASE_URL=http://host.docker.internal:11434
-
-# .env.prod (cloud)
-OLLAMA_BASE_URL=http://ollama:11434
+brew install ollama
+ollama serve  # Lance le serveur sur :11434
+ollama pull qwen2.5:7b-instruct-q8_0  # Ou votre modèle
+ollama ps  # Doit montrer "100% GPU" (Metal)
 ```
 
-**Important:** Tous vos services doivent lire `OLLAMA_BASE_URL` depuis l'environnement, jamais en dur.
+### Étape 2: Adapter Docker Compose
+
+**Structure fichiers:**
+```
+projet/
+├── docker-compose.yml           # Config commune
+├── docker-compose.dev.yml       # Overrides local (pas d'Ollama)
+├── docker-compose.prod.yml      # Overrides cloud (Ollama + GPU)
+├── .env.dev                     # Vars local
+└── .env.prod                    # Vars cloud
+```
+
+**docker-compose.dev.yml** (extrait):
+```yaml
+services:
+  backend:  # Ou le service qui appelle Ollama
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+```
+
+**docker-compose.prod.yml** (extrait):
+```yaml
+services:
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+  
+  backend:
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      - ollama
+```
+
+### Étape 3: Variables d'Environnement
+
+**.env.dev:**
+```bash
+OLLAMA_BASE_URL=http://host.docker.internal:11434
+OLLAMA_MODEL=qwen2.5:7b-instruct-q8_0
+```
+
+**.env.prod:**
+```bash
+OLLAMA_BASE_URL=http://ollama:11434
+OLLAMA_MODEL=qwen2.5:7b-instruct-q8_0
+```
+
+**Important:** Votre code doit lire `OLLAMA_BASE_URL` depuis l'environnement.
 
 ---
 
@@ -228,6 +218,131 @@ Sur les **GPU Droplets DigitalOcean**, tout est pré-configuré.
 
 ---
 
+## 🚀 CE QUI SE PASSE LORS DE LA MIGRATION CLOUD
+
+### Changements Effectifs
+
+**1. Ollama passe de Natif → Docker avec GPU**
+```bash
+# Local (avant)
+ollama serve  # Natif sur Mac, port :11434
+
+# Cloud (après)
+docker-compose up  # Ollama dans container, port :11434
+```
+
+**2. Une seule variable change**
+```bash
+# .env.dev (local)
+OLLAMA_BASE_URL=http://host.docker.internal:11434
+
+# .env.prod (cloud)
+OLLAMA_BASE_URL=http://ollama:11434
+```
+
+**3. Commande de lancement différente**
+```bash
+# Local
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+# Cloud
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+```
+
+### Ce Qui NE Change PAS
+
+| Composant | Status |
+|-----------|--------|
+| Code backend/frontend | ✅ Identique (0 ligne modifiée) |
+| API calls à Ollama | ✅ Identique (même format JSON) |
+| Modèles utilisés | ✅ Identiques (même compatibilité) |
+| Base de données | ✅ Identique (même config) |
+| Logique RAG | ✅ Identique |
+| Performance | ✅ GPU dans les 2 cas (Metal local, NVIDIA cloud) |
+
+### Déroulement Migration (Step-by-Step)
+
+**Sur votre machine locale:**
+```bash
+# 1. Pousser le code
+git push origin main
+```
+
+**Sur le Droplet DigitalOcean:**
+```bash
+# 2. Cloner le repo
+git clone <votre-repo> /opt/rag-app
+cd /opt/rag-app
+
+# 3. Configurer l'environnement
+cp .env.prod .env
+# Éditer .env avec les vrais secrets/passwords
+
+# 4. Vérifier GPU disponible
+nvidia-smi  # Doit afficher votre GPU NVIDIA
+
+# 5. Lancer en production
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+# 6. Attendre que Ollama démarre (~30 sec)
+docker logs -f rag-ollama
+
+# 7. Charger le modèle
+docker exec rag-ollama ollama pull qwen2.5:7b-instruct-q8_0
+
+# 8. VÉRIFIER GPU
+docker exec rag-ollama ollama ps
+# ✅ Doit afficher: PROCESSOR: 100% GPU
+```
+
+**Si `ollama ps` affiche "100% GPU" → Migration réussie ✅**
+
+### Temps de Migration Estimé
+
+| Étape | Durée |
+|-------|-------|
+| Setup droplet (si nouveau) | ~5 min |
+| Transfert code | ~1 min |
+| Configuration .env | ~2 min |
+| Premier `docker-compose up` | ~3-5 min (pull images) |
+| Chargement modèle Ollama | ~2-10 min (selon taille) |
+| **TOTAL** | **~15-25 minutes** |
+
+Ensuite, les redéploiements suivants: **~2-3 minutes** (juste rebuild).
+
+### Troubleshooting Migration
+
+**❌ Si `ollama ps` montre CPU au lieu de GPU:**
+```bash
+# Vérifier NVIDIA runtime
+docker run --rm --gpus all nvidia/cuda:11.8.0-base nvidia-smi
+
+# Si erreur → installer nvidia-docker2
+sudo apt-get install -y nvidia-docker2
+sudo systemctl restart docker
+```
+
+**❌ Si containers ne démarrent pas:**
+```bash
+# Checker les logs
+docker-compose logs
+
+# Problème courant: ports déjà utilisés
+sudo netstat -tulpn | grep :11434
+```
+
+**❌ Si backend ne peut pas joindre Ollama:**
+```bash
+# Vérifier networking Docker
+docker network ls
+docker network inspect <network_name>
+
+# Tester depuis le backend
+docker exec rag-backend curl http://ollama:11434/api/tags
+```
+
+---
+
 ## 🎯 VALIDATION MIGRATION
 
 ### Checklist Pré-Migration
@@ -250,41 +365,12 @@ Si `ollama ps` montre **"100% GPU"** → ✅ Migration réussie!
 
 ---
 
-## 💡 POURQUOI CETTE APPROCHE EST SÛRE
+## 💡 POURQUOI C'EST SANS RISQUE
 
-### 1. Pattern Standard
-C'est une pratique **commune** en développement cloud:
-- Bases de données en Docker, cache Redis en local pour certains
-- Services lourds (ML, GPU) souvent natifs en dev pour performance
-- Abstractions par variables d'environnement = best practice
-
-### 2. Même Interface, Implémentation Différente
-Architecture **hexagonale** en pratique:
-- Votre code dépend de l'**interface** Ollama API
-- Pas de l'**implémentation** (natif vs Docker)
-
-### 3. Testable
-Vous pouvez tester la config prod **avant déploiement**:
-```bash
-docker-compose -f docker-compose.prod.yml up
-```
-Tourne sur CPU mais valide networking, variables, dépendances.
-
-### 4. Rollback Facile
-Si problème en prod, rollback = **zéro code change**, juste env vars.
-
----
-
-## 🚀 ALTERNATIVES NON-RECOMMANDÉES
-
-### ❌ Tout en Docker (Ollama CPU) en Dev
-**Problème:** Tests 10-20x plus lents, impossible de valider perf réelles
-
-### ❌ Développer Directement sur GPU Cloud
-**Problème:** Coûts élevés, latence réseau, pas de dev offline
-
-### ❌ Attendre Docker Desktop GPU Support
-**Problème:** Pas de timeline Apple/Docker, peut ne jamais arriver
+1. **API identique** - Ollama API reste la même (natif ou Docker)
+2. **Abstraction propre** - Code dépend de l'interface, pas de l'implémentation
+3. **Testable avant prod** - `docker-compose -f docker-compose.prod.yml up` valide la config
+4. **Rollback immédiat** - En cas de problème, juste changer l'env var
 
 ---
 
@@ -304,25 +390,14 @@ Si problème en prod, rollback = **zéro code change**, juste env vars.
 
 ---
 
-## 🎓 APPRENTISSAGES POUR SONNET 4.5
+## 🎓 CONTEXTE POUR SONNET 4.5
 
-### Contexte Utilisateur
-- Dev système RAG avancé sur Mac M1 Max
-- Stack: Ollama (7B Q8), Neo4j, Backend/Frontend custom
-- Cible: DigitalOcean GPU Droplet
-- Problème: Ollama en Docker = CPU only sur Mac
-
-### Solution Appliquée
-- **Approche hybride** avec abstractions propres
-- **Zéro impact** sur le code métier
-- **Pattern standard** Docker Compose overrides
-- **Migration sans friction** via variables d'environnement
-
-### Principe Architectural Clé
-> "Dépendre d'interfaces (API Ollama), pas d'implémentations (natif/Docker)"
-
-Cette note devrait servir de référence pour des problématiques similaires GPU/ML en développement cross-platform.
+- **Problème:** Ollama en Docker sur Mac M1 Max = CPU only (limitation Docker Desktop)
+- **Solution:** Ollama natif local (GPU Metal) + Docker prod (GPU NVIDIA)
+- **Principe:** Dépendre d'interfaces (API Ollama), pas d'implémentations (natif/Docker)
+- **Migration:** Change uniquement `OLLAMA_BASE_URL` entre dev et prod
+- **Risque:** Aucun - Pattern standard industrie ML/GPU cross-platform
 
 ---
 
-**📝 Note:** Cette approche est **recommandée** et **standard** dans l'industrie pour le développement ML/GPU sur Mac avec déploiement cloud Linux. Elle n'introduit aucun risque technique lors de la migration.
+**📝 Note:** Cette approche est recommandée et éprouvée pour le développement ML/GPU sur Mac avec déploiement cloud Linux.

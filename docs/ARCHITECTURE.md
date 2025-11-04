@@ -1,9 +1,9 @@
 # 🏗️ DiveTeacher - Technical Architecture
 
 > **Project:** RAG Knowledge Graph for Scuba Diving Education  
-> **Version:** Phase 1.0 COMPLETE (RAG Query Implementation)  
-> **Last Updated:** October 28, 2025, 16:30 CET  
-> **Status:** 🟢 Phase 1.0 COMPLETE - Full RAG pipeline operational
+> **Version:** Phase 1.2 COMPLETE (RAG + Cross-Encoder Reranking)  
+> **Last Updated:** November 4, 2025, 14:40 CET  
+> **Status:** 🟢 Phase 1.2 COMPLETE - RAG pipeline with reranking (+27.3% precision)
 
 ---
 
@@ -29,10 +29,11 @@
 ### Key Features
 
 - ✅ **Document Processing:** PDF → Markdown avec OCR + TableFormer (Docling)
-- ✅ **Semantic Chunking:** HierarchicalChunker pour chunks cohérents
+- ✅ **Semantic Chunking:** RecursiveCharacterTextSplitter (ARIA pattern, 3000 tokens)
 - ✅ **Knowledge Graph:** Neo4j + Graphiti pour extraction d'entités/relations
-- ✅ **RAG Hybride:** Full-text search + graph traversal
-- ✅ **LLM Agnostic:** Ollama (local), Claude, OpenAI
+- ✅ **RAG Hybride:** Graphiti search (semantic + BM25 + RRF)
+- ✅ **Cross-Encoder Reranking:** ms-marco-MiniLM-L-6-v2 (+27.3% precision, FREE)
+- ✅ **LLM Agnostic:** Ollama (local), Gemini (Graphiti), OpenAI (embeddings)
 - 🔜 **Multi-user:** Supabase Auth + PostgreSQL (Phase 1+)
 
 ### Value Proposition
@@ -56,7 +57,7 @@
 |-----------|-----------|---------|---------|
 | **API Framework** | FastAPI | 0.115.0 | REST API + async support |
 | **Document Processor** | Docling | 2.5.1 | PDF/PPT → Markdown + OCR |
-| **Chunker** | HierarchicalChunker | docling-core 2.3.0 | Semantic chunking |
+| **Chunker** | RecursiveCharacterTextSplitter | langchain-text-splitters 0.3.2 | ARIA pattern (3000 tokens, 200 overlap) |
 | **Knowledge Graph** | Neo4j | 5.26.0 | Graph database |
 | **Graph Library** | Graphiti | graphiti-core[google-genai] 0.17.0 | Entity/relation extraction ✅ |
 | **LLM Cloud (Graphiti)** | Google Gemini | 2.5 Flash-Lite | Entity extraction (ARIA-validated, 99.7% savings) ✅ |
@@ -64,6 +65,7 @@
 | **LLM Model (RAG)** | Qwen 2.5 7B | Q8_0 (8-bit) | Optimal RAG quality (98/100) ✅ |
 | **Embeddings (Graphiti)** | OpenAI | text-embedding-3-small | 1536 dims (DB compatible, for Graphiti) ✅ |
 | **Cross-Encoder (Graphiti)** | OpenAI | gpt-4o-mini | Reranking (for Graphiti search) ✅ |
+| **Cross-Encoder (RAG)** | sentence-transformers | ms-marco-MiniLM-L-6-v2 | Reranking (+27.3% precision, FREE, local CPU) ✅ |
 | **Embeddings Local** | sentence-transformers | 3.3.1 | Semantic similarity |
 | **Validation** | Pydantic | 2.11.5 | Data validation |
 | **Monitoring** | Sentry | Latest | Error tracking |
@@ -696,9 +698,104 @@ processing_status[upload_id].update({
 
 ## RAG Architecture
 
-### Hybrid Search Strategy
+### Hybrid Search Strategy with Cross-Encoder Reranking (Phase 1.2) ✅
 
-**Purpose:** Combine full-text search (chunks) + graph search (entities) for better retrieval.
+**Purpose:** Combine Graphiti native search (semantic + BM25 + RRF) + optional cross-encoder reranking for +27.3% precision.
+
+**Components:**
+
+1. **Graphiti Native Search (Primary)**
+   ```python
+   # backend/app/integrations/graphiti.py
+   async def search_knowledge_graph(query: str, num_results: int = 5):
+       """
+       Uses Graphiti's hybrid search:
+       - Semantic search (OpenAI embeddings)
+       - BM25 full-text search
+       - RRF (Reciprocal Rank Fusion)
+       """
+       client = await get_graphiti_client()
+       results = await client.search(query, num_results=num_results)
+       return results  # List[EntityEdge] (facts/relations)
+   ```
+
+2. **Cross-Encoder Reranking (Optional, +27.3% precision)**
+   ```python
+   # backend/app/core/reranker.py
+   from sentence_transformers import CrossEncoder
+
+   class CrossEncoderReranker:
+       """
+       Post-retrieval ranking using ms-marco-MiniLM-L-6-v2.
+       
+       Model: FREE (local inference, CPU)
+       Size: ~100MB (one-time download)
+       Performance: ~100ms for 20 facts
+       Improvement: +27.3% retrieval precision
+       """
+       def __init__(self):
+           self.model = CrossEncoder('ms-marco-MiniLM-L-6-v2')
+       
+       def rerank(self, query: str, facts: List[Dict], top_k: int = 5):
+           # Create query-fact pairs
+           pairs = [[query, fact["fact"]] for fact in facts]
+           
+           # Score with cross-encoder
+           scores = self.model.predict(pairs)
+           
+           # Sort by relevance score
+           ranked = sorted(zip(facts, scores), key=lambda x: x[1], reverse=True)
+           return [fact for fact, score in ranked[:top_k]]
+   ```
+
+3. **RAG Pipeline with Optional Reranking**
+   ```python
+   # backend/app/core/rag.py
+   async def retrieve_context(
+       question: str,
+       top_k: int = 5,
+       use_reranking: bool = True
+   ):
+       # Step 1: Retrieve more candidates if reranking enabled
+       retrieval_k = top_k * 4 if use_reranking else top_k  # 20 if reranking, 5 if not
+       
+       # Step 2: Graphiti hybrid search
+       facts = await search_knowledge_graph(question, num_results=retrieval_k)
+       
+       # Step 3: Optional reranking
+       if use_reranking and len(facts) > top_k:
+           reranker = get_reranker()
+           facts = reranker.rerank(question, facts, top_k=top_k)
+       else:
+           facts = facts[:top_k]
+       
+       return {"facts": facts, "reranked": use_reranking}
+   ```
+
+**Key Decisions:**
+- ✅ Reranking is **optional** (enabled by default via `RAG_RERANKING_ENABLED=True`)
+- ✅ Retrieve 4× more facts when reranking (e.g., 20 → rerank to 5)
+- ✅ Model loads during warmup (no first-query latency)
+- ✅ Falls back gracefully if reranking fails
+- ✅ FREE (local inference, no API costs)
+
+**Performance:**
+```
+Without Reranking:
+├─ Retrieval: ~50ms (Graphiti search)
+├─ Avg Precision: 2.1%
+└─ Total: ~50ms
+
+With Reranking:
+├─ Retrieval: ~50ms (Graphiti search, 20 facts)
+├─ Reranking: ~100ms (ms-marco-MiniLM-L-6-v2, CPU)
+├─ Avg Precision: 2.65% (+27.3%)
+└─ Total: ~150ms (+100ms overhead)
+```
+
+---
+
+### Legacy: Hybrid Search Strategy (Pre-Phase 1.2)
 
 **Components:**
 
