@@ -11,7 +11,7 @@
 > - Performance metrics
 > - Next steps
 
-**Last Updated:** November 4, 2025 10:30 CET - Session 13 IN PROGRESS 🚀  
+**Last Updated:** November 4, 2025 12:15 CET - Session 13 IN PROGRESS 🚀  
 **Project:** DiveTeacher - Assistant IA pour Formation Plongée  
 **Repository:** https://github.com/nicozefrench/diveteacher (PRIVÉ)  
 **Domaine Principal:** diveteacher.io (+ diveteacher.app en redirect)
@@ -20,23 +20,31 @@
 
 ## 📍 Current Status
 
-**Phase:** RAG Strategies Analysis + Gap #2 Implementation READY  
-**Session:** 13 IN PROGRESS (RAG Strategies + Development Plans)  
+**Phase:** Gap #2 Implementation - PAUSED for Gemini Extraction Fix  
+**Session:** 13 IN PROGRESS (Reranking + Gemini Prompt Fix)  
 **Environment:** macOS (darwin 24.6.0) - Mac M1 Max, 32GB RAM, Docker Desktop 16GB  
-**Status:** 🚀 **READY FOR GAP #2 IMPLEMENTATION - Branch Created!**
+**Status:** ⚠️ **GEMINI EXTRACTION ISSUE DISCOVERED - FIX IN PROGRESS**
 
 **System State:**
 - ✅ **Backend:** Gemini 2.5 Flash-Lite + OpenAI Embeddings (1536 dims) - HEALTHY
 - ✅ **Frontend:** All fixes validated - Console clean, metrics working
-- ✅ **Neo4j:** Empty (ready for E2E test with Gemini)
-- ✅ **Ollama:** Loaded (qwen2.5:7b-instruct-q8_0)
+- ⚠️ **Neo4j:** 18 entities, 25 relations (Niveau 1.pdf - TOO LOW!)
+- ✅ **Ollama:** Loaded (qwen2.5:7b-instruct-q8_0) - Running on CPU only
 - ✅ **Docling:** ALL models cached during warmup (+ ARIA Chunker warmed)
-- ✅ **Chunking:** ARIA pattern (3000 tokens, 200 overlap) - VALIDATED ✅
-- ✅ **Graphiti:** Gemini 2.5 Flash-Lite (LLM) + OpenAI (embeddings) - VALIDATED ✅
+- ✅ **Chunking:** ARIA pattern (3000 tokens, 200 overlap) - WORKING ✅
+- ⚠️ **Graphiti:** Gemini extraction only 30% effective - **NEEDS PROMPT FIX**
 - ✅ **Cost:** $2/year (was $730/year) - 99.7% reduction ✅
 - ✅ **ARIA Audit:** 7/7 bugs avoided (100%) ✅
+- ⚠️ **Reranking:** Infrastructure ready, but knowledge graph too sparse for validation
 
-**All Fixes (Session 8-12):**
+**Critical Issue Discovered:**
+- **Problem:** Gemini extracts only 18 entities (expected: 60+) from Niveau 1.pdf
+- **Root Cause:** Graphiti prompt too generic for technical diving content
+- **Validation:** Chunk size OK (2158 tokens), Gemini capacity OK (1M context)
+- **Impact:** A/B test shows 0% precision on 19/20 queries (insufficient data)
+- **Solution:** Fix Graphiti prompt BEFORE resuming Gap #2 implementation
+
+**All Fixes (Session 8-13):**
 - ✅ Fix #1-15: Backend + Frontend + UI (documented)
 - ✅ Fix #16: Polling Redesign (superseded by Fix #19)
 - ✅ **Fix #19:** MetricsPanel Props Mismatch - VALIDATED ✅
@@ -57,13 +65,13 @@
 
 ## 🎯 Session 13 Summary (November 4, 2025) 🚀 IN PROGRESS
 
-**Duration:** ~3 hours (08:00-10:30 CET)  
-**Focus:** RAG Strategies Analysis + Development Plans Creation + Branch Setup  
-**Status:** ✅ **ANALYSIS COMPLETE - PLANS READY - BRANCH CREATED**
+**Duration:** ~5 hours (08:00-12:15 CET)  
+**Focus:** RAG Strategies + Gap #2 Reranking + Gemini Extraction Fix  
+**Status:** ⚠️ **GAP #2 PAUSED - GEMINI EXTRACTION FIX IN PROGRESS**
 
 ### Session Timeline
 
-**Phase 1: RAG Strategies Analysis (08:00-09:30)**
+**Phase 1: RAG Strategies Analysis (08:00-09:30)** ✅
 - Read Cole Medin's RAG Strategies Guide (1375 lines)
 - Analyzed DiveTeacher architecture vs best practices
 - Identified 4 critical gaps (Agentic Tools, Reranking, Contextual, Agentic Chunking)
@@ -71,17 +79,39 @@
 - Multiple self-reflection phases (7 corrections)
 - Created `Devplan/251104-RAG-STRATEGIES-ANALYSIS.md` (2260 lines)
 
-**Phase 2: Development Plans Creation (09:30-10:10)**
+**Phase 2: Development Plans Creation (09:30-10:10)** ✅
 - Created 4 detailed gap-specific plans
 - Created master implementation roadmap
 - Validated inter-plan dependencies
 - Total: 5 plans, 5980+ lines
 
-**Phase 3: Git Workflow & Branch Setup (10:10-10:30)**
+**Phase 3: Git Workflow & Branch Setup (10:10-10:30)** ✅
 - Merged `feat/production-ready-large-workloads` → `main`
 - Deleted merged branch (local + remote)
 - Created new branch: `feat/gap2-cross-encoder-reranking`
 - Ready for Gap #2 implementation
+
+**Phase 4: Gap #2 Implementation - Day 1-2 (10:30-11:30)** ✅
+- Created `backend/app/core/reranker.py` (150 lines)
+- Created `backend/tests/test_reranker.py` (13 unit tests)
+- Updated `backend/app/core/rag.py` (reranking integration)
+- Updated `backend/app/api/query.py` (API parameters)
+- Updated `backend/app/warmup.py` (cross-encoder warmup)
+- Modified `backend/app/core/llm.py` (conditional imports fix)
+- Rebuilt backend Docker container
+- All unit tests passing
+
+**Phase 5: Gap #2 Testing - Day 3 (11:30-12:15)** ⚠️ **ISSUE DISCOVERED**
+- Created test dataset: `TestPDF/niveau1_test_queries.json` (20 queries)
+- Created A/B test scripts:
+  - `scripts/test_reranking_ab.py`
+  - `scripts/test_reranking_retrieval_only.py`
+  - `scripts/benchmark_reranking.py`
+- Created new endpoint: `backend/app/api/test.py` (retrieval-only)
+- Launched A/B test (retrieval-only mode)
+- **CRITICAL DISCOVERY:** Only 18 entities in Neo4j (expected 60+)
+- **ROOT CAUSE:** Graphiti prompt too generic for technical content
+- **DECISION:** Pause Gap #2, fix Gemini extraction first
 
 ### Key Achievements
 
@@ -91,7 +121,7 @@
    - DiveTeacher = Advanced "Knowledge Graph RAG" (Cole Medin tier)
    - Current: 87% RAG quality (Gemini validated)
    - Target: 95% RAG quality in 9 weeks
-   - 5 critical gaps identified
+   - 4 critical gaps identified
 
 2. **4 GAPS IDENTIFIED & PRIORITIZED:**
    - **Gap #2 (P1 - URGENT):** Reranking (1 week, +9% quality, FREE)
@@ -99,40 +129,72 @@
    - **Gap #1 (P3):** Agentic Tools (6 weeks, +7% Phase 1, FREE)
    - **Gap #4 (P4 - DEFERRED):** Agentic Chunking (3 weeks, +5%, HIGH RISK)
 
-3. **DEVELOPMENT PLANS CREATED:**
+3. **GAP #2 RERANKING IMPLEMENTATION (Days 1-2 COMPLETE):**
+   - ✅ Cross-encoder module created (ms-marco-MiniLM-L-6-v2)
+   - ✅ Unit tests complete (13 tests, all passing)
+   - ✅ RAG pipeline integration complete
+   - ✅ API endpoints updated
+   - ✅ Warmup integration complete
+   - ✅ A/B test infrastructure created
+   - ⚠️ **BLOCKED:** Knowledge graph too sparse (only 18 entities vs 60+ expected)
+
+4. **CRITICAL ISSUE DISCOVERED:**
+   - Gemini extraction efficiency: **30%** (18 entities vs 60 expected)
+   - Root cause: Graphiti prompt optimized for narrative, not technical content
+   - Impact: Cannot validate reranking with sparse graph
+   - **Decision:** Fix extraction FIRST, then resume Gap #2
+
+5. **FILES CREATED (Gap #2):**
+   - `backend/app/core/reranker.py` (150 lines)
+   - `backend/tests/test_reranker.py` (200 lines, 13 tests)
+   - `backend/app/api/test.py` (60 lines, retrieval-only endpoint)
+   - `scripts/test_reranking_ab.py` (120 lines)
+   - `scripts/test_reranking_retrieval_only.py` (100 lines)
+   - `scripts/benchmark_reranking.py` (80 lines)
+   - `TestPDF/niveau1_test_queries.json` (438 lines, 20 queries)
+   - `Devplan/251104-RERANKING-AB-TEST-RESULTS.md` (partial)
+   - **Total: 8 files, ~1300 lines**
+
+6. **DEVELOPMENT PLANS CREATED:**
    - `251104-GAP2-RERANKING-PLAN.md` (732 lines)
    - `251104-GAP3-CONTEXTUAL-RETRIEVAL-PLAN.md` (827 lines)
    - `251104-GAP1-AGENTIC-TOOLS-PLAN.md` (832 lines)
    - `251104-GAP4-AGENTIC-CHUNKING-PLAN.md` (408 lines)
    - `251104-MASTER-IMPLEMENTATION-ROADMAP.md` (594 lines)
-   - **Total: 3392 lines of detailed plans**
+   - **Total: 5 plans, 3392 lines**
 
-4. **BRANCH WORKFLOW ESTABLISHED:**
-   - Merged production-ready code to `main`
-   - Created feature branch for Gap #2
-   - Safe development environment ready
+### Files Modified This Session
 
-### Files Created
+**Backend (8 files):**
+1. `backend/app/core/reranker.py` - NEW (150 lines)
+2. `backend/tests/test_reranker.py` - NEW (200 lines)
+3. `backend/app/core/rag.py` - Modified (reranking integration)
+4. `backend/app/api/query.py` - Modified (API parameters)
+5. `backend/app/api/test.py` - NEW (60 lines)
+6. `backend/app/warmup.py` - Modified (cross-encoder warmup)
+7. `backend/app/core/llm.py` - Modified (conditional imports)
+8. `backend/app/core/config.py` - Modified (reranking settings)
 
-**Analysis (1 file):**
-1. `Devplan/251104-RAG-STRATEGIES-ANALYSIS.md` (2260 lines)
-   - Complete comparison DiveTeacher vs Cole Medin
-   - 4 gaps identified with impact analysis
-   - 7 self-reflections + corrections
-   - Validated roadmap (7-9 weeks to 95% quality)
+**Scripts (3 files):**
+1. `scripts/test_reranking_ab.py` - NEW (120 lines)
+2. `scripts/test_reranking_retrieval_only.py` - NEW (100 lines)
+3. `scripts/benchmark_reranking.py` - NEW (80 lines)
 
-**Development Plans (5 files):**
-1. `Devplan/251104-MASTER-IMPLEMENTATION-ROADMAP.md` (594 lines)
-2. `Devplan/251104-GAP2-RERANKING-PLAN.md` (732 lines)
-3. `Devplan/251104-GAP3-CONTEXTUAL-RETRIEVAL-PLAN.md` (827 lines)
-4. `Devplan/251104-GAP1-AGENTIC-TOOLS-PLAN.md` (832 lines)
-5. `Devplan/251104-GAP4-AGENTIC-CHUNKING-PLAN.md` (408 lines)
+**Test Data (1 file):**
+1. `TestPDF/niveau1_test_queries.json` - NEW (438 lines, 20 queries)
 
-**Git Activity:**
-- Commit 1: RAG Strategies Analysis (2260 lines)
-- Commit 2: Development Plans (3392 lines)
-- Merge: `feat/production-ready-large-workloads` → `main` (24,853 insertions)
-- Branch: Created `feat/gap2-cross-encoder-reranking`
+**Documentation (7 files):**
+1. `Devplan/251104-RAG-STRATEGIES-ANALYSIS.md` - NEW (2260 lines)
+2. `Devplan/251104-GAP2-RERANKING-PLAN.md` - NEW (732 lines)
+3. `Devplan/251104-GAP3-CONTEXTUAL-RETRIEVAL-PLAN.md` - NEW (827 lines)
+4. `Devplan/251104-GAP1-AGENTIC-TOOLS-PLAN.md` - NEW (832 lines)
+5. `Devplan/251104-GAP4-AGENTIC-CHUNKING-PLAN.md` - NEW (408 lines)
+6. `Devplan/251104-MASTER-IMPLEMENTATION-ROADMAP.md` - NEW (594 lines)
+7. `Devplan/251104-RERANKING-AB-TEST-RESULTS.md` - NEW (partial)
+
+**Total This Session:**
+- 19 files created/modified
+- ~7000+ lines of code + documentation
 
 ### Impact
 
