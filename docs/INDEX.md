@@ -1,9 +1,9 @@
 # 📚 DiveTeacher - Documentation Index
 
-> **Version:** ARIA v2.0.0 + Gemini 2.5 Flash-Lite COMPLETE  
-> **Last Updated:** November 4, 2025, 09:30 CET  
+> **Version:** ARIA v2.0.0 + Gemini 2.5 Flash-Lite + Cross-Encoder Reranking COMPLETE  
+> **Last Updated:** November 5, 2025, 12:00 CET  
 > **Environment:** Local Development (Mac M1 Max)  
-> **Status:** 🟢 Production-Ready (100%) - Gemini E2E Validated (Test Run #22) + Fix #23 Complete
+> **Status:** 🟢 Production-Ready (100%) - Reranking Validated (Test Run #23) + Enhancement #1 Complete
 
 ---
 
@@ -30,11 +30,13 @@
   - Cost estimates (~$120-180/month)
 
 ### 🏗️ Technical Architecture
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design & data flow
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design & data flow ✅ **UPDATED (Nov 5)**
   - Overview & tech stack
   - Service architecture (FastAPI, Neo4j, Ollama, React)
   - Document processing pipeline
-  - RAG (Retrieval-Augmented Generation) flow
+  - **RAG (Retrieval-Augmented Generation) flow** ✨ **NEW: Cross-Encoder Reranking**
+  - **Hybrid Search Strategy:** Graphiti (semantic + BM25 + RRF) + Cross-Encoder (ms-marco-MiniLM-L-6-v2)
+  - **+16.67% precision improvement** (validated Test Run #23)
   - Database schemas
 
 ### 📄 Document Processing
@@ -75,10 +77,13 @@
   - Rate limiting (future)
 
 ### 🔧 Troubleshooting
-- **[FIXES-LOG.md](FIXES-LOG.md)** - Complete bug fix history ✅ **UPDATED (Nov 3, 18:45)**
-  - **Session 8-11:** 21+ fixes deployed (ARIA Chunking + Performance + UI)
-  - **Latest:** Gemini 2.5 Flash-Lite Migration (99.7% cost reduction)
-  - Real-time ingestion progress + Entity/Relation counts + Multi-document UI
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Complete bug fix history ✅ **UPDATED (Nov 5, 11:00)**
+  - **Session 8-12:** 25+ fixes + 1 enhancement deployed
+  - **Latest:** Enhancement #1 - Cross-Encoder Reranking (+16.67% precision improvement!)
+  - **Session 12 Highlights:**
+    - ✅ Ollama Baremetal Migration (Metal GPU, 10-20x faster)
+    - ✅ Cross-Encoder Reranking (FREE, ~100ms, +16.67% precision)
+    - ✅ 613 Style Warnings Fixed (zero linter errors)
   - All root causes, solutions, and validation results
   - Production-ready documentation
 - **[GEMINI-AUDIT-REPORT.md](GEMINI-AUDIT-REPORT.md)** ✨ **NEW (Nov 3)** - Gemini migration audit
@@ -112,7 +117,9 @@
   - Docling monitoring (verify, cache, performance)
   - System monitoring (health, resources, docker)
   - [Scripts Usage Guide](../scripts/SCRIPTS-USAGE-GUIDE.md) ✨ **NEW**
-- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED (Nov 4, 09:30)**
+- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED (Nov 5, 11:00)**
+  - **🆕 Test Run #24** - Ollama Baremetal Migration Validation (Metal GPU 100% active) ✨ **SUCCESS**
+  - **🆕 Test Run #23** - Cross-Encoder Reranking A/B Test (+16.67% precision) ✨ **VALIDATED**
   - **🆕 Test Run #22** - Gemini E2E production validation (275s, 249 entities, $0.001 cost) ✨ **SUCCESS**
   - **🆕 Test Run #21** - Gemini Complete Audit (7 ARIA bugs avoided) ✨ **VALIDATED**
   - **🆕 Test Run #19** - ARIA Chunking validation (3 chunks, 3.9 min) ✨ **SPECTACULAR**
@@ -120,14 +127,16 @@
   - E2E Test Initialization - `init-e2e-test.sh` automated script
   - Pre-Test Cleanup vs Production Warmup (clearly separated)
   - 12 sessions de test documentées
-  - Performance metrics (9.3× faster with ARIA)
+  - Performance metrics (9.3× faster with ARIA, +16.67% with reranking)
   - Known issues & resolutions
   - Success criteria & metrics
-- **[FIXES-LOG.md](FIXES-LOG.md)** - Tracker de bugs et fixes ✅ **UPDATED (Nov 4, 09:15)**
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Tracker de bugs et fixes ✅ **UPDATED (Nov 5, 11:00)**
+  - **🆕 Enhancement #1** - Cross-Encoder Reranking (+16.67% precision) ✨ **COMPLETE**
+  - **🆕 Fix #25** - Ollama Baremetal Migration (Metal GPU, 10-20x faster) ✨ **VALIDATED**
   - **🆕 Fix #23** - Monitoring Scripts Endpoint Correction (6 files fixed) ✨ **VALIDATED**
   - **🆕 Fix #22** - Gemini 2.5 Flash-Lite Migration (99.7% cost reduction) ✨ **VALIDATED**
   - **🆕 Fix #21** - ARIA Chunking Pattern (CRITICAL - 9.3× speedup)
-  - 23 bugs fixed total (Session 8-12)
+  - 25 bugs fixed + 1 enhancement (Session 8-12)
   - Root cause analysis
   - Solutions implemented
   - Validation results
