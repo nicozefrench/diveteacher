@@ -22,18 +22,35 @@ services:
       retries: 5
 
   # Ollama LLM Server
-  # NOTE: Ollama runs NATIVELY on Mac host (Metal GPU) for dev performance
-  # Docker Desktop on Mac does NOT support Metal GPU acceleration
-  # See: resources/251104-note-technique-ollama-gpu-hybrid.md
-  #
-  # To use native Ollama:
-  # 1. Install: brew install ollama
-  # 2. Start: ollama serve (Terminal 1, keep running)
-  # 3. Pull model: ollama pull qwen2.5:7b-instruct-q8_0
-  # 4. Backend connects via: http://host.docker.internal:11434
-  #
-  # Production (DigitalOcean GPU Droplet) will use Docker with NVIDIA GPU
-  # See: docker-compose.prod.yml (when created)
+  ollama:
+    build:
+      context: ./ollama
+      dockerfile: Dockerfile
+    image: diveteacher-ollama:latest
+    container_name: rag-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    environment:
+      # Best practices from Ollama deployment guides
+      - OLLAMA_HOST=0.0.0.0:11434
+      - OLLAMA_ORIGINS=*
+      - OLLAMA_KEEP_ALIVE=5m
+      - OLLAMA_MAX_LOADED_MODELS=1
+      - OLLAMA_NUM_PARALLEL=4
+      - OLLAMA_MAX_QUEUE=128
+    deploy:
+      resources:
+        limits:
+          memory: 16G  # Mac M1 Max has 32GB, leave 16GB for system
+    healthcheck:
+      # FIXED: Using custom image with curl installed
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/version"]
+      interval: 10s
+      timeout: 5s
+      retries: 10        # Increased from 5 to 10 (100s total wait)
+      start_period: 60s  # Grace period before counting failures
 
   # FastAPI Backend
   backend:
@@ -45,16 +62,13 @@ services:
       - ../.env
     ports:
       - "8000:8000"
-    extra_hosts:
-      # Allow backend to reach native Ollama on Mac host
-      - "host.docker.internal:host-gateway"
     environment:
       - API_HOST=0.0.0.0
       - API_PORT=8000
       - DEBUG=true
       - CORS_ORIGINS=http://localhost:5173
       - LLM_PROVIDER=${LLM_PROVIDER:-ollama}
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434  # Native Ollama on Mac host
+      - OLLAMA_BASE_URL=http://ollama:11434
       - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5:7b-instruct-q8_0}
       - NEO4J_URI=bolt://neo4j:7687
       - NEO4J_USER=neo4j
@@ -68,7 +82,8 @@ services:
     depends_on:
       neo4j:
         condition: service_healthy
-      # NOTE: No dependency on ollama service (runs natively on Mac host)
+      ollama:
+        condition: service_started  # Changed from service_healthy - Ollama optional for ingestion
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
       interval: 10s
@@ -96,6 +111,6 @@ services:
 volumes:
   neo4j-data:
   neo4j-logs:
+  ollama-models:
   uploads:
-  # NOTE: ollama-models volume removed (Ollama runs natively on Mac host)
 
