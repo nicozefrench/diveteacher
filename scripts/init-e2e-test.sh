@@ -160,7 +160,9 @@ check_dependencies() {
 check_containers() {
   log_step 1 "Checking Docker containers"
   
-  local required_containers=("rag-backend" "rag-neo4j" "rag-ollama")
+  # NOTE: rag-ollama removed - Ollama now runs natively on Mac host (Metal GPU)
+  # See: Devplan/251105-OLLAMA-BAREMETAL-MIGRATION.md
+  local required_containers=("rag-backend" "rag-neo4j")
   local missing=()
   
   for container in "${required_containers[@]}"; do
@@ -354,13 +356,15 @@ verify_services() {
     all_healthy=false
   fi
   
-  # Check Ollama
-  log_info "Checking Ollama LLM..."
+  # Check Ollama (native baremetal, not Docker)
+  log_info "Checking Ollama LLM (native baremetal)..."
   OLLAMA_MODELS=$(curl -s http://localhost:11434/api/tags 2>/dev/null | jq -r '.models[].name' 2>/dev/null)
   if [ -n "$OLLAMA_MODELS" ]; then
-    log_success "Ollama LLM: $(echo "$OLLAMA_MODELS" | head -1)"
+    log_success "Ollama LLM (Metal GPU): $(echo "$OLLAMA_MODELS" | head -1)"
   else
     log_error "Ollama LLM: Not responding or no models loaded"
+    log_error "Make sure 'ollama serve' is running in Terminal 1"
+    log_error "See: Devplan/251105-OLLAMA-BAREMETAL-MIGRATION.md"
     all_healthy=false
   fi
   
