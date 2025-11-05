@@ -14,7 +14,7 @@ import json
 class StructuredFormatter(logging.Formatter):
     """
     Custom formatter that outputs JSON-structured logs
-    
+
     Format:
     {
         "timestamp": "2025-10-29T10:30:45.123456Z",
@@ -32,10 +32,10 @@ class StructuredFormatter(logging.Formatter):
         }
     }
     """
-    
+
     def format(self, record: logging.LogRecord) -> str:
         """Format log record as JSON"""
-        
+
         # Base log structure
         log_data = {
             "timestamp": datetime.utcnow().isoformat() + "Z",
@@ -43,34 +43,34 @@ class StructuredFormatter(logging.Formatter):
             "logger": record.name,
             "message": record.getMessage(),
         }
-        
+
         # Add contextual fields if present
         if hasattr(record, 'upload_id'):
             log_data['upload_id'] = record.upload_id
-        
+
         if hasattr(record, 'stage'):
             log_data['stage'] = record.stage
-        
+
         if hasattr(record, 'sub_stage'):
             log_data['sub_stage'] = record.sub_stage
-        
+
         if hasattr(record, 'metrics'):
             log_data['metrics'] = record.metrics
-        
+
         if hasattr(record, 'duration'):
             log_data['duration'] = record.duration
-        
+
         # Add exception info if present
         if record.exc_info:
             log_data['exception'] = self.formatException(record.exc_info)
-        
+
         return json.dumps(log_data, ensure_ascii=False)
 
 
 class ContextLogger(logging.LoggerAdapter):
     """
     Logger adapter that adds contextual information to all log records
-    
+
     Usage:
         logger = ContextLogger(
             logging.getLogger('diveteacher.processor'),
@@ -79,44 +79,44 @@ class ContextLogger(logging.LoggerAdapter):
         logger.info("Processing started")
         # Output includes upload_id and stage automatically
     """
-    
+
     def process(self, msg: str, kwargs: Dict[str, Any]) -> tuple:
         """Add context to log record"""
         # Get or create 'extra' dict
         extra = kwargs.get('extra', {})
-        
+
         # Add adapter context
         extra.update(self.extra)
-        
+
         # Update kwargs
         kwargs['extra'] = extra
-        
+
         return msg, kwargs
 
 
 def setup_structured_logging(level: str = "INFO") -> None:
     """
     Configure structured JSON logging for the application
-    
+
     Args:
         level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-    
+
     Features:
         - JSON-formatted output
         - Contextual information (upload_id, stage, metrics)
         - Separate loggers for different components
         - Console output to stdout
     """
-    
+
     # Create handler
     handler = logging.StreamHandler(sys.stdout)
     handler.setFormatter(StructuredFormatter())
-    
+
     # Configure root logger
     root_logger = logging.getLogger()
     root_logger.setLevel(getattr(logging, level.upper()))
     root_logger.addHandler(handler)
-    
+
     # Configure application loggers
     app_loggers = [
         'diveteacher',
@@ -127,19 +127,19 @@ def setup_structured_logging(level: str = "INFO") -> None:
         'diveteacher.neo4j',
         'diveteacher.rag',
     ]
-    
+
     for logger_name in app_loggers:
         logger = logging.getLogger(logger_name)
         logger.setLevel(logging.DEBUG)  # Capture all levels
         logger.propagate = True  # Propagate to root handler
-    
+
     # Reduce noise from third-party libraries
     logging.getLogger('httpx').setLevel(logging.WARNING)
     logging.getLogger('httpcore').setLevel(logging.WARNING)
     logging.getLogger('anthropic').setLevel(logging.INFO)
     logging.getLogger('openai').setLevel(logging.INFO)
     logging.getLogger('neo4j').setLevel(logging.WARNING)
-    
+
     # Log startup
     startup_logger = logging.getLogger('diveteacher')
     startup_logger.info(
@@ -159,15 +159,15 @@ def get_context_logger(
 ) -> ContextLogger:
     """
     Get a context-aware logger
-    
+
     Args:
         name: Logger name (e.g., 'diveteacher.processor')
         upload_id: Optional upload ID to add to all logs
         stage: Optional processing stage to add to all logs
-    
+
     Returns:
         ContextLogger instance with automatic context
-    
+
     Example:
         logger = get_context_logger(
             'diveteacher.processor',
@@ -178,13 +178,13 @@ def get_context_logger(
         # Output includes upload_id and stage automatically
     """
     base_logger = logging.getLogger(name)
-    
+
     context = {}
     if upload_id:
         context['upload_id'] = upload_id
     if stage:
         context['stage'] = stage
-    
+
     return ContextLogger(base_logger, context)
 
 
@@ -219,7 +219,7 @@ def log_stage_progress(
 ) -> None:
     """Log progress within a stage"""
     progress_pct = int((current / total) * 100) if total > 0 else 0
-    
+
     logger.info(
         f"📊 {stage}: {sub_stage} ({current}/{total} - {progress_pct}%)",
         extra={

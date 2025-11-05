@@ -14,8 +14,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import sentry_sdk
-from sentry_sdk.integrations.fastapi import FastApiIntegration
-from sentry_sdk.integrations.starlette import StarletteIntegration
 
 from app.core.config import settings
 from app.core.logging_config import setup_structured_logging
@@ -64,17 +62,17 @@ app.include_router(test.router, prefix="/api/test", tags=["Testing"])
 async def startup_event():
     """Initialize services on startup"""
     print("🚀 Starting RAG Knowledge Graph API...")
-    
+
     # Test Neo4j connection
     try:
         neo4j_client.verify_connection()
         print("✅ Neo4j connection established")
-        
+
         # Create RAG-optimized indexes (after Graphiti indices)
         try:
             indexes = create_rag_indexes(neo4j_client.driver)
             print(f"✅ Created {len(indexes)} RAG indexes: {', '.join(indexes)}")
-            
+
             # Verify all indexes
             index_info = verify_indexes(neo4j_client.driver)
             print(f"📊 Total indexes: {index_info['total']} "
@@ -82,11 +80,11 @@ async def startup_event():
         except Exception as e:
             print(f"⚠️  Index creation/verification failed: {e}")
             # Don't crash - RAG will work but slower
-            
+
     except Exception as e:
         print(f"⚠️  Neo4j connection failed: {e}")
         # Don't crash - let health check report the issue
-    
+
     print("✅ API server ready")
 
 
@@ -94,16 +92,16 @@ async def startup_event():
 async def shutdown_event():
     """Cleanup on shutdown"""
     print("🛑 Shutting down RAG Knowledge Graph API...")
-    
+
     # Shutdown document queue (finish current doc, stop processing)
     await shutdown_document_queue()
-    
+
     # Close Neo4j connection
     neo4j_client.close()
-    
+
     # Close Graphiti connection
     await close_graphiti_client()
-    
+
     print("✅ Cleanup complete")
 
 
@@ -123,7 +121,7 @@ async def global_exception_handler(request, exc):
     """Global exception handler with Sentry integration"""
     if settings.SENTRY_DSN_BACKEND:
         sentry_sdk.capture_exception(exc)
-    
+
     return JSONResponse(
         status_code=500,
         content={
@@ -135,7 +133,7 @@ async def global_exception_handler(request, exc):
 
 if __name__ == "__main__":
     import uvicorn
-    
+
     uvicorn.run(
         "main:app",
         host=settings.API_HOST,

@@ -1,8 +1,8 @@
 # 🔌 DiveTeacher API Reference
 
 > **Project:** RAG Knowledge Graph for Scuba Diving Education  
-> **Version:** Phase 1.0 COMPLETE (RAG Query System)  
-> **Last Updated:** October 28, 2025, 16:20 CET  
+> **Version:** Phase 1.2 COMPLETE (RAG + Cross-Encoder Reranking)  
+> **Last Updated:** November 5, 2025, 11:30 CET  
 > **Base URL:** `http://localhost:8000` (local), `https://api.diveteacher.io` (production)
 
 ---
@@ -233,7 +233,8 @@ Content-Type: application/json
   "temperature": 0.7,
   "max_tokens": 2000,
   "stream": false,
-  "group_ids": null
+  "group_ids": null,
+  "use_reranking": true
 }
 ```
 
@@ -246,6 +247,7 @@ Content-Type: application/json
 | `max_tokens` | int | No | 2000 | Max response length (100-4000) |
 | `stream` | bool | No | true | Enable streaming (not used here) |
 | `group_ids` | string[] | No | null | Filter by groups (multi-tenant) |
+| `use_reranking` | bool | No | true | Enable cross-encoder reranking (+16.67% precision) |
 
 **Response:**
 
@@ -254,6 +256,7 @@ Content-Type: application/json
   "question": "What is the maximum depth for recreational diving?",
   "answer": "According to FFESSM standards, the maximum depth for recreational diving varies by certification level:\n\n- Level 1 (N1): 20 meters\n- Level 2 (N2): 40 meters\n- Level 3 (N3): 60 meters\n\nThese limits ensure diver safety while allowing progressive depth exposure as skills advance.",
   "num_sources": 5,
+  "reranked": true,
   "context": {
     "facts_used": [
       {
@@ -273,6 +276,16 @@ Content-Type: application/json
   }
 }
 ```
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `question` | string | Echo of the user's question |
+| `answer` | string | LLM-generated answer grounded in context |
+| `num_sources` | int | Number of facts used from knowledge graph |
+| `reranked` | bool | Whether cross-encoder reranking was applied |
+| `context` | object | Retrieval metadata (facts, timing) |
 
 **Response Codes:**
 - `200 OK` - Query successful

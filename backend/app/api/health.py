@@ -17,18 +17,18 @@ router = APIRouter()
 async def health_check():
     """
     Health check endpoint
-    
+
     Returns:
         Service health status
     """
-    
+
     health_status = {
         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat(),
         "version": "1.0.0",
         "services": {}
     }
-    
+
     # Check Neo4j
     try:
         await neo4j_client.verify_connection()
@@ -36,10 +36,10 @@ async def health_check():
     except Exception as e:
         health_status["services"]["neo4j"] = f"error: {str(e)}"
         health_status["status"] = "degraded"
-    
+
     # Check LLM provider
     try:
-        llm = get_llm()
+        get_llm()
         health_status["services"]["llm"] = {
             "provider": settings.LLM_PROVIDER,
             "status": "configured"
@@ -47,6 +47,6 @@ async def health_check():
     except Exception as e:
         health_status["services"]["llm"] = f"error: {str(e)}"
         health_status["status"] = "degraded"
-    
+
     return JSONResponse(content=health_status)
 

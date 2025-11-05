@@ -2,8 +2,8 @@
 
 > **Project:** RAG Knowledge Graph for Scuba Diving Education  
 > **Version:** Phase 1.2 COMPLETE (RAG + Cross-Encoder Reranking)  
-> **Last Updated:** November 4, 2025, 14:40 CET  
-> **Status:** 🟢 Phase 1.2 COMPLETE - RAG pipeline with reranking (+27.3% precision)
+> **Last Updated:** November 5, 2025, 11:15 CET  
+> **Status:** 🟢 Phase 1.2 COMPLETE - RAG pipeline with reranking (+16.67% precision validated)
 
 ---
 
@@ -32,7 +32,7 @@
 - ✅ **Semantic Chunking:** RecursiveCharacterTextSplitter (ARIA pattern, 3000 tokens)
 - ✅ **Knowledge Graph:** Neo4j + Graphiti pour extraction d'entités/relations
 - ✅ **RAG Hybride:** Graphiti search (semantic + BM25 + RRF)
-- ✅ **Cross-Encoder Reranking:** ms-marco-MiniLM-L-6-v2 (+27.3% precision, FREE)
+- ✅ **Cross-Encoder Reranking:** ms-marco-MiniLM-L-6-v2 (+16.67% precision, FREE)
 - ✅ **LLM Agnostic:** Ollama (local), Gemini (Graphiti), OpenAI (embeddings)
 - 🔜 **Multi-user:** Supabase Auth + PostgreSQL (Phase 1+)
 
@@ -700,7 +700,7 @@ processing_status[upload_id].update({
 
 ### Hybrid Search Strategy with Cross-Encoder Reranking (Phase 1.2) ✅
 
-**Purpose:** Combine Graphiti native search (semantic + BM25 + RRF) + optional cross-encoder reranking for +27.3% precision.
+**Purpose:** Combine Graphiti native search (semantic + BM25 + RRF) + optional cross-encoder reranking for +16.67% precision improvement.
 
 **Components:**
 
@@ -719,7 +719,7 @@ processing_status[upload_id].update({
        return results  # List[EntityEdge] (facts/relations)
    ```
 
-2. **Cross-Encoder Reranking (Optional, +27.3% precision)**
+2. **Cross-Encoder Reranking (Optional, +16.67% precision)**
    ```python
    # backend/app/core/reranker.py
    from sentence_transformers import CrossEncoder
@@ -731,7 +731,7 @@ processing_status[upload_id].update({
        Model: FREE (local inference, CPU)
        Size: ~100MB (one-time download)
        Performance: ~100ms for 20 facts
-       Improvement: +27.3% retrieval precision
+       Improvement: +16.67% retrieval precision (A/B tested)
        """
        def __init__(self):
            self.model = CrossEncoder('ms-marco-MiniLM-L-6-v2')
@@ -754,43 +754,59 @@ processing_status[upload_id].update({
    async def retrieve_context(
        question: str,
        top_k: int = 5,
-       use_reranking: bool = True
+       use_reranking: bool = None  # None = use settings default
    ):
+       if use_reranking is None:
+           use_reranking = settings.RAG_RERANKING_ENABLED
+       
        # Step 1: Retrieve more candidates if reranking enabled
-       retrieval_k = top_k * 4 if use_reranking else top_k  # 20 if reranking, 5 if not
+       retrieval_k = top_k * settings.RAG_RERANKING_RETRIEVAL_MULTIPLIER if use_reranking else top_k
        
        # Step 2: Graphiti hybrid search
        facts = await search_knowledge_graph(question, num_results=retrieval_k)
        
        # Step 3: Optional reranking
+       reranked = False
        if use_reranking and len(facts) > top_k:
            reranker = get_reranker()
            facts = reranker.rerank(question, facts, top_k=top_k)
+           reranked = True
        else:
            facts = facts[:top_k]
        
-       return {"facts": facts, "reranked": use_reranking}
+       return {"facts": facts, "reranked": reranked}
    ```
 
 **Key Decisions:**
 - ✅ Reranking is **optional** (enabled by default via `RAG_RERANKING_ENABLED=True`)
-- ✅ Retrieve 4× more facts when reranking (e.g., 20 → rerank to 5)
+- ✅ Retrieve 4× more facts when reranking (configurable via `RAG_RERANKING_RETRIEVAL_MULTIPLIER`)
 - ✅ Model loads during warmup (no first-query latency)
 - ✅ Falls back gracefully if reranking fails
 - ✅ FREE (local inference, no API costs)
+- ✅ A/B tested with 20 queries: +16.67% precision improvement
 
-**Performance:**
+**Performance (Test Run #23, November 5, 2025):**
 ```
-Without Reranking:
-├─ Retrieval: ~50ms (Graphiti search)
-├─ Avg Precision: 2.1%
-└─ Total: ~50ms
+Without Reranking (Baseline):
+├─ Retrieval: ~2.66s (Graphiti search + LLM)
+├─ Avg Precision: 6.00%
+└─ Facts Retrieved: 5
 
-With Reranking:
-├─ Retrieval: ~50ms (Graphiti search, 20 facts)
+With Reranking (Enhanced):
+├─ Retrieval: ~2.62s (Graphiti search + reranking + LLM)
 ├─ Reranking: ~100ms (ms-marco-MiniLM-L-6-v2, CPU)
-├─ Avg Precision: 2.65% (+27.3%)
-└─ Total: ~150ms (+100ms overhead)
+├─ Avg Precision: 7.00% (+16.67%)
+├─ Facts Retrieved: 5 (from 20 candidates)
+└─ Total: ~2.62s (-1.2% overhead)
+```
+
+**Cost Analysis:**
+```
+API Costs: $0 (local inference)
+Compute: CPU only (~200MB RAM)
+Development: 2 days
+Maintenance: Low (model cached locally)
+ROI: Immediate (+16.67% precision, no ongoing cost)
 ```
 
 ---

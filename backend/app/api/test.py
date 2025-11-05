@@ -35,22 +35,22 @@ class RetrievalTestResponse(BaseModel):
 async def test_retrieval(request: RetrievalTestRequest):
     """
     Test retrieval + reranking WITHOUT LLM generation
-    
+
     This endpoint is designed for A/B testing the cross-encoder reranking
     without the overhead of LLM answer generation.
-    
+
     Expected performance: ~2-5 seconds per query
-    
+
     Args:
         request: Retrieval test parameters
-        
+
     Returns:
         Retrieved facts (optionally reranked) without LLM answer
     """
     # Use settings defaults if not provided
     top_k = request.top_k if request.top_k is not None else settings.RAG_TOP_K
     use_reranking = request.use_reranking if request.use_reranking is not None else settings.RAG_RERANKING_ENABLED
-    
+
     # Retrieve context (with optional reranking)
     context = await retrieve_context(
         question=request.question,
@@ -58,7 +58,7 @@ async def test_retrieval(request: RetrievalTestRequest):
         group_ids=request.group_ids,
         use_reranking=use_reranking
     )
-    
+
     return RetrievalTestResponse(
         question=request.question,
         facts=context['facts'],
