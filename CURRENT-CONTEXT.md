@@ -11,7 +11,7 @@
 > - Performance metrics
 > - Next steps
 
-**Last Updated:** November 4, 2025 14:20 CET - Session 13 IN PROGRESS 🚀  
+**Last Updated:** November 4, 2025 15:30 CET - Session 13 - PAUSE TECHNIQUE 🔧  
 **Project:** DiveTeacher - Assistant IA pour Formation Plongée  
 **Repository:** https://github.com/nicozefrench/diveteacher (PRIVÉ)  
 **Domaine Principal:** diveteacher.io (+ diveteacher.app en redirect)
@@ -20,10 +20,10 @@
 
 ## 📍 Current Status
 
-**Phase:** Gap #2 Implementation (Reranking) - CRITICAL DISCOVERY  
-**Session:** 13 IN PROGRESS (Days 1-2 Complete, Entity Extraction Issue Identified)  
+**Phase:** Gap #2 Implementation (Reranking) - DAY 4 COMPLETE, PAUSE TECHNIQUE  
+**Session:** 13 IN PROGRESS - Technical Pause for Ollama Migration  
 **Environment:** macOS (darwin 24.6.0) - Mac M1 Max, 32GB RAM, Docker Desktop 16GB  
-**Status:** ⚠️ **CHECKPOINT - Awaiting Decision on Extraction Quality vs Reranking Deployment**
+**Status:** ⏸️ **TECHNICAL PAUSE - Ollama Baremetal Migration Before Day 5-7**
 
 **System State:**
 - ✅ **Backend:** Gemini 2.5 Flash-Lite + OpenAI Embeddings (1536 dims) - HEALTHY
@@ -57,13 +57,13 @@
 
 ## 🎯 Session 13 Summary (November 4, 2025) 🚀 IN PROGRESS
 
-**Duration:** ~6 hours (08:00-14:20 CET)  
-**Focus:** RAG Strategies → Gap #2 Implementation → **CRITICAL DISCOVERY: Entity Extraction Quality Issue**  
-**Status:** ⚠️ **CHECKPOINT - Major Decision Point Reached**
+**Duration:** ~7.5 hours (08:00-15:30 CET)  
+**Focus:** RAG Strategies → Gap #2 Implementation → Testing → Documentation → **TECHNICAL PAUSE**  
+**Status:** ⏸️ **DAY 4 COMPLETE - PAUSE FOR OLLAMA MIGRATION**
 
 ### Session Timeline
 
-**Phase 1: RAG Strategies Analysis (08:00-09:30)**
+**Phase 1: RAG Strategies Analysis (08:00-09:30)** ✅
 - Read Cole Medin's RAG Strategies Guide (1375 lines)
 - Analyzed DiveTeacher architecture vs best practices
 - Identified 4 critical gaps (Agentic Tools, Reranking, Contextual, Agentic Chunking)
@@ -71,19 +71,19 @@
 - Multiple self-reflection phases (7 corrections)
 - Created `Devplan/251104-RAG-STRATEGIES-ANALYSIS.md` (2260 lines)
 
-**Phase 2: Development Plans Creation (09:30-10:10)**
+**Phase 2: Development Plans Creation (09:30-10:10)** ✅
 - Created 4 detailed gap-specific plans
 - Created master implementation roadmap
 - Validated inter-plan dependencies
 - Total: 5 plans, 5980+ lines
 
-**Phase 3: Git Workflow & Branch Setup (10:10-10:30)**
+**Phase 3: Git Workflow & Branch Setup (10:10-10:30)** ✅
 - Merged `feat/production-ready-large-workloads` → `main`
 - Deleted merged branch (local + remote)
 - Created new branch: `feat/gap2-cross-encoder-reranking`
 - Ready for Gap #2 implementation
 
-**Phase 4: Gap #2 Implementation - Days 1-2 (10:30-12:00)**
+**Phase 4: Gap #2 Implementation - Days 1-2 (10:30-12:00)** ✅
 - ✅ Created `backend/app/core/reranker.py` (CrossEncoderReranker class)
 - ✅ Created `backend/tests/test_reranker.py` (13 comprehensive tests)
 - ✅ Updated `backend/requirements.txt` (sentence-transformers)
@@ -95,7 +95,7 @@
 - ✅ Created `Devplan/251104-GAP2-PROGRESS-REPORT.md` (364 lines)
 - ✅ All commits pushed to GitHub
 
-**Phase 5: A/B Testing Preparation (12:00-13:00)**
+**Phase 5: A/B Testing Preparation (12:00-13:00)** ✅
 - User provided new dataset: `niveau1_test_queries.json` (20 queries)
 - Validated dataset structure and content alignment
 - ✅ Dataset quality confirmed (100% relevant to Niveau 1.pdf)
@@ -104,7 +104,7 @@
 - **TIMEOUT ERRORS:** Full RAG queries taking 2-3 minutes
 - **DECISION:** Test retrieval-only (no LLM generation)
 
-**Phase 6: Retrieval-Only Testing (13:00-13:45)**
+**Phase 6: Retrieval-Only Testing (13:00-13:45)** ✅
 - Created `/api/test/retrieval` endpoint (backend)
 - Created `scripts/test_reranking_retrieval_only.py`
 - Rebuilt backend, restarted services
@@ -113,15 +113,13 @@
   - **BUT:** 19/20 queries had 0% precision (both modes)
   - Clear indicator of knowledge graph quality issue
 
-**Phase 7: CRITICAL DISCOVERY - Root Cause Analysis (13:45-14:20)**
+**Phase 7: Root Cause Analysis (13:45-14:20)** ✅
 - ✅ Verified dataset validity: 100% correct (manual PDF verification)
 - ✅ Checked Neo4j database:
   - **Only 18 entities** (expected ~60-80)
   - **Only 25 relations** (expected ~100-150)
   - **Only 2 episodes** (chunks created)
 - ✅ Investigated chunking: ARIA config correct (3000 tokens)
-  - **BUT:** System creating only 3 very large chunks
-  - Large chunks → Poor Gemini extraction
 - ✅ **ROOT CAUSE IDENTIFIED:**
   - **NOT a chunking capacity issue** (Gemini handles 1M tokens)
   - **NOT a cost issue** (ARIA pattern is optimal)
@@ -129,6 +127,22 @@
     - Gemini extracts 30% of expected entities
     - Prompt optimized for narrative, not technical content
     - Missing: numerical values, technical terms, specific procedures
+- ✅ **DECISION MADE:** Option A - Deploy reranking as-is, fix extraction in Gap #2.5
+
+**Phase 8: DAY 4 Documentation (14:20-15:10)** ✅
+- ✅ Updated `docs/ARCHITECTURE.md` (reranking section, Phase 1.2)
+- ✅ Updated `docs/TESTING-LOG.md` (Test Run #23, 268 lines)
+- ✅ Updated `docs/FIXES-LOG.md` (Known Issue #24 documented, 140 lines)
+- ✅ Created `Devplan/251104-RERANKING-AB-TEST-RESULTS.md` (551 lines)
+- ✅ All commits pushed to GitHub (6 commits total)
+
+**Phase 9: TECHNICAL PAUSE (15:10-15:30)** ⏸️
+- **Blocker Identified:** Ollama in Docker on Mac = CPU only (0.5-0.7 tok/s)
+- **Impact:** Cannot properly test full RAG queries (Days 5-7)
+- **Decision:** Migrate Ollama to baremetal (native Mac, Metal GPU)
+- **Reason:** Need proper performance for E2E testing, staging, and final validation
+- **Expected:** 10-20× speedup (CPU 0.7 tok/s → GPU 7-14 tok/s)
+- **Plan:** Read technical migration guide, implement hybrid Docker/baremetal setup
 
 ### Key Achievements
 
@@ -1037,61 +1051,49 @@ Neo4j:
 - ✅ **Development Plans:** 5 plans created (5980+ lines)
 - ✅ **Git Workflow:** Branch `feat/gap2-cross-encoder-reranking` ready
 
-### 🎯 Immediate Next Step: DECISION REQUIRED
+### 🎯 Immediate Next Step: TECHNICAL MIGRATION (BLOCKING)
 
-**Current Situation:**
-- ✅ Reranking implementation complete (Days 1-2)
-- ✅ +27.3% improvement validated
-- ❌ Knowledge graph quality issue discovered
-- ⚠️ Gemini extracting only 30% of expected entities
+**Current Blocker:**
+- ❌ Ollama in Docker on Mac M1 Max = CPU only (0.5-0.7 tok/s)
+- ❌ Full RAG queries timeout (2-3 minutes per query)
+- ❌ Cannot complete Days 5-7 without proper LLM performance
 
-**Option A (RECOMMENDED): Deploy Reranking + Defer Extraction Fix**
+**Migration Plan:**
 ```
-PROS:
-✅ Complete Gap #2 sprint on time (1 week)
-✅ Reranking proven to work (+27.3%)
-✅ ARIA chunking validated (optimal for large docs)
-✅ Zero risk to existing system
-✅ Clean separation of concerns (reranking ≠ extraction)
+BEFORE (Current - BROKEN):
+Docker Stack:
+├─ Ollama (Docker) → CPU only (0.5-0.7 tok/s) ❌
+├─ Backend → http://ollama:11434
+├─ Frontend
+└─ Neo4j
 
-CONS:
-⚠️ Knowledge graph quality remains at 30%
-⚠️ Retrieval precision stays low until extraction fixed
-
-TIMELINE:
-- Now: Finalize reranking documentation
-- Next: Complete Gap #2 deployment (Days 4-7)
-- Later: New sprint for Graphiti prompt optimization
+AFTER (Target - WORKING):
+Hybrid Setup:
+├─ Ollama (Baremetal Mac) → Metal GPU (7-14 tok/s) ✅
+├─ Backend (Docker) → http://host.docker.internal:11434
+├─ Frontend (Docker)
+└─ Neo4j (Docker)
 ```
 
-**Option B: Fix Graphiti Prompt Now**
-```
-PROS:
-✅ Immediate improvement in entity extraction
-✅ Better retrieval precision
-✅ Complete solution in one sprint
+**Steps:**
+1. ⏸️ Read technical migration guide (`resources/251104-note-technique-ollama-gpu-hybrid.md`)
+2. ⏸️ Understand hybrid Docker/baremetal architecture
+3. ⏸️ Validate approach vs current DiveTeacher setup
+4. ⏸️ Plan migration steps (waiting for user green light)
 
-CONS:
-❌ 2-4 hours additional dev (out of scope)
-❌ High risk (may break existing extraction)
-❌ Requires deep Graphiti internals understanding
-❌ May delay Gap #2 completion
+**Why This Matters:**
+- Days 5-7 require E2E testing with full RAG queries
+- Cannot validate reranking improvement without working LLM
+- Cannot complete Gap #2 deployment without proper testing
 
-TIMELINE:
-- Now: Pause Gap #2, investigate Graphiti prompts
-- Risk: Unknown (may take days, not hours)
-- Delay: Gap #2 completion pushed by unknown amount
-```
+**Gap #2 Progress:**
+- ✅ **Days 1-2:** Implementation complete (reranking code)
+- ✅ **Day 3:** A/B testing complete (retrieval-only, +27.3%)
+- ✅ **Day 4:** Documentation complete
+- ⏸️ **Days 5-7:** BLOCKED by Ollama performance (need GPU)
 
-**AI Agent Recommendation:**
-**OPTION A** - Deploy reranking as-is, fix extraction in dedicated sprint. Reasons:
-1. Reranking is production-ready and proven
-2. Extraction issue is separate concern (not caused by reranking)
-3. Sequential development reduces risk
-4. Clean rollback point already established
-5. User can make informed decision on extraction fix timing
-
-**Awaiting User Decision** 🎯
+**Status:** ⏸️ **AWAITING TECHNICAL MIGRATION - USER TO IMPLEMENT**  
+**Next:** User migrates Ollama to baremetal, then AI resumes Days 5-7
 
 ---
 
