@@ -1210,40 +1210,135 @@ class Settings(BaseSettings):
     QWEN_NUM_CTX: int = 4096  # Context window (supports up to 32k)
 ```
 
-### Docker Configuration (docker/docker-compose.dev.yml)
+### Environment-Specific Configuration
 
-**Ollama Service (Optimized):**
+#### Development Environment (Mac M1 Max) - Hybrid Architecture
+
+**Architecture Overview:**
+
+```
+Hybrid Setup (Post-Migration Nov 2025):
+├─ Ollama (Baremetal Mac) → Metal GPU ✅
+│  • Native process (not Docker)
+│  • 100% Metal GPU acceleration
+│  • 30-60× faster than Docker CPU
+│  • Port: 11434
+│  • See: Devplan/251105-OLLAMA-BAREMETAL-MIGRATION.md
+│
+├─ Backend (Docker) → http://host.docker.internal:11434
+├─ Frontend (Docker)
+└─ Neo4j (Docker)
+```
+
+**Why Native Ollama?**
+- Docker Desktop on macOS **cannot access Metal GPU** (architectural limitation)
+- Native Ollama provides direct Metal GPU access
+- Performance: 30-60× faster (0.7 tok/s → 7-14+ tok/s)
+- Migration completed: November 5, 2025
+
+**Docker Compose Configuration (docker/docker-compose.dev.yml):**
+
+```yaml
+# NOTE: Ollama service REMOVED from Docker Compose
+# Ollama now runs NATIVELY on Mac host for Metal GPU access
+
+backend:
+  environment:
+    - OLLAMA_BASE_URL=http://host.docker.internal:11434  # Native Ollama
+  extra_hosts:
+    - "host.docker.internal:host-gateway"  # Enable host communication
+  depends_on:
+    neo4j:
+      condition: service_healthy
+    # NOTE: No dependency on ollama service (runs natively)
+```
+
+**Daily Development Workflow:**
+
+```bash
+# Terminal 1: Start Native Ollama (keep this terminal open)
+export OLLAMA_HOST=0.0.0.0:11434
+export OLLAMA_ORIGINS="*"
+ollama serve
+
+# Terminal 2: Start Docker Services
+cd docker
+docker compose -f docker-compose.dev.yml up -d
+
+# Verify GPU Status
+ollama ps
+# Expected: 100% GPU (Metal)
+```
+
+**Native Ollama Setup:**
+
+```bash
+# Install (if needed)
+brew install ollama
+
+# Pull model
+ollama pull qwen2.5:7b-instruct-q8_0
+
+# Verify installation
+ollama list
+curl http://localhost:11434/api/version
+```
+
+#### Production Environment (DigitalOcean GPU) - Full Docker
+
+**Architecture Overview:**
+
+```
+Full Docker Setup (Production):
+├─ Ollama (Docker + NVIDIA GPU) ✅
+├─ Backend (Docker) → http://ollama:11434
+├─ Frontend (Docker)
+└─ Neo4j (Docker)
+```
+
+**Docker Compose Configuration:**
 
 ```yaml
 ollama:
   image: ollama/ollama:latest
-  container_name: rag-ollama
+  container_name: rag-ollama-prod
   ports:
     - "11434:11434"
   volumes:
     - ollama-models:/root/.ollama
   environment:
-    # Best practices from Ollama deployment guides
     - OLLAMA_HOST=0.0.0.0:11434
     - OLLAMA_ORIGINS=*
-    - OLLAMA_KEEP_ALIVE=5m
-    - OLLAMA_MAX_LOADED_MODELS=1
-    - OLLAMA_NUM_PARALLEL=4
-    - OLLAMA_MAX_QUEUE=128
   deploy:
     resources:
-      limits:
-        memory: 16G  # Mac M1 Max has 32GB, leave 16GB for system
-  healthcheck:
-    test: ["CMD", "curl", "-f", "http://localhost:11434/api/version"]
-    interval: 10s
-    timeout: 5s
-    retries: 5
+      reservations:
+        devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+
+backend:
+  environment:
+    - OLLAMA_BASE_URL=http://ollama:11434  # Internal Docker network
 ```
+
+**Zero Code Changes:** Backend code identical, only `OLLAMA_BASE_URL` differs.
 
 ### Performance Metrics
 
-**Local Development (Mac M1 Max CPU):**
+**Development (Mac M1 Max - Native Ollama + Metal GPU):**
+
+| Metric | Value | Notes |
+|--------|-------|-------|
+| **GPU Utilization** | 100% Metal | Native Ollama only |
+| **Model Load Time** | ~2-3s | First query |
+| **Tokens/Second** | 7-14 tok/s | Measured on Metal GPU |
+| **Response Time** | <1s | Simple queries |
+| **Full RAG Query** | 10-20s | With context retrieval |
+| **Memory Usage** | 8.9 GB | Model loaded on GPU |
+| **Context Window** | 4096 tokens | Qwen 2.5 7B Q8_0 |
+
+**Production (DigitalOcean GPU Droplet - Docker + NVIDIA):**
 
 | Metric | Value | Notes |
 |--------|-------|-------|

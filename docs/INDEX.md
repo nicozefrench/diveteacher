@@ -196,7 +196,7 @@
 
 | Task | Status | Documentation |
 |------|--------|---------------|
-| **Ollama Docker Config** | ✅ Optimized | [Docker Compose](../docker/docker-compose.dev.yml) |
+| **Ollama Setup** | ✅ **Dev:** Native (Metal GPU)<br>**Prod:** Docker (NVIDIA) | [Migration Guide](../Devplan/251105-OLLAMA-BAREMETAL-MIGRATION.md) |
 | **Qwen 2.5 7B Q8_0** | ✅ Loaded (8.1GB) | [ENV_CONFIGURATION](../resources/251028-qwen2.5-7b-instruct-q8_0-ollama-guide.md) |
 | **RAG Query API** | ✅ 3 endpoints | [API.md](API.md#rag-query-endpoints) |
 | **Streaming (SSE)** | ✅ Working | [API.md](API.md#streaming) |
