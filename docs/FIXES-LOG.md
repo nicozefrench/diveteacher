@@ -1,8 +1,8 @@
 # 🔧 Fixes Log - DiveTeacher RAG System
 
 > **Purpose:** Track all bugs fixed, problems resolved, and system improvements  
-> **Last Updated:** November 4, 2025, 09:15 CET  
-> **Status:** Session 12 COMPLETE (Gemini Migration + Monitoring Fix 🎉)
+> **Last Updated:** November 5, 2025, 17:30 CET  
+> **Status:** Session 13 COMPLETE (Docling POC NO-GO 🎯)
 
 ---
 
@@ -16,6 +16,121 @@
 ---
 
 ## Active Fixes
+
+### ✅ ENHANCEMENT #2 - DOCLING POC NO-GO - Documented ✅
+
+**Status:** ✅ COMPLETE (Decision Made)  
+**Opened:** November 5, 2025, 16:00 CET (POC execution)  
+**Completed:** November 5, 2025, 17:30 CET  
+**Priority:** P1 - HIGH (Strategic Decision)  
+**Impact:** Kept stable stack, avoided 2-3 days of risky refactoring
+
+**Context:**
+After Gap #2 (Reranking) success, investigated Docling HybridChunker as potential optimization for Gap #3 (Contextual Retrieval). Goal was to reduce implementation time from 10 days to 3-5 days by leveraging built-in chunking and contextualization.
+
+**Investigation:**
+```bash
+# Discovery 1: Module exists but in newer version
+Docling 2.5.1 (current): ❌ No docling.chunking module
+Docling 2.60.1 (latest): ✅ Has docling.chunking.HybridChunker
+
+# Discovery 2: Breaking changes
+Numpy conflict: Docling 2.60 requires numpy >= 2.0
+              LangChain 0.3.7 requires numpy < 2.0
+              → INCOMPATIBLE (mutually exclusive)
+
+OpenCV deps: libGL.so.1 missing in Docker
+           → Requires Dockerfile rebuild + system packages
+
+Transformers: Upgrade 4.48 → 4.57 required
+           → Unknown impacts on Gap #2 Reranking (unvalidated)
+```
+
+**Root Cause:**
+🚨 **DEPENDENCY HELL - Major Version Conflicts**
+
+The Docling HybridChunker feature exists but requires:
+1. Numpy 2.x (breaks LangChain compatibility)
+2. OpenCV system libraries (not in Docker)
+3. Transformers upgrade (risks Gap #2 stability)
+
+**Decision: NO-GO**
+
+**Rationale:**
+1. **Stack Stability:** Docling 2.5.1 + LangChain is **PRODUCTION-READY**
+   - Gap #2 (Reranking) validated with current stack (+16.67% precision)
+   - Zero bugs, zero regressions
+   - "Don't fix what isn't broken"
+
+2. **Risk Too High:** Fixing conflicts would require:
+   - Upgrade LangChain (may break ARIA chunking pattern)
+   - Rebuild Docker images (OpenCV system deps)
+   - Re-test Gap #2 Reranking (unknown impacts from transformers upgrade)
+   - Estimated: 2-3 days + unknown risks
+
+3. **Alternative Exists:** Gap #3 Original plan (10 days)
+   - Custom section parser (full control)
+   - Proven pattern (similar to attempted Day 1-3)
+   - No dependency risks
+   - Clean, maintainable code
+
+**Solution Implemented:**
+
+**1. POC Documentation:**
+- Created `Devplan/251105-POC-HYBRID-RESULTS.md` (complete analysis)
+- Documented all blocking issues with evidence
+- Provided decision rationale
+
+**2. Rollback to Stable:**
+```bash
+# Restored Docling 2.5.1 stack
+docker compose exec backend pip install docling==2.5.1 \
+  docling-core==2.3.0 numpy==1.26.4 transformers==4.48.3 \
+  --force-reinstall
+
+✅ Stack restored to pre-POC state
+✅ Zero production impact
+```
+
+**3. Updated Master Roadmap:**
+- Marked M1.5 (Docling POC) as **NO-GO**
+- Reverted to 12-week timeline (original plan)
+- Gap #3: 10 days (custom implementation)
+- Gap #4: Back on roadmap (re-evaluate after Gap #3)
+
+**Impact:**
+
+**Before POC:**
+- ❓ Unknown if Docling HybridChunker viable
+- 🎯 Potential time savings unclear
+- ⚠️  Risk of breaking stable stack
+
+**After POC:**
+- ✅ Clear NO-GO decision with evidence
+- ✅ Stable stack preserved (Docling 2.5.1 + LangChain)
+- ✅ Avoided 2-3 days of risky refactoring
+- ✅ Gap #2 Reranking remains validated
+- ✅ Clear path forward (Gap #3 Original, 10 days)
+
+**Files Modified:**
+1. `Devplan/251105-POC-HYBRID-RESULTS.md` - **CREATED** (complete POC analysis)
+2. `Devplan/251104-MASTER-IMPLEMENTATION-ROADMAP.md` - Updated (POC NO-GO, back to 12 weeks)
+3. `Devplan/251105-GAP3-CONTEXTUAL-RETRIEVAL-REVISED-WITH-DOCLING.md` - Archived (NOT VIABLE)
+4. `scripts/poc_simple.sh` - Created (POC execution script)
+5. `docs/FIXES-LOG.md` - This entry
+6. `docs/TESTING-LOG.md` - POC results documented
+
+**Lessons Learned:**
+
+1. **Always POC Before Committing:** 1 day investigation saved 2-3 days of broken work
+2. **Dependency Conflicts are Real:** Numpy 2.x vs 1.x is a hard blocker
+3. **Stability > Speed:** Keep working stack, don't chase optimizations
+4. **Document Decision Rationale:** Clear evidence prevents second-guessing
+5. **Failed POCs are Success:** Quick NO-GO better than slow realization
+
+**Status:** ✅ **COMPLETE** - Decision made, stack stable, proceeding with Gap #3 Original
+
+---
 
 ### 🐛 FIX #23 - MONITORING SCRIPTS WRONG ENDPOINT - Fixed ✅
 
