@@ -1,8 +1,8 @@
 # 🔧 Fixes Log - DiveTeacher RAG System
 
 > **Purpose:** Track all bugs fixed, problems resolved, and system improvements  
-> **Last Updated:** November 4, 2025, 09:15 CET  
-> **Status:** Session 12 COMPLETE (Gemini Migration + Monitoring Fix 🎉)
+> **Last Updated:** November 4, 2025, 15:10 CET  
+> **Status:** Session 13 IN PROGRESS (Gap #2 Reranking + Known Issue #24 Documented 🎉)
 
 ---
 
@@ -10,12 +10,137 @@
 
 - [Active Fixes](#active-fixes)
 - [Resolved Fixes](#resolved-fixes)
+- [Known Issues (Deferred)](#known-issues-deferred)
 - [Pending Issues](#pending-issues)
 - [Fix Statistics](#fix-statistics)
 
 ---
 
 ## Active Fixes
+
+**None currently active** - Gap #2 implementation complete, awaiting deployment.
+
+---
+
+## Known Issues (Deferred)
+
+### ⚠️ ISSUE #24 - LOW ENTITY EXTRACTION QUALITY (30% RATE) - Deferred to Gap #2.5
+
+**Status:** 🔜 DEFERRED TO FUTURE SPRINT  
+**Discovered:** November 4, 2025, 14:00 CET (Gap #2 A/B Testing - Test Run #23)  
+**Priority:** P1 - HIGH (Impacts retrieval precision)  
+**Severity:** MEDIUM (System functional, but suboptimal)  
+**Planned Fix:** Gap #2.5 Sprint (Graphiti Prompt Engineering)
+
+**Context:**
+During Gap #2 A/B testing (Test Run #23), reranking showed +27.3% improvement but 95% of queries had 0% precision in both modes. Root cause analysis revealed low entity extraction quality from Gemini, not a reranking issue.
+
+**Problem:**
+```
+Expected (Niveau 1.pdf, 16 pages):
+├─ Entities: ~60-80 (technical terms, values, procedures)
+├─ Relations: ~100-150 (concept connections)
+└─ Episodes: ~17 chunks (ARIA 3000 tokens)
+
+Actual:
+├─ Entities: 18 (only 30% extraction rate) ❌
+├─ Relations: 25 (only 25% extraction rate) ❌
+└─ Episodes: 2 (chunking creates 3 large chunks) ✅
+```
+
+**Root Cause Analysis:**
+
+**1. NOT a Chunking Issue** ✅
+- Configuration: ARIA pattern (3000 tokens, 200 overlap)
+- Result: 3 chunks created (~2158 tokens each)
+- Verdict: CORRECT (optimal for large documents & cost)
+
+**2. NOT a Gemini Capacity Issue** ✅
+- Context window: 1,000,000 tokens
+- Our chunks: ~2,158 tokens each (0.2% usage)
+- Verdict: NO ISSUE (Gemini can handle much larger)
+
+**3. IS a Graphiti Prompt Quality Issue** ❌
+- Extraction rate: 30% (18/60 entities expected)
+- **What Gemini Extracts:**
+  - ✅ High-level concepts: "Le plongeur", "NIVEAU 1", "Valsalva"
+  - ✅ General terms: "Se ventiler", "Compenser"
+- **What Gemini Misses:**
+  - ❌ Numerical values: "6 mètres", "50 m", "15 mois"
+  - ❌ Technical procedures: "Lâcher et reprise d'embout"
+  - ❌ Equipment details: "Gilet stabilisateur", "Détendeur"
+  - ❌ Specific conditions: "Eau trouble", "Courant"
+
+**Hypothesis:**
+Graphiti's default prompts are optimized for **narrative documents** (articles, books, stories), not **technical manuals** with:
+- Numerical specifications
+- Procedural step-by-step instructions
+- Equipment technical details
+- Safety conditions and thresholds
+
+**Impact:**
+- Retrieval precision: LOW (95% queries return 0 relevant facts)
+- Reranking effectiveness: LIMITED (can't improve missing entities)
+- User experience: POOR (system can't answer basic questions)
+- Cost: NO IMPACT ($0.001 per document maintained)
+
+**Why Deferred (Not Fixed in Gap #2):**
+1. ✅ **Reranking Works:** +27.3% improvement validated
+2. ✅ **Separate Concern:** Extraction ≠ reranking
+3. ✅ **Clean Rollback:** Safe checkpoint established
+4. ❌ **Out of Scope:** Graphiti prompt engineering not in Gap #2 plan
+5. ❌ **Time Required:** 2-4+ hours (unknown complexity)
+6. ❌ **High Risk:** May break existing extraction
+7. ✅ **Sequential Development:** Fix one thing at a time
+
+**Decision:**
+**Option A selected:** Deploy reranking as-is, fix extraction in dedicated sprint (Gap #2.5)
+
+**Planned Solution (Gap #2.5 Sprint):**
+
+**Approach:**
+1. Read Graphiti source code to understand prompt templates
+2. Create custom prompts optimized for technical documents
+3. Test with Niveau 1.pdf (baseline: 18 entities)
+4. Validate extraction rate improvement (target: 80%+ = 48+ entities)
+5. Re-run A/B tests with improved knowledge graph
+6. Consider Graphiti fork if prompts not customizable
+
+**Estimated Effort:**
+- Investigation: 4-6 hours
+- Implementation: 2-3 hours
+- Testing: 2 hours
+- **Total: 2-3 days**
+
+**Expected ROI:**
+- **HIGH:** Directly improves retrieval precision (0% → 60%+ expected)
+- Reranking becomes truly valuable (+27.3% on good data)
+- User experience significantly improved
+- Cost: Still $0 (Gemini capacity sufficient)
+
+**Related:**
+- Test Run #23: Gap #2 Reranking A/B Test Validation
+- Devplan/251104-RERANKING-AB-TEST-RESULTS.md (detailed analysis)
+- Gap #2: Cross-Encoder Reranking (completed)
+- Gap #2.5: Graphiti Prompt Engineering (planned)
+
+**Files to Review (Gap #2.5):**
+```
+backend/app/integrations/graphiti.py  (Graphiti client initialization)
+graphiti-core library source code       (prompt templates)
+Devplan/251104-RERANKING-AB-TEST-RESULTS.md (root cause analysis)
+```
+
+**Success Criteria (Gap #2.5):**
+- [ ] Entity extraction rate: 30% → 80%+ (18 → 48+ entities)
+- [ ] Relation extraction rate: 25% → 80%+ (25 → 80+ relations)
+- [ ] Retrieval precision: 0% → 60%+ (queries with relevant results)
+- [ ] Cost maintained: $0.001 per document (no increase)
+- [ ] A/B test shows combined reranking + extraction improvement
+
+---
+
+## Resolved Fixes
 
 ### 🐛 FIX #23 - MONITORING SCRIPTS WRONG ENDPOINT - Fixed ✅
 
