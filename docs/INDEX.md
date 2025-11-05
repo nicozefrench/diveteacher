@@ -22,6 +22,12 @@
   - Neo4j setup & troubleshooting
   - Docling + HierarchicalChunker validation
   - Testing procedures
+- **[CLOUD-MIGRATION-GUIDE.md](CLOUD-MIGRATION-GUIDE.md)** - ⭐ **Cloud migration guide** ✨ **NEW (Nov 5)**
+  - Ollama migration: Mac M1 Max (Metal GPU) → DigitalOcean (NVIDIA GPU)
+  - Step-by-step migration procedure (20-30 min)
+  - Zero code changes (only `OLLAMA_BASE_URL` env var)
+  - Troubleshooting & validation checklists
+  - Cost estimates (~$120-180/month)
 
 ### 🏗️ Technical Architecture
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design & data flow
