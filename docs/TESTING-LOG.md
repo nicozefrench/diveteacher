@@ -1,8 +1,16 @@
 # 🧪 Testing Log - DiveTeacher RAG System
 
 > **Purpose:** Historique complet des tests effectués, résultats, et état du système  
-> **Last Updated:** November 5, 2025, 18:45 CET  
-> **Current Status:** 🎉 **PRODUCTION READY** + ✅ **DOCLING HYBRIDCHUNKER POC GO (Session 14)**
+> **Last Updated:** November 6, 2025, 15:00 CET  
+> **Current Status:** 🎉 **PRODUCTION READY** + ✅ **GAP #3 CONTEXTUAL RETRIEVAL COMPLETE (Session 15)**
+
+**🎊 SESSION 15 COMPLETE:** Gap #3 Contextual Retrieval Validated!
+- ✅ **Test Run #25:** A/B test 20 queries (Docling HybridChunker + Context Enrichment)
+- ✅ **Results:** 20/20 queries successful (100% success rate), avg 43.6% precision
+- ✅ **Performance:** 7 queries at 100% precision, 5 facts retrieved per query
+- ✅ **Bug Fixed:** A/B test script corrected (`context.facts` not `context.sources`)
+- ✅ **System Validated:** Retrieval works, contextualization functional
+- 🚀 **Timeline:** Gap #3 complete (DAY 1-2.5 done), documentation in progress
 
 **🎊 SESSION 14 COMPLETE:** Docling HybridChunker POC GO!
 - ✅ **POC #1:** ARIA vs HybridChunker comparison (Niveau 1.pdf)
