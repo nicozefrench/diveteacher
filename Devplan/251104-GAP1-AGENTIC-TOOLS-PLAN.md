@@ -1,11 +1,31 @@
-# GAP #1 DEVELOPMENT PLAN: Agentic Tool Selection
+# GAP #1 DEVELOPMENT PLAN: Agentic Tool Selection (REVISED)
 
 **Priority:** 🟡 P3 - HIGH (Implement AFTER Gap #2 & #3)  
-**Date:** November 4, 2025  
-**Estimated Duration:** 6 weeks (30 working days) - SPLIT INTO 2 PHASES  
+**Date:** November 4, 2025 (REVISED November 6, 2025 after Gap #3 complete)  
+**Estimated Duration:** 5 weeks (25 working days) - SPLIT INTO 2 PHASES  
 **Risk Level:** 🟠 MEDIUM-HIGH  
-**Value:** 🟢 VERY HIGH (+20% overall RAG quality)  
-**Cost:** 💰 FREE (no API costs)
+**Value:** 🟢 VERY HIGH (+5-6% overall RAG quality from 87% baseline)  
+**Cost:** 💰 FREE (no API costs with heuristic classification)
+
+---
+
+## 🔥 REVISION NOTES (Nov 6, 2025)
+
+**What Changed from Original Plan:**
+1. ✅ **Timeline:** 4 weeks → 5 weeks (+1 week buffer, learned from Gap #3)
+2. ✅ **Baseline:** Updated to 87% (after Gap #2 + Gap #3, not 75%)
+3. ✅ **Day 0 Added:** Neo4j schema audit (prevent assumptions from failing)
+4. ✅ **Days 16-19:** Marked OPTIONAL (no staging/prod env, same as Gap #3)
+5. ✅ **full_document tool:** Simplified to top 10 chunks (not all 29)
+6. ✅ **Fallback logic:** Added explicit thresholds (<3 facts = poor result)
+7. ✅ **Performance metrics:** Per-tool metrics added (not just "overhead")
+
+**Lessons Applied from Gap #3:**
+- Gap #3 completed in 2 days (vs 3-5 planned) - but had Docling doing 70% work
+- Gap #1 is custom implementation → Need buffer for unknowns
+- No staging/prod environment available → Skip those days
+- Keyword matching was too strict in Gap #3 A/B test → Need better classification
+- Always validate infrastructure BEFORE starting (Day 0)
 
 ---
 
@@ -39,13 +59,16 @@
 
 ## 🎯 TWO-PHASE APPROACH
 
-### **Phase 1: Basic Agentic Tools (4 weeks)**
-- ✅ Implement 3 tools: rag_lookup, list_documents, full_document
+### **Phase 1: Basic Agentic Tools (5 weeks)**
+- ✅ Day 0: Neo4j schema audit + infrastructure validation (NEW!)
+- ✅ Implement 3 tools: rag_lookup, list_documents, full_document (top 10 chunks)
 - ✅ Implement agent logic (query classification, tool selection)
-- ✅ Implement fallback strategies
+- ✅ Implement fallback strategies (with explicit thresholds)
 - ✅ Test with semantic, listing, and comprehensive queries
+- ✅ Buffer time for unknowns (+1 week)
 - **Risk:** MEDIUM
-- **Value:** HIGH (+15% quality)
+- **Value:** HIGH (+5-6% quality from 87% baseline)
+- **Duration:** 5 weeks (vs 4 weeks original)
 
 ### **Phase 2: SQL Tool (2 weeks) - DEFER IF NEEDED**
 - ✅ Implement table extraction from Docling
@@ -53,24 +76,34 @@
 - ✅ Implement SQL query generation
 - ✅ Test with numerical queries
 - **Risk:** HIGH (table extraction complexity)
-- **Value:** MEDIUM (+5% quality, but critical for diving tables)
+- **Value:** MEDIUM (+3-4% quality, but critical for diving tables)
+- **Duration:** 2 weeks (unchanged)
 
 **Rationale for Split:**
 - De-risk: Validate Phase 1 before committing to complex SQL tool
-- Quick wins: Get 15% improvement in 4 weeks
+- Quick wins: Get +5-6% improvement in 5 weeks (realistic baseline = 87%)
 - Option to defer: If SQL proves too complex, Phase 1 still delivers value
+- Lessons from Gap #3: Always buffer time for unknowns (+1 week)
 
 ---
 
-## 📊 EXPECTED IMPACT (Validated Estimates)
+## 📊 EXPECTED IMPACT (REVISED - From 87% Baseline)
 
-| Metric | Baseline | After Phase 1 | After Phase 2 | Total Improvement |
-|--------|----------|---------------|---------------|-------------------|
+**CRITICAL:** Baseline is now 87% (after Gap #2 Reranking + Gap #3 Contextual), NOT 75%
+
+| Metric | Baseline (After Gap #2/#3) | After Phase 1 | After Phase 2 | Total Improvement |
+|--------|----------------------------|---------------|---------------|-------------------|
 | **Semantic queries** | 87% | 90% (+3%) | 90% | +3% |
-| **Document listing** | 0% (impossible) | 100% (+100%) | 100% | +100% |
-| **Full-context queries** | 70% | 90% (+29%) | 90% | +29% |
+| **Document listing** | 0% (impossible) | 100% (+100%) | 100% | +100% (new!) |
+| **Full-context queries** | 70% | 85% (+21%) | 85% | +21% |
 | **Numerical queries** | 60% | 65% (+8%) | 90% (+50%) | +50% |
-| **Overall RAG quality** | 87% | 92% (+6%) | 95% (+9%) | +9% |
+| **Overall RAG quality** | **87%** | **92% (+5-6%)** | **95% (+9%)** | **+9%** |
+
+**Key Changes from Original:**
+- Baseline: 87% (was incorrectly 75% - Gap #2 + #3 already improved it!)
+- Phase 1 target: 92% (+5-6%, was +15% but that was vs 75% baseline)
+- Phase 2 target: 95% (+9% total, was +20% but again vs 75%)
+- Realistic expectations based on actual current system state
 
 ---
 
@@ -238,28 +271,37 @@ async def list_documents_tool(
     return {"documents": documents, "total": len(documents)}
 ```
 
-**Tool #3: Get Full Document (NEW - Phase 1)**
+**Tool #3: Get Full Document (NEW - Phase 1) - SIMPLIFIED**
 ```python
 async def get_full_document_tool(
     self,
     document_id: str,
-    group_ids: Optional[List[str]] = None
+    group_ids: Optional[List[str]] = None,
+    max_chunks: int = 10  # NEW: Limit to top 10 chunks
 ) -> Dict[str, Any]:
     """
-    Retrieve full document text (reconstruct from all chunks).
+    Retrieve comprehensive document context (TOP 10 most relevant chunks).
+    
+    **REVISED:** Instead of ALL chunks (29 for Niveau 1), return top 10 most relevant.
+    Rationale from Gap #3 experience:
+    - Niveau 1.pdf = 29 chunks → Too slow to concatenate all
+    - LLM context window limit (128K tokens)
+    - "Comprehensive" != "Exhaustive" - Top 10 provides enough context
     
     Args:
         document_id: Document identifier (filename or UUID)
+        max_chunks: Maximum chunks to return (default: 10)
         
     Returns:
         {
             "document_id": "FFESSM Niveau 1.pdf",
-            "full_text": "...",  # Concatenated chunks
+            "top_chunks": [...],  # Top 10 chunks (not all 29)
             "metadata": {...},
-            "num_chunks": 25
+            "num_chunks_returned": 10,
+            "total_chunks_available": 29
         }
     """
-    logger.info(f"📄 Retrieving full document: {document_id}")
+    logger.info(f"📄 Retrieving comprehensive context: {document_id} (top {max_chunks} chunks)")
     
     # Query Neo4j for all chunks of document
     query = """
@@ -268,16 +310,18 @@ async def get_full_document_tool(
       AND ($group_ids IS NULL OR e.group_id IN $group_ids)
     RETURN e.content AS chunk_text, e.created_at AS created_at
     ORDER BY e.created_at
+    LIMIT $max_chunks
     """
     
-    # Reconstruct full document
+    # Return top N chunks (comprehensive, not exhaustive)
     # ...
     
     return {
         "document_id": document_id,
-        "full_text": full_text,
+        "top_chunks": chunks,  # Top 10, not all
         "metadata": metadata,
-        "num_chunks": len(chunks)
+        "num_chunks_returned": len(chunks),
+        "total_chunks_available": total_count  # May be 29, but we only return 10
     }
 ```
 
@@ -315,7 +359,52 @@ async def sql_query_tool(
 
 ---
 
-## 📅 PHASE 1 PLAN (4 WEEKS)
+## 📅 PHASE 1 PLAN (5 WEEKS - REVISED)
+
+### **DAY 0: PRE-IMPLEMENTATION AUDIT** (NEW - Friday before Week 1)
+
+**Goal:** Validate infrastructure and Neo4j schema BEFORE starting implementation
+
+**Why This is Critical (Lesson from Gap #3):**
+- Gap #3 had assumptions about Ollama/Neo4j connectivity that took time to debug
+- Tools depend on Neo4j schema (group_id, source_description, metadata fields)
+- Better to spend 4 hours validating than waste 2 days debugging wrong assumptions
+
+**Tasks:**
+
+**0.1 Neo4j Schema Audit (2 hours)**
+- Connect to Neo4j from Python (test driver)
+- Query actual Episode nodes: `MATCH (e:EpisodeType) RETURN e LIMIT 5`
+- Verify fields exist:
+  * `group_id` (for document grouping)
+  * `source_description` (for document identification)
+  * `content` or `episode_body` (for chunk text)
+  * `created_at` (for chunk ordering)
+- Document actual schema in `docs/NEO4J-SCHEMA.md`
+
+**0.2 Graphiti Client Test (1 hour)**
+- Verify Graphiti client imports work
+- Test search functionality (1 query)
+- Verify response format (facts list)
+- Document any quirks
+
+**0.3 Infrastructure Connectivity (1 hour)**
+- Verify Docker networking (backend → Neo4j)
+- Verify Ollama connectivity (`http://host.docker.internal:11434`)
+- Test end-to-end: Upload → Ingest → Query
+- Document connection strings
+
+**Deliverables:**
+- ✅ `docs/NEO4J-SCHEMA.md` (actual schema documented)
+- ✅ Neo4j connectivity validated
+- ✅ Graphiti client tested
+- ✅ No assumptions - everything verified!
+
+**Time:** 4 hours
+
+**Decision Point:** If schema doesn't match assumptions, revise tool designs BEFORE coding!
+
+---
 
 ### **WEEK 1: FOUNDATION & LIST_DOCUMENTS TOOL**
 
@@ -359,9 +448,22 @@ async def sql_query_tool(
 **Tasks:**
 
 **2.1 Neo4j Query Design (2 hours)**
+- **Choose Neo4j access method:**
+  * Option A: Use Graphiti's internal driver (recommended - already integrated)
+  * Option B: Direct `neo4j-driver` library (if Graphiti doesn't expose)
+  * Decision based on Day 0 findings
 - Design query to list all documents
 - Extract metadata (filename, chunks, upload_date)
 - Handle group_ids filter
+- **Query template:**
+  ```cypher
+  MATCH (e:EpisodeType)
+  WHERE ($group_ids IS NULL OR e.group_id IN $group_ids)
+  RETURN DISTINCT e.group_id AS doc_id, 
+                  e.source_description AS filename,
+                  count(*) AS num_chunks
+  ORDER BY filename
+  ```
 
 **2.2 Implement Tool (4 hours)**
 - Add `list_documents_tool()` to agent
@@ -481,13 +583,80 @@ async def execute_primary_tool(
         return await self.rag_lookup_tool(question, group_ids)
 ```
 
-**6.2 Implement Fallback Logic (4 hours)**
-- Add `should_fallback()` method
+**6.2 Implement Fallback Logic (4 hours) - WITH EXPLICIT THRESHOLDS**
+- Add `should_fallback()` method with CLEAR conditions
 - Add `execute_fallback_tool()` method
-- Implement fallback strategies:
-  - SEMANTIC → Try COMPREHENSIVE if few results
-  - COMPREHENSIVE → Try SEMANTIC if no match
-  - NUMERICAL → Try SEMANTIC (Phase 1)
+- Implement fallback strategies with explicit thresholds:
+
+```python
+def should_fallback(self, result: Dict[str, Any]) -> bool:
+    """
+    Determine if fallback is needed based on EXPLICIT thresholds.
+    
+    Learned from Gap #3 A/B test: Need clear, measurable criteria.
+    """
+    # Condition 1: Error occurred
+    if "error" in result:
+        logger.warning(f"   ⚠️  Tool returned error: {result['error']}")
+        return True
+    
+    # Condition 2: No facts retrieved (< 3 facts = poor result)
+    # From Gap #3: We always got 5 facts, <3 = something wrong
+    facts = result.get("context", {}).get("facts", [])
+    if len(facts) < 3:
+        logger.warning(f"   ⚠️  Tool returned too few facts: {len(facts)} < 3")
+        return True
+    
+    # Condition 3: Empty response (no answer generated)
+    if not result.get("answer", "").strip():
+        logger.warning("   ⚠️  Tool returned empty answer")
+        return True
+    
+    # All thresholds passed - no fallback needed
+    return False
+
+async def execute_fallback_tool(
+    self,
+    query_type: QueryType,
+    question: str,
+    group_ids: Optional[List[str]] = None
+) -> Dict[str, Any]:
+    """
+    Execute fallback tool based on query type.
+    
+    Fallback strategies:
+    - SEMANTIC → COMPREHENSIVE (try broader context)
+    - COMPREHENSIVE → SEMANTIC (try narrower search)
+    - NUMERICAL → SEMANTIC (Phase 1, no SQL yet)
+    - LISTING → No fallback (return empty list)
+    """
+    if query_type == QueryType.SEMANTIC:
+        logger.info("   🔄 Fallback: SEMANTIC → COMPREHENSIVE")
+        # Get first document, return top 10 chunks
+        docs = await self.list_documents_tool(question, group_ids)
+        if docs["documents"]:
+            return await self.get_full_document_tool(
+                docs["documents"][0]["filename"], 
+                group_ids
+            )
+        return {"error": "No fallback available"}
+    
+    elif query_type == QueryType.COMPREHENSIVE:
+        logger.info("   🔄 Fallback: COMPREHENSIVE → SEMANTIC")
+        return await self.rag_lookup_tool(question, group_ids)
+    
+    elif query_type == QueryType.NUMERICAL:
+        logger.info("   🔄 Fallback: NUMERICAL → SEMANTIC (SQL not available)")
+        return await self.rag_lookup_tool(question, group_ids)
+    
+    elif query_type == QueryType.DOCUMENT_LISTING:
+        logger.warning("   ⚠️  No fallback for LISTING (return empty)")
+        return {"documents": [], "total": 0}
+    
+    else:
+        # Default fallback
+        return await self.rag_lookup_tool(question, group_ids)
+```
 
 **6.3 Unit Tests (4 hours)**
 - Test: execute_primary_tool for each query type
@@ -584,12 +753,16 @@ async def execute_primary_tool(
 **Tasks:**
 
 **11.1 Create Test Dataset (4 hours)**
-- 40 test queries:
-  - 15 semantic queries (baseline)
-  - 10 document listing queries (new capability)
-  - 10 comprehensive queries (should improve)
-  - 5 numerical queries (partial, Phase 2 will improve)
-- Each with expected tool and expected quality
+- 40 test queries total (reuse + expand Gap #3 dataset):
+  * **Reuse Gap #3:** 20 existing queries from `gap3_test_dataset.json` (semantic focus)
+  * **Add 10 new:** Document listing queries (e.g., "What manuals do we have?", "List all FFESSM documents")
+  * **Add 5 new:** Comprehensive queries (e.g., "Explain buoyancy in detail", "Full guide to equipment")
+  * **Add 5 new:** Numerical queries (e.g., "How many decompression stops?", "Average dive depth?")
+- Each query includes:
+  * Expected query_type (SEMANTIC, LISTING, COMPREHENSIVE, NUMERICAL)
+  * Expected tool (rag_lookup, list_documents, full_document, sql_query)
+  * Expected quality threshold (relevant keywords for precision calc)
+- Store in `backend/tests/test_data/gap1_test_dataset.json`
 
 **11.2 Run A/B Test (6 hours)**
 - Run each query with use_agent=False (baseline)
@@ -680,153 +853,257 @@ async def execute_primary_tool(
 
 ---
 
-### **DAY 16-17: Staging Deployment** (Monday-Tuesday)
+### **DAY 16-19: Local Testing & Phase 2 Prep** ❌ **STAGING/PROD SKIPPED** (Monday-Thursday)
 
-**Goal:** Deploy Phase 1 to staging
+**Status:** Days 16-17 (Staging) and Days 18-19 (Production) are **NOT APPLICABLE**
 
-**Tasks:**
+**Reason (Same as Gap #3):**
+- No staging environment available (local Mac M1 Max = production for now)
+- Cloud deployment planned for "way later" (outside current scope)
+- All validation completed in local Docker Compose environment
+- Gap #3 precedent: Skipped Days 4-5 for same reason
 
-**16.1 Staging Deployment (4 hours)**
-- Rebuild Docker containers
-- Deploy to staging
-- Verify agent loads
-- Test all tools
+**REVISED PLAN - Local Testing & Buffer:**
 
-**16.2 Staging Tests (4 hours)**
-- Run 20 test queries
-- Verify tool selection
-- Check performance
-- Monitor errors
+**16.1 Extended Local Testing (6 hours)**
+- Run comprehensive test suite (all 40 A/B test queries)
+- Verify agent overhead <50ms (classification + routing)
+- Test all tool combinations (semantic, listing, comprehensive)
+- Monitor memory usage (<100MB increase)
+- Performance profiling (identify bottlenecks)
 
-**16.3 Load Testing (4 hours)**
-- 100 concurrent queries
-- Verify agent overhead acceptable
-- Check memory usage
+**16.2 Edge Case Testing (4 hours)**
+- Test with empty database (no documents)
+- Test with malformed queries
+- Test with very long queries (>1000 chars)
+- Test with concurrent requests (10 simultaneous queries)
+- Verify error handling for all failure modes
+
+**16.3 Documentation Finalization (8 hours)**
+- Finalize `docs/AGENT.md` (complete agent architecture)
+- Update `docs/ARCHITECTURE.md` (add agent layer diagram)
+- Update `docs/API.md` (use_agent parameter)
+- Update `docs/TESTING-LOG.md` (Phase 1 results)
+- Update `docs/FIXES-LOG.md` (Enhancement #3: Agentic Tools)
+- Update `CURRENT-CONTEXT.md` (Session summary)
+
+**16.4 Phase 2 Planning (6 hours)**
+- Design table extraction pipeline (Docling tables)
+- Design `document_rows` schema (Neo4j)
+- Design SQL generation logic (LLM vs templates)
+- Risk assessment: Proceed or defer Phase 2?
+- Document decision in `Devplan/251104-GAP1-PHASE2-DECISION.md`
 
 **Deliverables:**
-- ✅ Staging deployment successful
-- ✅ Tests passing
+- ✅ Comprehensive local testing complete
+- ✅ All documentation updated
+- ✅ Phase 2 plan ready (if proceeding)
+- ✅ Phase 1 COMPLETE (in local environment)!
 
-**Time:** 12 hours (2 days × 6 hours)
+**Time:** 24 hours (4 days × 6 hours)
+
+**Note:** If cloud deployment happens later, Days 16-19 tasks can be executed then. For now, local = production.
 
 ---
 
-### **DAY 18-19: Production Deployment** (Wednesday-Thursday)
+### **DAY 20-25: Buffer Week** (Friday + Week 5)
 
-**Goal:** Deploy Phase 1 to production
+**Goal:** Buffer time for unknowns and Phase 2 prep
 
-**Tasks:**
+**Rationale (Lesson from Gap #3):**
+- Gap #3 planned 3-5 days, completed in 2 (but had Docling doing 70% work)
+- Gap #1 is custom implementation → Needs buffer for:
+  * Unexpected Neo4j schema issues
+  * Query classification edge cases
+  * Tool integration debugging
+  * Performance optimization
+- Better to have buffer and not need it, than need it and not have it!
 
-**18.1 Production Deployment (4 hours)**
-- Deploy to production
-- Verify startup
-- Monitor metrics
+**Flexible Use of Buffer Days:**
 
-**18.2 Production Tests (4 hours)**
-- 30 real queries
-- User acceptance testing
-- Collect feedback
+**Option A: Everything on track** (ideal scenario)
+- Day 20-22: Start Phase 2 design (table extraction)
+- Day 23-24: Create detailed Phase 2 plan
+- Day 25: Team retrospective + celebration 🎉
 
-**18.3 Documentation Finalization (4 hours)**
-- Update `CURRENT-CONTEXT.md`
-- Finalize all docs
-- Commit to GitHub
+**Option B: Minor issues encountered** (likely scenario)
+- Use 2-3 days to address any technical debt from Weeks 1-4
+- Improve test coverage
+- Optimize performance
+- Remaining days: Phase 2 prep
+
+**Option C: Major issues encountered** (contingency)
+- Use full week to resolve blocking issues
+- Ensure Phase 1 is solid before considering Phase 2
+- Defer Phase 2 if needed
 
 **Deliverables:**
-- ✅ Production deployment
-- ✅ Phase 1 COMPLETE!
+- ✅ Phase 1 fully validated and stable
+- ✅ All tests passing (100% success rate)
+- ✅ Documentation complete
+- ✅ Phase 2 decision documented
+- ✅ Buffer utilized wisely!
 
-**Time:** 12 hours (2 days × 6 hours)
+**Time:** 30 hours (5 days × 6 hours)
 
 ---
 
-### **DAY 20: Phase 2 Planning** (Friday)
+## 📊 PERFORMANCE METRICS (ADDED - Per-Tool Breakdown)
 
-**Goal:** Plan Phase 2 (SQL Tool)
+### **Classification Overhead**
+- **Target:** <50ms (was "<100ms" but too vague)
+- **Measurement:** Time from query input to query_type determined
+- **Method:** Heuristic keyword matching (no LLM call = fast)
+- **Acceptable range:** 10-50ms
 
-**Tasks:**
+### **Tool Selection Overhead**
+- **Target:** <10ms
+- **Measurement:** Time to route to appropriate tool
+- **Method:** Simple if/elif logic
+- **Acceptable range:** 1-10ms
 
-**20.1 Phase 2 Design (3 hours)**
-- Design table extraction pipeline
-- Design `document_rows` schema
-- Design SQL generation logic
+### **Tool Execution Times** (NEW - Specific per tool)
 
-**20.2 Risk Assessment (2 hours)**
-- Evaluate Phase 2 complexity
-- Decide: Proceed or defer?
-- Document decision
+**rag_lookup (Graphiti hybrid search):**
+- **Baseline (Gap #3):** ~4.13s avg (20 queries, 100% success)
+- **Target:** <5s (maintain current performance)
+- **Components:**
+  * Semantic search: ~1s
+  * BM25 search: ~0.5s
+  * RRF fusion: ~0.1s
+  * Reranking: ~0.2s (from Gap #2)
+  * LLM generation: ~2s
 
-**20.3 Celebrate Phase 1! (1 hour)** 🎉
-- Retrospective
-- Lessons learned
-- Team celebration
+**list_documents:**
+- **Target:** <500ms (simple Neo4j query)
+- **Estimate:** ~100-200ms
+- **Query:** `MATCH (e:EpisodeType) RETURN DISTINCT group_id`
 
-**Deliverables:**
-- ✅ Phase 2 plan (if proceeding)
-- ✅ Phase 1 retrospective
+**full_document (top 10 chunks):**
+- **Target:** <2s (10 chunks concatenation + retrieval)
+- **Estimate:** ~1-2s (much faster than all 29 chunks)
+- **Query:** `MATCH (e:EpisodeType) WHERE ... LIMIT 10`
 
-**Time:** 6 hours
+**sql_query (Phase 2 only):**
+- **Target:** <3s
+- **Estimate:** TBD (depends on table complexity)
+
+### **Total Response Time Targets** (NEW - Per Query Type)
+
+**Semantic queries:**
+- Current: ~4.13s (Gap #3 baseline)
+- With agent: ~4.2s (4.13s + 50ms + 10ms overhead)
+- **Target:** <5s ✅
+
+**Document listing:**
+- Current: N/A (impossible)
+- With agent: ~0.6s (500ms tool + 50ms + 10ms overhead)
+- **Target:** <1s ✅
+
+**Comprehensive queries:**
+- Current: ~4.13s (same as semantic, but poor quality)
+- With agent: ~2.1s (2s tool + 50ms + 10ms overhead)
+- **Target:** <3s ✅ (faster AND better quality!)
+
+**Numerical queries (Phase 2):**
+- Current: ~4.13s (RAG fallback, poor results)
+- With agent: ~3.1s (3s SQL + 50ms + 10ms overhead)
+- **Target:** <5s ✅
+
+### **Memory Usage**
+- **Baseline:** ~2GB (Docker backend container)
+- **Target:** <2.1GB (+100MB max)
+- **Components:**
+  * Agent instance: ~10MB
+  * Tool caches: ~50MB
+  * Query classification cache: ~20MB
+
+### **Success Criteria Summary**
+- ✅ Classification overhead: <50ms
+- ✅ Tool selection overhead: <10ms
+- ✅ Total response time: Within targets per query type
+- ✅ Memory increase: <100MB
+- ✅ No regressions in semantic query performance (maintain 4.13s)
 
 ---
 
-## 📊 PHASE 1 SUCCESS METRICS
+## 📊 PHASE 1 SUCCESS METRICS (REVISED)
 
-### **Baseline (Before Agentic)**
-- Semantic query accuracy: 87%
-- Document listing: 0% (impossible)
-- Comprehensive queries: 70%
-- Overall RAG quality: 87%
+### **Baseline (After Gap #2 + #3 Complete)**
+- Semantic query accuracy: **87%** (NOT 75% - Gap #2 + #3 already improved it!)
+- Document listing: **0%** (impossible with current system)
+- Comprehensive queries: **70%** (poor - uses same 5 chunks as semantic)
+- Overall RAG quality: **87%**
 
-### **Target (After Phase 1)**
+### **Target (After Phase 1 - 5 weeks)**
 - Semantic query accuracy: **90% (+3%)**
 - Document listing: **100% (new capability!)**
-- Comprehensive queries: **90% (+29%)**
-- Overall RAG quality: **92% (+6%)**
+- Comprehensive queries: **85% (+21%)**  
+- Overall RAG quality: **92% (+5-6%)**
+
+### **Success Criteria Checklist**
+- ✅ Day 0 completed (Neo4j schema validated, no assumptions)
+- ✅ 3 tools implemented (rag, list, full_doc with top 10 chunks)
+- ✅ Agent classifies queries correctly (>90% accuracy with heuristics)
+- ✅ Tool selection works for each query type
+- ✅ Fallback strategies trigger correctly (<3 facts = fallback)
+- ✅ Document listing works 100% of time
+- ✅ Comprehensive queries improve +21%
+- ✅ Semantic queries maintain quality (no regression)
+- ✅ A/B test validates +5-6% improvement (40 queries)
+- ✅ Performance targets met (see Performance Metrics section)
+- ✅ All documentation updated (6+ files)
+- ✅ Buffer week utilized (if needed)
 
 ---
 
-## 🔄 PHASE 2 PLAN (2 WEEKS) - DEFER IF NEEDED
+## ✅ PHASE 1 ACCEPTANCE CRITERIA (REVISED)
 
-### **Week 5: Table Extraction**
-- Day 21-22: Docling table extraction
-- Day 23-24: `document_rows` schema design
-- Day 25: Testing
-
-### **Week 6: SQL Tool**
-- Day 26-27: SQL query generation
-- Day 28: Integration testing
-- Day 29: Deployment
-- Day 30: Validation
-
-**Phase 2 Target:**
-- Numerical query accuracy: **90% (+50%)**
-- Overall RAG quality: **95% (+9%)**
-
----
-
-## ✅ PHASE 1 ACCEPTANCE CRITERIA
+### **Pre-Implementation (Day 0)**
+- [x] Neo4j schema documented (no assumptions)
+- [x] Graphiti client tested (response format verified)
+- [x] Infrastructure connectivity validated (Docker networking)
 
 ### **Functional**
-- [x] 3 tools implemented (rag, list, full_doc)
+- [x] 3 tools implemented (rag, list, full_doc with 10 chunks max)
 - [x] Agent classifies queries correctly (>90% accuracy)
 - [x] Tool selection works for each query type
-- [x] Fallback strategies trigger when needed
+- [x] Fallback strategies trigger when needed (<3 facts threshold)
 
-### **Quality**
+### **Quality (from 87% baseline)**
 - [x] Document listing works 100%
-- [x] Comprehensive queries improve +20-30%
-- [x] Semantic queries maintain quality
-- [x] A/B test validates improvement
+- [x] Comprehensive queries improve +21% (70% → 85%)
+- [x] Semantic queries maintain quality (87% → 90%)
+- [x] A/B test validates +5-6% overall improvement
+- [x] NO REGRESSIONS in current functionality
 
 ### **Performance**
-- [x] Agent overhead <100ms
-- [x] No regression in response time
+- [x] Classification overhead <50ms (was <100ms)
+- [x] Tool selection overhead <10ms
+- [x] Total response time per query type within targets
 - [x] Memory increase <100MB
+- [x] No regression in semantic query time (~4.13s maintained)
+
+### **Documentation & Testing**
+- [x] 6+ docs updated (AGENT, ARCHITECTURE, API, TESTING-LOG, FIXES-LOG, USER-GUIDE)
+- [x] 40 A/B test queries created and executed
+- [x] Test coverage >80% for agent code
+- [x] All integration tests passing
 
 ---
 
-**Phase 1 Status:** 🟢 READY FOR IMPLEMENTATION  
-**Next Action:** Begin after Gap #2 + #3 complete  
-**Estimated Start Date:** November 26, 2025 (after 3 weeks)
+**Phase 1 Status:** 🟢 READY FOR IMPLEMENTATION (After Gap #2 + #3 complete)  
+**Next Action:** Execute Day 0 (Neo4j schema audit) first!  
+**Estimated Start Date:** Week after Gap #3 complete (~November 13, 2025)  
+**Estimated Complete Date:** 5 weeks later (~December 18, 2025)
+
+**KEY REVISION SUMMARY:**
+1. ✅ Timeline: 4 weeks → 5 weeks (+1 week buffer)
+2. ✅ Baseline: 75% → 87% (after Gap #2 + #3)
+3. ✅ Day 0: Added (Neo4j schema audit)
+4. ✅ Days 16-19: Marked OPTIONAL (no staging/prod)
+5. ✅ full_document: Simplified (top 10 chunks, not all 29)
+6. ✅ Fallback: Added explicit thresholds (<3 facts)
+7. ✅ Performance: Per-tool metrics added (not just overhead)
 
 
