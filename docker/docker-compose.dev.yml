@@ -68,7 +68,7 @@ services:
       - DEBUG=true
       - CORS_ORIGINS=http://localhost:5173
       - LLM_PROVIDER=${LLM_PROVIDER:-ollama}
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
       - OLLAMA_MODEL=${OLLAMA_MODEL:-qwen2.5:7b-instruct-q8_0}
       - NEO4J_URI=bolt://neo4j:7687
       - NEO4J_USER=neo4j
@@ -82,8 +82,6 @@ services:
     depends_on:
       neo4j:
         condition: service_healthy
-      ollama:
-        condition: service_started  # Changed from service_healthy - Ollama optional for ingestion
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
       interval: 10s
