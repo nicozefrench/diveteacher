@@ -54,6 +54,11 @@ class Settings(BaseSettings):
     GRAPHITI_ESTIMATED_TOKENS_PER_CHUNK: int = 3_000  # Conservative estimate
     GRAPHITI_SEMAPHORE_LIMIT: int = 10  # Concurrent LLM calls (4K RPM = safe)
     
+    # Docling HybridChunker Configuration (Gap #3 - Contextual Retrieval)
+    DOCLING_MAX_TOKENS: int = 2000  # Optimal for educational manuals (10-100 pages)
+    DOCLING_MERGE_PEERS: bool = True  # Merge small adjacent chunks (avoid micro-chunks)
+    DOCLING_EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"  # Match embedding model
+    
     # File Storage
     UPLOAD_DIR: str = "/uploads"
     MAX_UPLOAD_SIZE_MB: int = 50

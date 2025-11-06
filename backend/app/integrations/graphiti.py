@@ -199,8 +199,14 @@ async def ingest_chunks_to_graph(
     """
     Ingest semantic chunks to Graphiti knowledge graph with SEQUENTIAL PROCESSING (Simple Mode)
     
+    GAP #3 UPDATE (Nov 5, 2025):
+    - NOW uses 'contextualized_text' from Docling HybridChunker (not 'text'!)
+    - Contextual enrichment: Document > Section > Subsection prefix
+    - Expected improvement: +7-10% retrieval quality
+    - Zero additional cost (same embedding API calls)
+    
     Args:
-        chunks: List of chunks from HierarchicalChunker
+        chunks: List of chunks from Docling HybridChunker (with contextualized_text!)
         metadata: Document-level metadata
         upload_id: Optional upload ID for logging context
         processing_status: Optional dict for real-time progress updates
@@ -227,6 +233,7 @@ async def ingest_chunks_to_graph(
         
     Note:
         - Each chunk is ingested as an "episode" in Graphiti
+        - CRITICAL: Uses 'contextualized_text' for embedding (Gap #3)
         - Graphiti automatically extracts entities and relationships using Gemini 2.5 Flash-Lite
         - No rate limiting issues (4K RPM = plenty for our use case)
         - Failed chunks are logged but don't block the pipeline
@@ -281,7 +288,9 @@ async def ingest_chunks_to_graph(
     ingestion_start_time = time.time()
     
     for i, chunk in enumerate(chunks):
-        chunk_text = chunk["text"]
+        # GAP #3: Use contextualized_text for embedding (with hierarchical prefix)
+        # Falls back to raw 'text' if contextualized_text not available (backward compatible)
+        chunk_text = chunk.get("contextualized_text", chunk["text"])
         chunk_index = chunk["index"]
         total_chunks = chunk['metadata']['total_chunks']
         
@@ -291,7 +300,7 @@ async def ingest_chunks_to_graph(
             # Simple sequential ingestion (no SafeQueue, no bulk)
             await client.add_episode(
                 name=f"{metadata['filename']} - Chunk {chunk_index}",
-                episode_body=chunk_text,
+                episode_body=chunk_text,  # ✅ Now uses contextualized_text!
                 source_description=f"Document: {metadata['filename']}, Chunk {chunk_index}/{total_chunks}",
                 reference_time=datetime.now(timezone.utc),
                 group_id=group_id,
