@@ -1,0 +1,163 @@
+[
+  {
+    "id": 1,
+    "category": "safety_procedures",
+    "question": "Quelles sont les vérifications de sécurité à faire avant une plongée?",
+    "expected_keywords": ["équipement", "sécurité", "vérification", "contrôle", "pré-plongée"],
+    "expected_sections": ["Safety Procedures", "Pre-Dive Checks"],
+    "difficulty": "basic"
+  },
+  {
+    "id": 2,
+    "category": "safety_procedures",
+    "question": "Que faire en cas de panne d'air pendant la plongée?",
+    "expected_keywords": ["panne", "air", "procédure", "urgence", "secours"],
+    "expected_sections": ["Emergency Procedures", "Air Management"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 3,
+    "category": "safety_procedures",
+    "question": "Comment gérer un accident de décompression?",
+    "expected_keywords": ["décompression", "accident", "traitement", "symptômes", "urgence"],
+    "expected_sections": ["Decompression", "Emergency"],
+    "difficulty": "advanced"
+  },
+  {
+    "id": 4,
+    "category": "safety_procedures",
+    "question": "Quels sont les signes de l'essoufflement en plongée?",
+    "expected_keywords": ["essoufflement", "respiration", "signes", "symptômes"],
+    "expected_sections": ["Breathing", "Safety"],
+    "difficulty": "basic"
+  },
+  {
+    "id": 5,
+    "category": "safety_procedures",
+    "question": "Comment assister un plongeur en difficulté?",
+    "expected_keywords": ["assistance", "secours", "aide", "sauvetage", "procédure"],
+    "expected_sections": ["Rescue", "Emergency Procedures"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 6,
+    "category": "equipment",
+    "question": "Comment fonctionne un détendeur de plongée?",
+    "expected_keywords": ["détendeur", "fonctionnement", "mécanique", "pression"],
+    "expected_sections": ["Equipment", "Regulator"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 7,
+    "category": "equipment",
+    "question": "Quelle est la différence entre un gilet stabilisateur et une wing?",
+    "expected_keywords": ["gilet", "wing", "stabilisateur", "flottabilité", "différence"],
+    "expected_sections": ["Equipment", "BCD"],
+    "difficulty": "basic"
+  },
+  {
+    "id": 8,
+    "category": "equipment",
+    "question": "Comment entretenir son ordinateur de plongée?",
+    "expected_keywords": ["ordinateur", "entretien", "maintenance", "soin"],
+    "expected_sections": ["Equipment", "Dive Computer"],
+    "difficulty": "basic"
+  },
+  {
+    "id": 9,
+    "category": "equipment",
+    "question": "Quels sont les différents types de masques de plongée?",
+    "expected_keywords": ["masque", "types", "modèles", "choix"],
+    "expected_sections": ["Equipment", "Mask"],
+    "difficulty": "basic"
+  },
+  {
+    "id": 10,
+    "category": "equipment",
+    "question": "Comment choisir ses palmes selon le type de plongée?",
+    "expected_keywords": ["palmes", "choix", "type", "plongée", "adaptation"],
+    "expected_sections": ["Equipment", "Fins"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 11,
+    "category": "dive_planning",
+    "question": "Comment calculer la consommation d'air pour une plongée?",
+    "expected_keywords": ["consommation", "air", "calcul", "planification"],
+    "expected_sections": ["Planning", "Air Management"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 12,
+    "category": "dive_planning",
+    "question": "Qu'est-ce qu'un palier de sécurité et pourquoi est-il recommandé?",
+    "expected_keywords": ["palier", "sécurité", "décompression", "recommandation"],
+    "expected_sections": ["Decompression", "Safety"],
+    "difficulty": "basic"
+  },
+  {
+    "id": 13,
+    "category": "dive_planning",
+    "question": "Comment utiliser les tables de plongée MN90?",
+    "expected_keywords": ["tables", "MN90", "utilisation", "planification"],
+    "expected_sections": ["Dive Tables", "Planning"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 14,
+    "category": "dive_planning",
+    "question": "Quelle est la profondeur maximale pour un plongeur Niveau 1?",
+    "expected_keywords": ["profondeur", "maximum", "niveau 1", "limite", "prérogatives"],
+    "expected_sections": ["Prerogatives", "Level 1"],
+    "difficulty": "basic"
+  },
+  {
+    "id": 15,
+    "category": "dive_planning",
+    "question": "Comment planifier une plongée successive?",
+    "expected_keywords": ["successive", "planification", "majoration", "intervalle"],
+    "expected_sections": ["Planning", "Successive Dives"],
+    "difficulty": "advanced"
+  },
+  {
+    "id": 16,
+    "category": "general_knowledge",
+    "question": "Qu'est-ce que la loi de Boyle-Mariotte en plongée?",
+    "expected_keywords": ["Boyle", "Mariotte", "loi", "pression", "volume"],
+    "expected_sections": ["Physics", "Theory"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 17,
+    "category": "general_knowledge",
+    "question": "Pourquoi faut-il éviter l'apnée en remontant?",
+    "expected_keywords": ["apnée", "remontée", "surpression", "pulmonaire", "risque"],
+    "expected_sections": ["Safety", "Physics"],
+    "difficulty": "basic"
+  },
+  {
+    "id": 18,
+    "category": "general_knowledge",
+    "question": "Qu'est-ce que la narcose à l'azote?",
+    "expected_keywords": ["narcose", "azote", "ivresse", "profondeur", "symptômes"],
+    "expected_sections": ["Physiology", "Nitrogen"],
+    "difficulty": "intermediate"
+  },
+  {
+    "id": 19,
+    "category": "general_knowledge",
+    "question": "Comment se forme la buée dans un masque et comment l'éviter?",
+    "expected_keywords": ["buée", "masque", "prévention", "éviter"],
+    "expected_sections": ["Equipment", "Tips"],
+    "difficulty": "basic"
+  },
+  {
+    "id": 20,
+    "category": "general_knowledge",
+    "question": "Quelles sont les conditions requises pour obtenir le Niveau 1 FFESSM?",
+    "expected_keywords": ["niveau 1", "FFESSM", "conditions", "formation", "prérequis"],
+    "expected_sections": ["Training", "Level 1", "Prerequisites"],
+    "difficulty": "basic"
+  }
+]
+
