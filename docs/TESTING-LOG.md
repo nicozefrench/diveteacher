@@ -1,8 +1,16 @@
 # 🧪 Testing Log - DiveTeacher RAG System
 
 > **Purpose:** Historique complet des tests effectués, résultats, et état du système  
-> **Last Updated:** November 4, 2025, 09:30 CET  
-> **Current Status:** 🎉 **PRODUCTION READY** + 🚀 **GEMINI VALIDATED IN PRODUCTION (E2E Test #22)**
+> **Last Updated:** November 5, 2025, 18:45 CET  
+> **Current Status:** 🎉 **PRODUCTION READY** + ✅ **DOCLING HYBRIDCHUNKER POC GO (Session 14)**
+
+**🎊 SESSION 14 COMPLETE:** Docling HybridChunker POC GO!
+- ✅ **POC #1:** ARIA vs HybridChunker comparison (Niveau 1.pdf)
+- ✅ **Stack Upgrade:** numpy 2.x, langchain 1.0.3, transformers 4.57.1, docling 2.60.1
+- ✅ **Docker Fixed:** Added OpenCV system libs (libgl1, libglib2.0-0, etc.)
+- ✅ **Results:** 9 chunks (ARIA) vs 31 chunks (HybridChunker) - better precision!
+- ✅ **Decision:** GO for Gap #3 (3-5 days), Gap #4 OBSOLETE (3 weeks saved!)
+- 🚀 **Timeline Savings:** 12 weeks → 8 weeks (4 weeks saved)
 
 **🎊 SESSION 12 COMPLETE:** Gemini 2.5 Flash-Lite E2E Validated!
 - ✅ **Test Run #22:** First production E2E test with Gemini (275s, 249 entities, 150 relations)

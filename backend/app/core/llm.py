@@ -19,8 +19,19 @@ import logging
 from abc import ABC, abstractmethod
 from typing import AsyncGenerator, Optional
 import httpx
-from anthropic import AsyncAnthropic
-from openai import AsyncOpenAI
+
+# Optional imports for paid LLM providers
+try:
+    from anthropic import AsyncAnthropic
+    ANTHROPIC_AVAILABLE = True
+except ImportError:
+    ANTHROPIC_AVAILABLE = False
+
+try:
+    from openai import AsyncOpenAI
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OPENAI_AVAILABLE = False
 
 from app.core.config import settings
 
@@ -199,6 +210,8 @@ class ClaudeProvider(LLMProvider):
     """Anthropic Claude provider"""
     
     def __init__(self):
+        if not ANTHROPIC_AVAILABLE:
+            raise ImportError("anthropic package is not installed. Install with: pip install anthropic")
         if not settings.ANTHROPIC_API_KEY:
             raise ValueError("ANTHROPIC_API_KEY not set")
         self.client = AsyncAnthropic(api_key=settings.ANTHROPIC_API_KEY)
@@ -228,6 +241,8 @@ class OpenAIProvider(LLMProvider):
     """OpenAI provider"""
     
     def __init__(self):
+        if not OPENAI_AVAILABLE:
+            raise ImportError("openai package is not installed. Install with: pip install openai")
         if not settings.OPENAI_API_KEY:
             raise ValueError("OPENAI_API_KEY not set")
         self.client = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)

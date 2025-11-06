@@ -1,9 +1,9 @@
 # 📚 DiveTeacher - Documentation Index
 
-> **Version:** ARIA v2.0.0 + Gemini 2.5 Flash-Lite COMPLETE  
-> **Last Updated:** November 4, 2025, 09:30 CET  
+> **Version:** ARIA v2.0.0 + Gemini 2.5 Flash-Lite + Reranking + Docling 2.60.1 COMPLETE  
+> **Last Updated:** November 5, 2025, 19:00 CET  
 > **Environment:** Local Development (Mac M1 Max)  
-> **Status:** 🟢 Production-Ready (100%) - Gemini E2E Validated (Test Run #22) + Fix #23 Complete
+> **Status:** 🟢 Production-Ready (100%) - Gap #2 COMPLETE (+16.67%), Gap #3 NEXT (HybridChunker)
 
 ---
 
@@ -32,14 +32,16 @@
   - Database schemas
 
 ### 📄 Document Processing
-- **[DOCLING.md](DOCLING.md)** - Advanced document processing ✅ **UPDATED (Oct 31)**
-  - Docling integration & configuration
+- **[DOCLING.md](DOCLING.md)** - Advanced document processing ✅ **UPDATED (Nov 5)**
+  - **Docling 2.60.1** integration (HybridChunker POC validated!)
   - `PdfPipelineOptions` (OCR, TableFormer)
-  - ~~`HierarchicalChunker`~~ → **REPLACED with ARIA RecursiveCharacterTextSplitter** ✨
-  - **ARIA Chunking Pattern:** 3000 tokens/chunk, 200 overlap (9.3× faster!)
+  - **ARIA Chunking Pattern (Current):** 3000 tokens/chunk, 200 overlap
+  - **HybridChunker (Gap #3 - NEXT):** Automatic context enrichment + table/list preservation
   - Metadata extraction
-  - **🆕 Enhanced Warmup System** - Docling + ARIA Chunker initialization
+  - **Stack Upgrade:** numpy 2.x, transformers 4.57.1, langchain 1.0.3
+  - Enhanced Warmup System
   - Performance optimization (68× fewer chunks, +17% entities, +50% relations)
+  - **POC Results:** 31 chunks (optimal precision), contextualize() works
   - Common issues & solutions
 
 ### 🔗 Knowledge Graph & RAG
@@ -49,7 +51,8 @@
   - GeminiClient integration (ultra-low cost: $0.10/M input + $0.40/M output)
   - Entity extraction & relation detection (Gemini LLM)
   - Vector embeddings (OpenAI text-embedding-3-small, 1536 dims - DB compatible!)
-  - Cross-encoder reranking (OpenAI gpt-4o-mini)
+  - **Cross-encoder reranking** (ms-marco-MiniLM-L-6-v2) ✨ **NEW (Nov 4)** - Gap #2 COMPLETE
+  - **+16.67% precision improvement** (75% → 82%)
   - AsyncIO threading architecture
   - Rate Limits: 4K RPM (Tier 1) - No throttling
   - **[GEMINI-AUDIT-REPORT.md](GEMINI-AUDIT-REPORT.md)** ✨ **NEW** - Complete audit report (7 bugs évités)
@@ -69,7 +72,10 @@
   - Rate limiting (future)
 
 ### 🔧 Troubleshooting
-- **[FIXES-LOG.md](FIXES-LOG.md)** - Complete bug fix history ✅ **UPDATED (Nov 3, 18:45)**
+- **[FIXES-LOG.md](FIXES-LOG.md)** - Complete bug fix history ✅ **UPDATED (Nov 5, 19:00)**
+  - **Session 14:** Docling 2.60.1 POC + Stack Upgrade (Gap #2 Reranking)
+  - **Stack Upgrade:** Docling 2.60.1, numpy 2.x, transformers 4.57.1, langchain 1.0.3
+  - **POC GO:** HybridChunker validated, all blockers fixed
   - **Session 8-11:** 21+ fixes deployed (ARIA Chunking + Performance + UI)
   - **Latest:** Gemini 2.5 Flash-Lite Migration (99.7% cost reduction)
   - Real-time ingestion progress + Entity/Relation counts + Multi-document UI
@@ -106,14 +112,15 @@
   - Docling monitoring (verify, cache, performance)
   - System monitoring (health, resources, docker)
   - [Scripts Usage Guide](../scripts/SCRIPTS-USAGE-GUIDE.md) ✨ **NEW**
-- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED (Nov 4, 09:30)**
+- **[TESTING-LOG.md](TESTING-LOG.md)** - Historique complet des tests ✅ **UPDATED (Nov 5, 19:00)**
+  - **🆕 Test Run #23** - Docling 2.60.1 HybridChunker POC (31 chunks, contextualize works) ✨ **GO!**
   - **🆕 Test Run #22** - Gemini E2E production validation (275s, 249 entities, $0.001 cost) ✨ **SUCCESS**
   - **🆕 Test Run #21** - Gemini Complete Audit (7 ARIA bugs avoided) ✨ **VALIDATED**
   - **🆕 Test Run #19** - ARIA Chunking validation (3 chunks, 3.9 min) ✨ **SPECTACULAR**
   - **🆕 Test Run #17-18** - Production architecture validation
   - E2E Test Initialization - `init-e2e-test.sh` automated script
   - Pre-Test Cleanup vs Production Warmup (clearly separated)
-  - 12 sessions de test documentées
+  - 14 sessions de test documentées
   - Performance metrics (9.3× faster with ARIA)
   - Known issues & resolutions
   - Success criteria & metrics

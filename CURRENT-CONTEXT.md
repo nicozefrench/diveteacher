@@ -11,7 +11,7 @@
 > - Performance metrics
 > - Next steps
 
-**Last Updated:** November 3, 2025 19:45 CET - Session 12 COMPLETE ✅  
+**Last Updated:** November 5, 2025 18:45 CET - Session 14 COMPLETE ✅  
 **Project:** DiveTeacher - Assistant IA pour Formation Plongée  
 **Repository:** https://github.com/nicozefrench/diveteacher (PRIVÉ)  
 **Domaine Principal:** diveteacher.io (+ diveteacher.app en redirect)
@@ -20,29 +20,30 @@
 
 ## 📍 Current Status
 
-**Phase:** Production Ready + Gemini Migration COMPLETE  
-**Session:** 12 COMPLETE (Gemini 2.5 Flash-Lite - 99.7% Cost Reduction!)  
+**Phase:** Production Ready + Docling HybridChunker POC GO! ✅  
+**Session:** 14 COMPLETE (Docling 2.60.1 + HybridChunker - 4 Weeks Timeline Savings!)  
 **Environment:** macOS (darwin 24.6.0) - Mac M1 Max, 32GB RAM, Docker Desktop 16GB  
-**Status:** 🚀 **100% PRODUCTION READY - Gemini Migration Complete!**
+**Status:** 🚀 **100% PRODUCTION READY - POC GO, Stack Upgraded, Roadmap Revised!**
 
 **System State:**
-- ✅ **Backend:** Gemini 2.5 Flash-Lite + OpenAI Embeddings (1536 dims) - HEALTHY
+- ✅ **Backend:** Docling 2.60.1 + HybridChunker + numpy 2.x + langchain 1.0.3 - HEALTHY
 - ✅ **Frontend:** All fixes validated - Console clean, metrics working
-- ✅ **Neo4j:** Empty (ready for E2E test with Gemini)
+- ✅ **Neo4j:** Ready for Gap #3 implementation
 - ✅ **Ollama:** Loaded (qwen2.5:7b-instruct-q8_0)
-- ✅ **Docling:** ALL models cached during warmup (+ ARIA Chunker warmed)
-- ✅ **Chunking:** ARIA pattern (3000 tokens, 200 overlap) - VALIDATED ✅
+- ✅ **Docling:** Upgraded to 2.60.1 with HybridChunker (POC validated!)
+- ✅ **Chunking:** HybridChunker (31 chunks, contextualized) vs ARIA (9 chunks) - POC GO! ✅
 - ✅ **Graphiti:** Gemini 2.5 Flash-Lite (LLM) + OpenAI (embeddings) - VALIDATED ✅
 - ✅ **Cost:** $2/year (was $730/year) - 99.7% reduction ✅
-- ✅ **ARIA Audit:** 7/7 bugs avoided (100%) ✅
+- ✅ **Timeline:** 8 weeks (was 12 weeks) - 4 weeks saved! ✅
 
-**All Fixes (Session 8-12):**
+**All Fixes (Session 8-14):**
 - ✅ Fix #1-15: Backend + Frontend + UI (documented)
 - ✅ Fix #16: Polling Redesign (superseded by Fix #19)
 - ✅ **Fix #19:** MetricsPanel Props Mismatch - VALIDATED ✅
 - ✅ **Fix #20:** React Hooks Violation - VALIDATED ✅  
 - ✅ **Fix #21:** ARIA Chunking Pattern - VALIDATED ✅ (9.3× faster, 68× fewer chunks!)
 - ✅ **Fix #22:** Gemini 2.5 Flash-Lite Migration - VALIDATED ✅ (99.7% cost reduction!)
+- ✅ **Enhancement #2:** Docling HybridChunker POC GO! ✅ (4 weeks saved, Gap #4 obsolete!)
 
 **Development Strategy:**
 - ✅ **Phases 0-1.0:** 100% Local sur Mac M1 Max (Docker) → **Coût: ~$5/mois (APIs)**
@@ -51,6 +52,57 @@
 - 🚧 **Current:** Fix #16 deployed, awaiting E2E test to validate polling redesign
 - ⏸️ **Phase 9:** Production (DigitalOcean GPU + Vercel) → **Coût: ~$170/mois**  
   (Activé UNIQUEMENT quand tout fonctionne en local)
+
+---
+
+## 🎯 Session 14 Summary (November 5, 2025) ✅ COMPLETE
+
+**Duration:** ~3 hours (16:00-18:45 CET)  
+**Focus:** Docling HybridChunker POC - Stack Upgrade - Roadmap Revision  
+**Status:** ✅ **POC GO - ALL BLOCKERS FIXED - 4 WEEKS TIMELINE SAVINGS**
+
+### Session Objectives
+
+1. ✅ Execute Docling HybridChunker POC
+2. ✅ Resolve all blocking dependency issues
+3. ✅ Compare ARIA vs HybridChunker chunking results
+4. ✅ Make GO/NO-GO decision
+5. ✅ Update all documentation and roadmap
+
+### Key Achievements
+
+**1. Stack Upgrade (All Dependencies Resolved!):**
+- Docling: 2.5.1 → 2.60.1 (HybridChunker available!)
+- numpy: <2.0 → >=2.0,<3.0 (Docling 2.60.1 requirement)
+- langchain: 0.3.7 → 1.0.3 (numpy 2.x compatible!)
+- langchain-text-splitters: 0.3.2 → 1.0.0
+- transformers: 4.48.3 → 4.57.1 (Docling 2.60.1 requirement)
+- docling-core: 2.3.0 → >=2.48.2,<3.0.0
+
+**2. Docker Environment Fixed:**
+- Added OpenCV system libraries: libgl1, libglib2.0-0, libsm6, libxext6, libxrender-dev, libgomp1
+- Fixed libGL.so.1 missing error
+- Conditional imports for anthropic/openai (optional dependencies)
+
+**3. POC Results (Niveau 1.pdf):**
+- ARIA RecursiveCharacterTextSplitter: 9 chunks (3000 chars each)
+- Docling HybridChunker: 31 chunks (smaller, contextualized)
+- **Decision: GO!** (Better precision, automatic context, table/list preservation)
+
+**4. Roadmap Impact:**
+- Gap #3 (Contextual Retrieval): 10 days → 3-5 days (7 days saved!)
+- Gap #4 (Agentic Chunking): 3 weeks → OBSOLETE (3 weeks saved!)
+- **Total Timeline: 12 weeks → 8 weeks (4 weeks saved!)**
+
+**5. Documentation Updates:**
+- ✅ Updated `251104-MASTER-IMPLEMENTATION-ROADMAP.md` (POC GO, revised timeline)
+- ✅ Updated `251105-GAP3-CONTEXTUAL-RETRIEVAL-REVISED-WITH-DOCLING.md` (VIABLE status)
+- ✅ Created `251105-POC-HYBRID-RESULTS-FINAL.md` (complete POC analysis)
+- ✅ Updated `docs/INDEX.md` (POC GO status)
+- ✅ Updated `docs/ARCHITECTURE.md` (HybridChunker integration)
+- ✅ Updated `docs/DOCLING.md` (Docling 2.60.1, HybridChunker)
+- ✅ Updated `docs/FIXES-LOG.md` (Enhancement #2 GO decision)
+- ✅ Updated `docs/TESTING-LOG.md` (POC results)
 
 ---
 

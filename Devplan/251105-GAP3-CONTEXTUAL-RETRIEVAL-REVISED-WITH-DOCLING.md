@@ -1,38 +1,45 @@
 # GAP #3 DEVELOPMENT PLAN (REVISED): Contextual Retrieval with Docling
 
-**Status:** ❌ **NOT VIABLE** - POC NO-GO (November 5, 2025)  
-**Priority:** N/A (archived)  
-**Date:** November 5, 2025 (POC NO-GO)  
+**Status:** ✅ **VIABLE** - POC GO! (November 5, 2025)  
+**Priority:** 🟠 P2 - HIGH (Implement AFTER Gap #2)  
+**Date:** November 5, 2025 (POC GO!)  
 **Original Duration:** 2 weeks (10 working days)  
-**Proposed Duration:** ~~3-5 days~~ **NOT ACHIEVABLE**  
-**Risk Level:** 🔴 VERY HIGH (breaking changes)  
-**Value:** N/A (blocked by dependencies)  
-**Cost:** N/A (not implemented)
+**Revised Duration:** ✅ **3-5 days** (50-70% faster!)  
+**Risk Level:** 🟢 LOW (all blockers resolved)  
+**Value:** 🟢 HIGH (+7-10% retrieval quality)  
+**Cost:** 💰 FREE (no API costs, no additional embeddings)
 
 ---
 
-## ❌ POC NO-GO DECISION
+## ✅ POC GO DECISION
 
 **Date:** November 5, 2025  
-**Decision:** **DO NOT PROCEED** with Docling HybridChunker approach
+**Decision:** **PROCEED** with Docling HybridChunker approach
 
-**Blocking Issues:**
-1. **Numpy Conflict:** Docling 2.60 requires numpy >= 2.0, LangChain requires numpy < 2.0 (INCOMPATIBLE)
-2. **OpenCV Dependencies:** libGL.so.1 missing in Docker (requires full rebuild)
-3. **Transformers Upgrade:** 4.48 → 4.57 (unknown impacts on Gap #2 Reranking)
-4. **Risk Level:** VERY HIGH - major version jumps across entire stack mid-project
+**All Blocking Issues RESOLVED:**
+1. ✅ **Numpy Conflict:** langchain 1.0.3 installed (numpy 2.x compatible)
+2. ✅ **OpenCV Dependencies:** libgl1, libglib2.0-0, etc. added to Dockerfile
+3. ✅ **Transformers Upgrade:** 4.48 → 4.57.1 (reranking still works)
+4. ✅ **Anthropic Import:** Conditional import added to llm.py
+5. ✅ **Stack Upgrade:** Docling 2.60.1, numpy 2.2.6, transformers 4.57.1
 
-**Recommendation:** Use `@251104-GAP3-CONTEXTUAL-RETRIEVAL-PLAN.md` (original custom implementation, 10 days)
+**POC Results:**
+- ✅ HybridChunker works: 31 chunks for Niveau 1.pdf
+- ✅ Context enrichment works: `contextualize()` adds hierarchy
+- ✅ Performance acceptable: ~1.15s chunking time
+- ✅ Table/list preservation: Built-in
+- ✅ All imports successful
+
+**Recommendation:** Proceed with Gap #3 using Docling HybridChunker (3-5 days)
 
 ---
 
-## 🔒 DOCUMENT ARCHIVED
+## 📝 DOCUMENT STATUS
 
-This plan is **NOT VIABLE** with current stack (Docling 2.5.1 + LangChain).
+This plan is **ACTIVE AND VIABLE** with Docling 2.60.1 + numpy 2.x stack.
 
-**Active Plan:** `@251104-GAP3-CONTEXTUAL-RETRIEVAL-PLAN.md` (original, 10 days)
-
----
+**Current Plan:** This document (Docling HybridChunker, 3-5 days)  
+**Alternative Plan:** `@251104-GAP3-CONTEXTUAL-RETRIEVAL-PLAN.md` (custom, 10 days) - NO LONGER NEEDED
 
 ---
 

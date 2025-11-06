@@ -1,8 +1,8 @@
 # 📄 Docling - Document Processing Guide
 
 > **Purpose:** Transform PDFs/PPTs into structured, RAG-ready chunks with OCR and table extraction  
-> **Version:** Docling 2.5.1 + docling-core 2.3.0  
-> **Last Updated:** October 29, 2025 ✅ **Enhanced Warmup System**
+> **Version:** Docling 2.60.1 + HybridChunker ✅ **POC GO!**  
+> **Last Updated:** November 5, 2025, 18:45 CET ✅ **HybridChunker Validated (Session 14)**
 
 ---
 
@@ -47,10 +47,13 @@
 
 ```bash
 # Backend requirements.txt
-docling==2.5.1
-docling-core[chunking]==2.3.0  # ✅ [chunking] pour HierarchicalChunker
-sentence-transformers==3.3.1    # Pour tokenizer chunking
-transformers==4.48.3            # Dépendance sentence-transformers
+docling==2.60.1  # ✅ HybridChunker POC GO!
+docling-core>=2.48.2,<3.0.0
+sentence-transformers==3.3.1
+transformers==4.57.1  # Upgraded for Docling 2.60.1
+numpy>=2.0,<3.0      # Required by Docling 2.60.1
+langchain==1.0.3     # Upgraded for numpy 2.x compatibility
+langchain-text-splitters==1.0.0
 ```
 
 ### Docker Setup
@@ -58,17 +61,22 @@ transformers==4.48.3            # Dépendance sentence-transformers
 **Dockerfile important:**
 ```dockerfile
 # backend/Dockerfile
-FROM python:3.11-slim  # -slim suffisant (full si problèmes ML)
+FROM python:3.11-slim
 
-# Install system dependencies
+# Install system dependencies (including OpenCV libs for Docling 2.60.1)
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir --force-reinstall tqdm==4.66.0  # ✅ Fix tqdm._lock
+RUN pip install --no-cache-dir -r requirements.txt
 ```
 
 **Pourquoi `tqdm==4.66.0`?**
