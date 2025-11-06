@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-11-06T17:20:38.896744",
+  "timestamp": "2025-11-06T17:29:13.308507",
   "day": "2.4",
   "task": "A/B Test - Docling HybridChunker Validation",
   "database": "Enhanced (Docling HybridChunker with contextualization)",
@@ -10,9 +10,10 @@
       "category": "connaissance_theorique",
       "question": "Quelle profondeur maximum pour la remontée en expiration contrôlée au niveau 1 ?",
       "success": true,
-      "answer": "I don't have enough information in the diving manuals to answer that question accurately.\n\nThe provided facts do not specify a depth limit for controlled ascent (remontée en expiration contrôlée) at l",
-      "sources_count": 0,
-      "elapsed_time": 5.3389270305633545,
+      "answer": "Je n'ai pas suffisamment d'informations dans les manuels de plongée fournis pour répondre précisément à cette question concernant la profondeur maximum pour une remontée en expiration contrôlée au niv",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 5.32840895652771,
       "precision": {
         "precision_pct": 16.666666666666664,
         "relevant_found": [
@@ -29,21 +30,23 @@
       "category": "connaissance_theorique",
       "question": "Quelles sont les trois techniques de compensation mentionnées pour éviter les barotraumatismes de l'oreille ?",
       "success": true,
-      "answer": "Les trois techniques de compensation mentionnées pour éviter les barotraumatismes de l'oreille sont :\n\n1. Valsalva [Fact 1]\n2. Bubba Thumbs Up (BTV) [Fact 1]\n3. Frenzel [Fact 1]\n\nCes techniques aident",
-      "sources_count": 0,
-      "elapsed_time": 5.8102500438690186,
+      "answer": "Les trois techniques de compensation mentionnées pour éviter les barotraumatismes de l'oreille sont le Valsalva, le Bubonne Valvulaire Technique (BTV) et le Frenzel.\n\nCité(s) : [Fact 1 - USES_TECHNIQU",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 4.682568073272705,
       "precision": {
-        "precision_pct": 83.33333333333334,
+        "precision_pct": 100.0,
         "relevant_found": [
           "Valsalva",
           "BTV",
           "Frenzel",
           "barotraumatismes",
-          "oreille"
+          "oreille",
+          "prévention"
         ],
         "relevant_total": 6,
         "irrelevant_found": [],
-        "raw_score": 5.0,
+        "raw_score": 6.0,
         "max_score": 6
       }
     },
@@ -53,19 +56,21 @@
       "question": "Dans quel délai maximum doit-on acquérir toutes les compétences du niveau 1 ?",
       "success": true,
       "answer": "Dans le délai de 15 mois à compter de la délivrance de la première compétence, toutes les compétences du niveau 1 doivent être acquises. [Fact 1]",
-      "sources_count": 0,
-      "elapsed_time": 3.052183151245117,
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 2.8146979808807373,
       "precision": {
-        "precision_pct": 80.0,
+        "precision_pct": 100.0,
         "relevant_found": [
           "15 mois",
           "délai",
+          "ensemble des compétences",
           "délivrance de la première compétence",
           "acquis"
         ],
         "relevant_total": 5,
         "irrelevant_found": [],
-        "raw_score": 4.0,
+        "raw_score": 5.0,
         "max_score": 5
       }
     },
@@ -74,14 +79,17 @@
       "category": "connaissance_theorique",
       "question": "Quelle distance en apnée expiratoire est demandée pour la familiarisation à la panne d'air ?",
       "success": true,
-      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts do not specify a particular distance for apnea exhaling during familiarization with air out",
-      "sources_count": 0,
-      "elapsed_time": 4.3668999671936035,
+      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts mention short apnea movements but do not specify a particular distance for expiratory apnea",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 3.1391172409057617,
       "precision": {
         "precision_pct": 0.0,
         "relevant_found": [],
         "relevant_total": 6,
-        "irrelevant_found": [],
+        "irrelevant_found": [
+          "apnée inspiratoire"
+        ],
         "raw_score": 0,
         "max_score": 6
       }
@@ -91,21 +99,23 @@
       "category": "connaissance_theorique",
       "question": "Combien de plongées en milieu naturel sont requises après une certification en milieu artificiel ?",
       "success": true,
-      "answer": "Selon les informations fournies, un plongeur niveau 1 (N1) doit réaliser au moins 4 plongées en milieu naturel dans les douze mois qui suivent l'obtention de la certification délivrée en milieu artifi",
-      "sources_count": 0,
-      "elapsed_time": 4.695521831512451,
+      "answer": "Selon les informations fournies dans les manuels de plongée, un plongeur niveau 1 (N1) qui obtient sa certification en milieu artificiel doit réaliser au moins 4 plongées en milieu naturel au cours de",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 4.863255739212036,
       "precision": {
-        "precision_pct": 83.33333333333334,
+        "precision_pct": 100.0,
         "relevant_found": [
           "4 plongées",
           "milieu naturel",
           "milieu artificiel",
           "douze mois",
-          "certification"
+          "certification",
+          "attestées sur son carnet"
         ],
         "relevant_total": 6,
         "irrelevant_found": [],
-        "raw_score": 5.0,
+        "raw_score": 6.0,
         "max_score": 6
       }
     },
@@ -114,19 +124,23 @@
       "category": "evoluer_dans_eau",
       "question": "Quelles sont les deux techniques d'immersion à maîtriser en scaphandre et en plongée libre ?",
       "success": true,
-      "answer": "Les deux techniques que le plongeur doit maîtriser sont le canard et le phoque.\n\nCitation de la source : [Fact 5] Les deux techniques du canard et du phoque doivent être maitrises.",
-      "sources_count": 0,
-      "elapsed_time": 3.082365036010742,
+      "answer": "En scaphandre, vous devez maîtriser les deux techniques du canard et du phoque. [Fact 5] Cette information concerne spécifiquement la technique d'immersion à maîtriser en scaphandre.\n\nIl est important",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 9.704903841018677,
       "precision": {
-        "precision_pct": 50.0,
+        "precision_pct": 100.0,
         "relevant_found": [
           "canard",
           "phoque",
-          "deux techniques"
+          "deux techniques",
+          "scaphandre",
+          "plongée libre",
+          "immersion"
         ],
         "relevant_total": 6,
         "irrelevant_found": [],
-        "raw_score": 3.0,
+        "raw_score": 6.0,
         "max_score": 6
       }
     },
@@ -135,9 +149,10 @@
       "category": "evoluer_dans_eau",
       "question": "Quelle distance est évaluée pour le palmage en capelé lors de l'évaluation du N1 ?",
       "success": true,
-      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts do not include specific evaluation criteria or distances for the palmage en capelé during t",
-      "sources_count": 0,
-      "elapsed_time": 3.1394660472869873,
+      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts do not specify a distance for evaluating the palmage en capelé during the N1 evaluation.",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 3.018502950668335,
       "precision": {
         "precision_pct": 20.0,
         "relevant_found": [
@@ -154,14 +169,17 @@
       "category": "evoluer_dans_eau",
       "question": "Quelle distance est évaluée pour le palmage PMT lors de l'évaluation du N1 ?",
       "success": true,
-      "answer": "I don't have enough information in the diving manuals to answer that question accurately.",
-      "sources_count": 0,
-      "elapsed_time": 1.8559486865997314,
+      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts mention palmages (palmage dorsal, palmage de sustentation, palmage de surface) as technique",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 3.865032911300659,
       "precision": {
         "precision_pct": 0.0,
         "relevant_found": [],
         "relevant_total": 5,
-        "irrelevant_found": [],
+        "irrelevant_found": [
+          "capelé"
+        ],
         "raw_score": 0,
         "max_score": 5
       }
@@ -171,19 +189,21 @@
       "category": "evoluer_dans_eau",
       "question": "À quelle profondeur faut-il rechercher l'équilibre lors de l'immersion ?",
       "success": true,
-      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts do not specify at what depth one should seek equilibrium during immersion. They primarily d",
-      "sources_count": 0,
-      "elapsed_time": 3.9100501537323,
+      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts focus on basic scuba diving skills, autonomy, and limits for a level 1 diver but do not spe",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 3.587224006652832,
       "precision": {
-        "precision_pct": 12.5,
+        "precision_pct": 0.0,
         "relevant_found": [
           "immersion"
         ],
         "relevant_total": 4,
         "irrelevant_found": [
-          "surface"
+          "surface",
+          "fond"
         ],
-        "raw_score": 0.5,
+        "raw_score": 0,
         "max_score": 4
       }
     },
@@ -192,9 +212,10 @@
       "category": "evoluer_dans_eau",
       "question": "Quelle est la tolérance de variation de profondeur lors de l'évaluation de l'équilibrage ?",
       "success": true,
-      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts focus on the evaluation of equilibrium skills and behaviors but do not specify any toleranc",
-      "sources_count": 0,
-      "elapsed_time": 3.0766139030456543,
+      "answer": "I don't have enough information in the diving manuals to answer that question accurately.",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 2.806272029876709,
       "precision": {
         "precision_pct": 0.0,
         "relevant_found": [],
@@ -209,9 +230,10 @@
       "category": "equiper_desequiper",
       "question": "Quels sont les trois éléments principaux à gréer pour l'équipement scaphandre ?",
       "success": true,
-      "answer": "Selon les informations fournies dans les manuels de plongée, les deux éléments principaux mentionnés pour gréer l'équipement scaphandre sont :\n\n1. Le poumon ballast (Fact 1).\n2. Le gilet de stabilisat",
-      "sources_count": 0,
-      "elapsed_time": 4.999552011489868,
+      "answer": "Selon la documentation fournie, les deux éléments mentionnés comme nécessitant des ajustements de stabilité pour l'équipement scaphandre sont :\n\n1. Le poumon ballast [Fact 1]\n2. Le gilet de stabilisat",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 5.910386323928833,
       "precision": {
         "precision_pct": 20.0,
         "relevant_found": [
@@ -228,17 +250,19 @@
       "category": "equiper_desequiper",
       "question": "Quelles vérifications doit faire le plongeur avant utilisation de son équipement ?",
       "success": true,
-      "answer": "Le plongeur doit être capable de mettre en œuvre son équipement de manière autonome et de vérifier son bon fonctionnement [Fact 1]. De plus, le plongeur doit être capable de gérer son équipement sans ",
-      "sources_count": 0,
-      "elapsed_time": 5.112755060195923,
+      "answer": "Le plongeur doit être capable de mettre en œuvre son équipement de manière autonome et d'en vérifier le bon fonctionnement [Fact 1]. De plus, il doit être capable de gérer son équipement sans l'assist",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 4.959362030029297,
       "precision": {
-        "precision_pct": 20.0,
+        "precision_pct": 40.0,
         "relevant_found": [
-          "vérification"
+          "vérification",
+          "avant utilisation"
         ],
         "relevant_total": 5,
         "irrelevant_found": [],
-        "raw_score": 1.0,
+        "raw_score": 2.0,
         "max_score": 5
       }
     },
@@ -248,14 +272,17 @@
       "question": "Quels sont les deux types d'environnement mentionnés pour adapter le lestage ?",
       "success": true,
       "answer": "I don't have enough information in the diving manuals to answer that question accurately.",
-      "sources_count": 0,
-      "elapsed_time": 1.8843300342559814,
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 2.0491831302642822,
       "precision": {
-        "precision_pct": 0.0,
-        "relevant_found": [],
+        "precision_pct": 20.0,
+        "relevant_found": [
+          "milieu"
+        ],
         "relevant_total": 5,
         "irrelevant_found": [],
-        "raw_score": 0,
+        "raw_score": 1.0,
         "max_score": 5
       }
     },
@@ -264,9 +291,10 @@
       "category": "equiper_desequiper",
       "question": "Quelles règles d'hygiène du matériel sont mentionnées dans le manuel ?",
       "success": true,
-      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts do not include specific rules regarding hygiene of diving equipment.",
-      "sources_count": 0,
-      "elapsed_time": 2.604997158050537,
+      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts focus on general guidelines, precautionary measures, and equipment usage but do not specifi",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 2.658581256866455,
       "precision": {
         "precision_pct": 0.0,
         "relevant_found": [],
@@ -281,9 +309,10 @@
       "category": "equiper_desequiper",
       "question": "Où doit-on être capable de s'équiper selon les modalités d'évaluation ?",
       "success": true,
-      "answer": "Selon la fiche de suivi et d'évaluation N1, vous devez être capable de vous équiper et de vous déséquiper. Les situations d'évaluation doivent être variées, incluant des scénarios statiques, dynamique",
-      "sources_count": 0,
-      "elapsed_time": 6.061367034912109,
+      "answer": "Selon la documentation fournie, la capacité de se préparer et de se déséquiper doit être évaluée dans des situations variées. \n\nCes situations peuvent inclure des scénarios statiques (par exemple, en ",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 6.723737001419067,
       "precision": {
         "precision_pct": 20.0,
         "relevant_found": [
@@ -301,16 +330,19 @@
       "question": "Quelle est la profondeur maximale autorisée pour un plongeur niveau 1 ?",
       "success": true,
       "answer": "La profondeur maximale autorisée pour un plongeur niveau 1 (N1) est de 20 mètres de profondeur.\n\n[Fact 1 - CAN_PERFORM_DIVES_UP_TO_DEPTH]",
-      "sources_count": 0,
-      "elapsed_time": 4.386415004730225,
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 3.924862861633301,
       "precision": {
-        "precision_pct": 25.0,
+        "precision_pct": 75.0,
         "relevant_found": [
+          "20 m de profondeur",
+          "plongées d'exploration",
           "profondeur maximale"
         ],
         "relevant_total": 4,
         "irrelevant_found": [],
-        "raw_score": 1.0,
+        "raw_score": 3.0,
         "max_score": 4
       }
     },
@@ -319,9 +351,10 @@
       "category": "prerogatives_conditions",
       "question": "Quel est l'âge minimum pour entrer en formation niveau 1 ?",
       "success": true,
-      "answer": "L'âge minimum pour entrer en formation niveau 1 est de 12 ans au moins à la date d'entrée en formation.\n\n[Fact 1 - REQUIRES]",
-      "sources_count": 0,
-      "elapsed_time": 3.5085792541503906,
+      "answer": "L'âge minimum pour entrer en formation niveau 1 est de 12 ans. [Fact 1]",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 2.4992239475250244,
       "precision": {
         "precision_pct": 60.0,
         "relevant_found": [
@@ -341,19 +374,22 @@
       "question": "Qui encadre le plongeur niveau 1 pendant les plongées d'exploration ?",
       "success": true,
       "answer": "Le plongeur niveau 1 (N1) est encadré par un guide de palanquée (GP) lors des plongées d'exploration. [Fact 1], [Fact 2]",
-      "sources_count": 0,
-      "elapsed_time": 3.496291160583496,
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 3.454319953918457,
       "precision": {
-        "precision_pct": 66.66666666666666,
+        "precision_pct": 100.0,
         "relevant_found": [
           "guide de palanquée",
           "GP",
+          "prend en charge",
+          "conduite de la plongée",
           "palanquée",
           "encadré"
         ],
         "relevant_total": 6,
         "irrelevant_found": [],
-        "raw_score": 4.0,
+        "raw_score": 6.0,
         "max_score": 6
       }
     },
@@ -362,13 +398,15 @@
       "category": "prerogatives_conditions",
       "question": "Quelles qualifications peuvent délivrer le brevet N1 avec l'autorisation du président ?",
       "success": true,
-      "answer": "Le brevet N1 peut être délivré par un encadrant licencié au minimum E3 FFESSM, BEES1, ou DEJEPS, avec l'autorisation du président du club ou du responsable de la structure commerciale agréée. [Fact 2]",
-      "sources_count": 0,
-      "elapsed_time": 3.7756433486938477,
+      "answer": "Le brevet N1 peut être délivré par un encadrant licencié au minimum au niveau E3 FFESSM, BEES1, ou DEJEPS, avec l'autorisation du président du club ou du responsable de la structure commerciale agréée",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 3.8652291297912598,
       "precision": {
-        "precision_pct": 83.33333333333334,
+        "precision_pct": 100.0,
         "relevant_found": [
           "E3 FFESSM",
+          "associé",
           "BEES1",
           "DEJEPS",
           "encadrant licencié au minimum",
@@ -376,7 +414,7 @@
         ],
         "relevant_total": 6,
         "irrelevant_found": [],
-        "raw_score": 5.0,
+        "raw_score": 6.0,
         "max_score": 6
       }
     },
@@ -385,14 +423,17 @@
       "category": "prerogatives_conditions",
       "question": "Dans quelle zone de profondeur s'effectue l'enseignement et la validation des compétences par un E1 ?",
       "success": true,
-      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts do not specify the depth range for teaching and validating skills by an E1 (likely referrin",
-      "sources_count": 0,
-      "elapsed_time": 3.329895257949829,
+      "answer": "I don't have enough information in the diving manuals to answer that question accurately. The provided facts do not specify the depth range for teaching and validating skills by an E1 (entry-level ins",
+      "sources_count": 5,
+      "facts_count": 5,
+      "elapsed_time": 2.783552885055542,
       "precision": {
         "precision_pct": 0.0,
         "relevant_found": [],
         "relevant_total": 4,
-        "irrelevant_found": [],
+        "irrelevant_found": [
+          "0 à 20 m"
+        ],
         "raw_score": 0,
         "max_score": 4
       }
@@ -402,20 +443,20 @@
     "total_queries": 20,
     "successful_queries": 20,
     "failed_queries": 0,
-    "avg_precision": 32.04166666666667,
+    "avg_precision": 43.58333333333333,
     "min_precision": 0.0,
-    "max_precision": 83.33333333333334,
-    "avg_response_time": 3.8744025588035584,
+    "max_precision": 100.0,
+    "avg_response_time": 4.131921112537384,
     "category_breakdown": {
-      "connaissance_theorique": 52.66666666666667,
-      "evoluer_dans_eau": 16.5,
-      "equiper_desequiper": 12.0,
-      "prerogatives_conditions": 47.0
+      "connaissance_theorique": 63.333333333333336,
+      "evoluer_dans_eau": 24.0,
+      "equiper_desequiper": 20.0,
+      "prerogatives_conditions": 67.0
     }
   },
   "validation": {
     "target_precision": "80-90%",
-    "actual_precision": "32.0%",
+    "actual_precision": "43.6%",
     "status": "NEEDS_IMPROVEMENT"
   }
 }

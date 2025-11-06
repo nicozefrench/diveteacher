@@ -71,11 +71,17 @@ def execute_query(question: str, query_id: str) -> dict:
         
         result = response.json()
         
+        # FIXED: API returns 'facts' not 'sources' (Graphiti structure)
+        context = result.get('context', {})
+        facts = context.get('facts', [])
+        
         return {
             "success": True,
             "answer": result.get('answer', ''),
-            "context": result.get('context', {}),
-            "sources": result.get('context', {}).get('sources', []),
+            "context": context,
+            "facts": facts,
+            "sources": facts,  # Alias for backward compatibility with precision calculation
+            "num_sources": result.get('num_sources', len(facts)),
             "elapsed_time": elapsed
         }
         
@@ -86,7 +92,7 @@ def execute_query(question: str, query_id: str) -> dict:
             "elapsed_time": 0
         }
 
-def calculate_precision(answer: str, sources: list, relevant_keywords: list, irrelevant_keywords: list) -> dict:
+def calculate_precision(answer: str, facts: list, relevant_keywords: list, irrelevant_keywords: list) -> dict:
     """
     Calculate precision score based on keyword presence
     
@@ -96,8 +102,10 @@ def calculate_precision(answer: str, sources: list, relevant_keywords: list, irr
     - Normalize to 0-100%
     """
     answer_lower = answer.lower()
-    sources_text = " ".join([s.get('text', '') for s in sources]).lower()
-    combined_text = (answer_lower + " " + sources_text).lower()
+    
+    # FIXED: Extract text from Graphiti facts (not 'text' field but 'fact' field)
+    facts_text = " ".join([f.get('fact', '') if isinstance(f, dict) else str(f) for f in facts]).lower()
+    combined_text = (answer_lower + " " + facts_text).lower()
     
     relevant_found = []
     irrelevant_found = []
@@ -166,13 +174,14 @@ def run_ab_test(queries: list):
         # Calculate precision
         precision = calculate_precision(
             result['answer'],
-            result['sources'],
+            result['facts'],
             relevant_keywords,
             irrelevant_keywords
         )
         
         print(f"   ✅ Precision: {precision['precision_pct']:.1f}% "
               f"({precision['relevant_found']}/{precision['relevant_total']} keywords)")
+        print(f"   📚 Facts retrieved: {result['num_sources']}")
         print(f"   ⏱️  Response time: {result['elapsed_time']:.2f}s")
         
         # Store result
@@ -182,7 +191,8 @@ def run_ab_test(queries: list):
             "question": question,
             "success": True,
             "answer": result['answer'][:200],  # Truncate for storage
-            "sources_count": len(result['sources']),
+            "sources_count": result['num_sources'],
+            "facts_count": len(result['facts']),
             "elapsed_time": result['elapsed_time'],
             "precision": precision
         })
