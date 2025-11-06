@@ -7,6 +7,21 @@
 
 ---
 
+## ⚠️ IMPORTANT: Development vs Production Architecture
+
+### Development (Mac M1 Max) - Hybrid Setup
+- **Ollama:** Native baremetal (Metal GPU) - NOT in Docker
+- **Other Services:** Docker containers (Backend, Neo4j, Frontend)
+- **Connection:** Backend → `http://host.docker.internal:11434`
+- **See:** `docs/SETUP.md` + `Devplan/251105-OLLAMA-BAREMETAL-MIGRATION.md`
+
+### Production (DigitalOcean GPU) - Full Docker Setup
+- **All Services:** Docker containers (including Ollama with NVIDIA GPU)
+- **Connection:** Backend → `http://ollama:11434` (Docker internal)
+- **This Guide:** Covers production deployment ONLY
+
+---
+
 ## 📋 Document Purpose (AI Agent Context)
 
 This guide covers **production deployment only** (Phase 9 of 9).

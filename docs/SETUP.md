@@ -139,24 +139,49 @@ docker ps --filter "name=aria-neo4j"
 # Expected: aria-neo4j running on 0.0.0.0:7474->7474/tcp, 0.0.0.0:7687->7687/tcp
 
 # If rag-neo4j already running, stop it first
-docker stop rag-neo4j rag-backend rag-frontend rag-ollama 2>/dev/null || true
+docker stop rag-neo4j rag-backend rag-frontend 2>/dev/null || true
 ```
 
-#### Step 2: Start All Services
+#### Step 2: Start Native Ollama (Terminal 1)
+
+**⚠️ IMPORTANT:** Ollama runs NATIVELY on Mac (not in Docker) for Metal GPU access.
+
+```bash
+# Terminal 1: Start Ollama (keep this terminal open)
+export OLLAMA_HOST=0.0.0.0:11434
+export OLLAMA_ORIGINS="*"
+ollama serve
+
+# Expected output:
+# time=... level=INFO source=routes.go msg="Listening on [::]:11434"
+# time=... level=INFO source=types.go msg="inference compute" id=0 library=metal ...
+```
+
+**Verify Ollama is running (Terminal 2):**
+```bash
+curl http://localhost:11434/api/version
+# Expected: {"version":"0.12.6"}
+
+ollama ps
+# Expected: Shows GPU status (will show models after first query)
+```
+
+#### Step 3: Start Docker Services (Terminal 2)
 ```bash
 cd /Users/nicozefrench/Dropbox/AI/rag-knowledge-graph-starter
-docker-compose -f docker/docker-compose.dev.yml up -d
+docker compose -f docker/docker-compose.dev.yml up -d
 ```
 
 **Expected Output:**
 ```
 ✔ Container rag-neo4j     Started
-✔ Container rag-ollama    Started
 ✔ Container rag-backend   Started
 ✔ Container rag-frontend  Started
 ```
 
-#### Step 3: Wait for Services to Be Healthy
+**Note:** No `rag-ollama` container (Ollama runs natively).
+
+#### Step 4: Wait for Services to Be Healthy
 ```bash
 # Wait 30-60 seconds, then check
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
@@ -166,11 +191,12 @@ docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 ```
 NAMES          STATUS                 PORTS
 rag-neo4j      Up 60s (healthy)       0.0.0.0:7475->7474/tcp, 0.0.0.0:7688->7687/tcp
-rag-ollama     Up 60s                 0.0.0.0:11434->11434/tcp
 rag-backend    Up 60s (healthy)       0.0.0.0:8000->8000/tcp
 rag-frontend   Up 60s                 0.0.0.0:5173->5173/tcp
 aria-neo4j     Up (from before)       0.0.0.0:7474->7474/tcp, 0.0.0.0:7687->7687/tcp
 ```
+
+**Note:** `rag-ollama` not shown (runs natively outside Docker).
 
 **⚠️ Troubleshooting - If unhealthy after 2 minutes:**
 ```bash
@@ -183,9 +209,10 @@ docker logs rag-neo4j --tail 50
 
 ### Phase 0.4: Pull Mistral Model
 
-#### Step 1: Pull Model (5.2GB download)
+#### Step 1: Pull Model (8.1GB download)
 ```bash
-docker exec rag-ollama ollama pull mistral:7b-instruct-q5_K_M
+# Native Ollama command
+ollama pull qwen2.5:7b-instruct-q8_0
 ```
 
 **Expected Output:**
@@ -202,7 +229,7 @@ success
 
 #### Step 2: Verify Model Installed
 ```bash
-docker exec rag-ollama ollama list
+ollama list
 ```
 
 **Expected Output:**
@@ -257,7 +284,7 @@ open http://localhost:5173
 
 #### Test 4: Ollama + Mistral Inference
 ```bash
-docker exec rag-ollama ollama run mistral:7b-instruct-q5_K_M "Say 'DiveTeacher is ready!' in one sentence." --verbose 2>/dev/null
+ollama run mistral:7b-instruct-q5_K_M "Say 'DiveTeacher is ready!' in one sentence." --verbose 2>/dev/null
 ```
 
 **Expected Output:**
@@ -832,7 +859,7 @@ Bind for 0.0.0.0:7474 failed: port is already allocated
 docker ps --filter "publish=7474" --filter "publish=8000"
 
 # If DiveTeacher containers need restart:
-docker stop rag-neo4j rag-backend rag-frontend rag-ollama
+docker stop rag-neo4j rag-backend rag-frontend
 docker-compose -f docker/docker-compose.dev.yml up -d
 
 # NEVER stop aria-neo4j (it's for another app)
@@ -864,13 +891,13 @@ docker logs rag-backend --tail 50
 **Solution:**
 ```bash
 # 1. Check if model exists
-docker exec rag-ollama ollama list
+ollama list
 
 # 2. If not, pull it
-docker exec rag-ollama ollama pull mistral:7b-instruct-q5_K_M
+ollama pull mistral:7b-instruct-q5_K_M
 
 # 3. Verify (should show 5.2GB)
-docker exec rag-ollama ollama list
+ollama list
 ```
 
 ### Issue 4: Frontend Shows "Network Error"
@@ -905,29 +932,40 @@ docker ps
 
 ## 🔄 Daily Development Workflow
 
-### Starting Work
+### Starting Work (Development on Mac M1 Max)
+
+**⚠️ IMPORTANT:** Hybrid architecture - Ollama runs natively, other services in Docker.
+
 ```bash
 # 1. Start Docker Desktop (if not running)
 open -a Docker
 
-# 2. Start DiveTeacher services
+# 2. Terminal 1: Start Native Ollama (keep this terminal open)
+export OLLAMA_HOST=0.0.0.0:11434
+export OLLAMA_ORIGINS="*"
+ollama serve
+
+# 3. Terminal 2: Start DiveTeacher services
 cd /Users/nicozefrench/Dropbox/AI/rag-knowledge-graph-starter
-docker-compose -f docker/docker-compose.dev.yml up -d
+docker compose -f docker/docker-compose.dev.yml up -d
 
-# 3. Check all healthy
-docker ps
+# 4. Verify all healthy
+docker ps  # Should show rag-backend, rag-neo4j, rag-frontend
+ollama ps  # Should show 100% GPU
 
-# 4. Open frontend
+# 5. Open frontend
 open http://localhost:5173
 ```
 
 ### Stopping Work
 ```bash
-# Stop services (preserves data)
-docker-compose -f docker/docker-compose.dev.yml stop
+# Terminal 2: Stop Docker services (preserves data)
+docker compose -f docker/docker-compose.dev.yml stop
 
-# OR completely remove (clears data)
-docker-compose -f docker/docker-compose.dev.yml down -v
+# Terminal 1: Stop Ollama (Ctrl+C)
+
+# OR completely remove Docker containers (clears data)
+docker compose -f docker/docker-compose.dev.yml down -v
 ```
 
 ---
@@ -941,12 +979,23 @@ docker-compose -f docker/docker-compose.dev.yml down -v
 - **Data:** Persisted in named volume `neo4j-data`
 - **Health:** Checked via `cypher-shell` every 10s
 
-### Service: rag-ollama
-- **Image:** ollama/ollama:latest
-- **Purpose:** LLM inference server (runs Mistral 7B)
-- **Port:** 11434 (API)
-- **Data:** Models stored in volume `ollama-models`
-- **GPU:** Uses Mac M1 Metal via Docker
+### Service: Native Ollama (Baremetal)
+
+**⚠️ NOT A DOCKER SERVICE** - Runs natively on Mac host for Metal GPU access.
+
+- **Process:** Native macOS process (not containerized)
+- **Purpose:** LLM inference server (runs Qwen 2.5 7B Q8_0)
+- **Port:** 11434 (API on host)
+- **Data:** Models stored in `~/.ollama/models/`
+- **GPU:** 100% Metal GPU acceleration (M1 Max)
+- **Performance:** 30-60× faster than Docker CPU (7-14 tok/s vs 0.5-0.7 tok/s)
+- **Connection:** Backend connects via `http://host.docker.internal:11434`
+- **Migration:** See `Devplan/251105-OLLAMA-BAREMETAL-MIGRATION.md`
+
+**Why Native?**
+- Docker Desktop on macOS cannot access Metal GPU
+- Native Ollama provides direct Metal GPU access
+- Critical for acceptable RAG query performance (<20s vs 2-3min)
 
 ### Service: rag-backend
 - **Build:** backend/Dockerfile

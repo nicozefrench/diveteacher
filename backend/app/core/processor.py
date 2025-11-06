@@ -8,7 +8,6 @@ Pipeline complet:
 4. Ingestion Neo4j (Graphiti)
 """
 import os
-import uuid
 import asyncio
 import logging
 from pathlib import Path
@@ -16,16 +15,13 @@ from typing import Dict, Any, Optional
 from datetime import datetime
 from time import time
 
-from app.core.config import settings
 from app.core.logging_config import (
-    get_context_logger,
     log_stage_start,
-    log_stage_progress,
     log_stage_complete,
     log_error
 )
 from app.integrations.dockling import (
-    convert_document_to_docling, 
+    convert_document_to_docling,
     extract_document_metadata
 )
 from app.services.document_chunker import get_chunker  # ARIA production-validated pattern (RecursiveCharacterTextSplitter)
@@ -42,10 +38,10 @@ processing_status: Dict[str, Dict[str, Any]] = {}
 async def get_entity_count() -> int:
     """
     Query Neo4j for Entity node count
-    
+
     Returns:
         Total number of Entity nodes in Neo4j
-        
+
     Note:
         - Uses asyncio.to_thread for synchronous Neo4j driver
         - Returns 0 if query fails (graceful degradation)
@@ -57,7 +53,7 @@ async def get_entity_count() -> int:
                 result = session.run("MATCH (n:Entity) RETURN count(n) as count")
                 record = result.single()
                 return record["count"] if record else 0
-        
+
         count = await asyncio.to_thread(_query)
         return count
     except Exception as e:
@@ -68,10 +64,10 @@ async def get_entity_count() -> int:
 async def get_relation_count() -> int:
     """
     Query Neo4j for RELATES_TO relationship count
-    
+
     Returns:
         Total number of RELATES_TO relationships in Neo4j
-        
+
     Note:
         - Uses asyncio.to_thread for synchronous Neo4j driver
         - Returns 0 if query fails (graceful degradation)
@@ -84,7 +80,7 @@ async def get_relation_count() -> int:
                 )
                 record = result.single()
                 return record["count"] if record else 0
-        
+
         count = await asyncio.to_thread(_query)
         return count
     except Exception as e:
@@ -93,30 +89,30 @@ async def get_relation_count() -> int:
 
 
 async def process_document(
-    file_path: str, 
-    upload_id: str, 
+    file_path: str,
+    upload_id: str,
     metadata: Optional[Dict[str, Any]] = None
 ) -> None:
     """
     Process uploaded document through the complete pipeline
-    
+
     Steps:
     1. Validate (dans convert_document_to_docling)
     2. Convert to DoclingDocument (Docling)
     3. Chunk semantically (HybridChunker)
     4. Ingest to knowledge graph (Graphiti + Neo4j)
     5. Update status & cleanup
-    
+
     Args:
         file_path: Path to uploaded file
         upload_id: Unique upload identifier
         metadata: Optional document metadata
     """
-    
+
     # Initialize status dict FIRST (before any exception)
     file_size = os.path.getsize(file_path) if os.path.exists(file_path) else 0
     file_size_mb = file_size / (1024 * 1024)
-    
+
     processing_status[upload_id] = {
         "status": "processing",
         "stage": "initialization",
@@ -134,7 +130,7 @@ async def process_document(
             "filename": Path(file_path).name
         }
     }
-    
+
     # Structured logging
     log_stage_start(
         logger,
@@ -146,9 +142,9 @@ async def process_document(
             "metadata": metadata
         }
     )
-    
+
     start_time = time()
-    
+
     try:
         # STEP 1: Convert to DoclingDocument
         processing_status[upload_id].update({
@@ -161,15 +157,15 @@ async def process_document(
                 "unit": "stages"
             }
         })
-        
+
         log_stage_start(logger, upload_id, "conversion")
         conversion_start = time()
-        
+
         docling_doc = await convert_document_to_docling(file_path, upload_id=upload_id)
         doc_metadata = extract_document_metadata(docling_doc)
-        
+
         conversion_duration = time() - conversion_start
-        
+
         log_stage_complete(
             logger,
             upload_id=upload_id,
@@ -180,7 +176,7 @@ async def process_document(
                 "file_size_mb": round(file_size_mb, 2)
             }
         )
-        
+
         processing_status[upload_id].update({
             "progress": 40,
             "sub_stage": "conversion_complete",
@@ -190,7 +186,7 @@ async def process_document(
                 "conversion_duration": round(conversion_duration, 2)
             }
         })
-        
+
         # STEP 2: Semantic Chunking
         processing_status[upload_id].update({
             "stage": "chunking",
@@ -202,22 +198,22 @@ async def process_document(
                 "unit": "stages"
             }
         })
-        
+
         log_stage_start(logger, upload_id, "chunking")
         chunking_start = time()
-        
+
         chunker = get_chunker()
         chunks = chunker.chunk_document(
             docling_doc=docling_doc,
             filename=Path(file_path).name,
             upload_id=upload_id
         )
-        
+
         chunking_duration = time() - chunking_start
         # Chunks are dicts with "text" key, not objects with .content attribute
         avg_chunk_size = sum(len(c["text"]) for c in chunks) / len(chunks) if chunks else 0
         total_tokens = sum(c.get("metadata", {}).get("num_tokens", 0) for c in chunks)
-        
+
         log_stage_complete(
             logger,
             upload_id=upload_id,
@@ -229,7 +225,7 @@ async def process_document(
                 "total_tokens": total_tokens
             }
         )
-        
+
         processing_status[upload_id].update({
             "progress": 70,
             "sub_stage": "chunking_complete",
@@ -240,7 +236,7 @@ async def process_document(
                 "chunking_duration": round(chunking_duration, 2)
             }
         })
-        
+
         # STEP 3: Ingest to Knowledge Graph
         processing_status[upload_id].update({
             "stage": "ingestion",
@@ -258,7 +254,7 @@ async def process_document(
                 "current_chunk_index": 0,
             }
         })
-        
+
         log_stage_start(
             logger,
             upload_id,
@@ -266,7 +262,7 @@ async def process_document(
             details={"num_chunks": len(chunks)}
         )
         ingestion_start = time()
-        
+
         # Enriched metadata
         enriched_metadata = {
             "filename": Path(file_path).name,
@@ -276,7 +272,7 @@ async def process_document(
             **doc_metadata,
             **(metadata or {})
         }
-        
+
         # 🔧 Pass processing_status for real-time updates
         await ingest_chunks_to_graph(
             chunks=chunks,
@@ -284,9 +280,9 @@ async def process_document(
             upload_id=upload_id,
             processing_status=processing_status  # ← ADD THIS
         )
-        
+
         ingestion_duration = time() - ingestion_start
-        
+
         log_stage_complete(
             logger,
             upload_id=upload_id,
@@ -296,9 +292,9 @@ async def process_document(
                 "chunks_processed": len(chunks)
             }
         )
-        
+
         # 🔧 QUERY NEO4J FOR ENTITY/RELATION COUNTS (Bug #10 Fix)
-        logger.info(f"📊 Querying Neo4j for entity/relation counts...", extra={'upload_id': upload_id})
+        logger.info("📊 Querying Neo4j for entity/relation counts...", extra={'upload_id': upload_id})
         entity_count = await get_entity_count()
         relation_count = await get_relation_count()
         logger.info(
@@ -309,7 +305,7 @@ async def process_document(
                 'relations': relation_count
             }
         )
-        
+
         processing_status[upload_id].update({
             "progress": 95,
             "sub_stage": "ingestion_complete",
@@ -320,10 +316,10 @@ async def process_document(
                 "relations": relation_count,    # ← ADD
             }
         })
-        
+
         # STEP 4: Finalize and complete
         total_duration = time() - start_time
-        
+
         # Ensure metadata is JSON-serializable
         safe_metadata = {}
         for key, value in doc_metadata.items():
@@ -333,7 +329,7 @@ async def process_document(
                 continue
             else:
                 safe_metadata[key] = value
-        
+
         processing_status[upload_id].update({
             "status": "completed",
             "stage": "completed",
@@ -353,9 +349,9 @@ async def process_document(
             },
             "completed_at": datetime.now().isoformat(),
         })
-        
+
         logger.info(
-            f"✅ Processing complete",
+            "✅ Processing complete",
             extra={
                 'upload_id': upload_id,
                 'stage': 'completed',
@@ -370,7 +366,7 @@ async def process_document(
                 }
             }
         )
-        
+
     except ValueError as e:
         log_error(logger, upload_id, "validation", e)
         sentry_sdk.capture_exception(e)
@@ -382,7 +378,7 @@ async def process_document(
             "failed_at": datetime.now().isoformat(),
         })
         raise
-        
+
     except TimeoutError as e:
         log_error(logger, upload_id, "conversion", e)
         sentry_sdk.capture_exception(e)
@@ -394,11 +390,11 @@ async def process_document(
             "failed_at": datetime.now().isoformat(),
         })
         raise
-        
+
     except Exception as e:
         log_error(logger, upload_id, processing_status[upload_id].get("stage", "unknown"), e)
         sentry_sdk.capture_exception(e)
-        
+
         if upload_id in processing_status:
             processing_status[upload_id].update({
                 "status": "failed",
@@ -408,7 +404,7 @@ async def process_document(
                 "error_type": type(e).__name__,
                 "failed_at": datetime.now().isoformat(),
             })
-    
+
     finally:
         status = processing_status.get(upload_id, {}).get("status", "unknown")
         logger.info(
@@ -429,16 +425,16 @@ def get_processing_status(upload_id: str) -> Optional[Dict[str, Any]]:
 async def cleanup_old_status(max_age_hours: int = 24):
     """Cleanup old processing status entries"""
     from datetime import datetime, timedelta
-    
+
     cutoff = datetime.now() - timedelta(hours=max_age_hours)
-    
+
     to_delete = []
     for upload_id, status in processing_status.items():
         started_at = datetime.fromisoformat(status.get("started_at", ""))
         if started_at < cutoff:
             to_delete.append(upload_id)
-    
+
     for upload_id in to_delete:
         del processing_status[upload_id]
-    
+
     logger.info(f"Cleaned up {len(to_delete)} old status entries")

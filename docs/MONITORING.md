@@ -30,7 +30,7 @@
 Monitoring System
 ├── Real-Time Monitoring
 │   ├── monitor_ingestion.sh    - Logs Graphiti en temps réel
-│   └── monitor_ollama.sh        - Performance Ollama + Docker
+│   └── monitor_ollama.sh        - Performance Ollama (Native Metal GPU)
 ├── Testing
 │   ├── test_rag_query.sh        - Tests RAG query (bash)
 │   └── test_rag_query.py        - Tests RAG query (Python)
@@ -41,7 +41,7 @@ Monitoring System
 ### Objectifs
 
 ✅ **Visibilité en temps réel** sur l'ingestion de documents  
-✅ **Performance monitoring** pour Ollama et Docker  
+✅ **Performance monitoring** pour Ollama natif (Metal GPU)  
 ✅ **Testing automatisé** pour le pipeline RAG  
 ✅ **Maintenance** de la base de données Neo4j  
 ✅ **Debugging** avec logs colorisés et filtrés
@@ -200,7 +200,7 @@ Les scripts bash historiques restent disponibles mais la nouvelle suite est reco
 ### 2. 📊 monitor_ollama.sh
 
 **📍 Localisation:** `scripts/monitor_ollama.sh`  
-**🎯 Objectif:** Monitoring complet de la performance Ollama + Docker
+**🎯 Objectif:** Monitoring complet de la performance Ollama natif (Metal GPU)
 
 #### Usage
 
@@ -214,33 +214,35 @@ Les scripts bash historiques restent disponibles mais la nouvelle suite est reco
 
 #### Ce qu'il fait
 
-**1. Docker Container Status** ✅
-- Vérifie si le container `rag-ollama` est running
-- Affiche le statut (Up X minutes, healthy/unhealthy)
+**1. Native Ollama Process Status** ✅
+- Vérifie si le processus `ollama` est running (natif)
+- Affiche le PID, Memory (RSS), CPU%
+- **Migration Note**: Plus de Docker container, processus natif Mac
 
-**2. Docker Resource Usage** 📊
-- Memory usage (current / limit)
-- CPU percentage
-- Network I/O
-- Block I/O
-- **Alerte**: Si memory > 14GB / 16GB → Warning
+**2. Native Process Resource Usage** 📊
+- Memory usage (RSS en GB)
+- CPU percentage (via `ps`)
+- **Note**: Plus de limites Docker, utilise RAM système
 
 **3. Ollama API Status** 🔌
 - Test de connexion à `http://localhost:11434/api/version`
 - Vérifie que l'API répond
 
-**4. Loaded Model Information** 🤖
-- Liste des modèles chargés (`ollama list`)
+**4. Loaded Model Information + GPU Status** 🤖 + 🎮
+- Liste des modèles chargés (`ollama ps`)
 - Pour chaque modèle:
   - Nom et version
   - Taille (GB)
-  - Famille (Qwen, Mistral, etc.)
-- **Validation**: Vérifie si Qwen 2.5 7B est chargé
+  - **Processor: 100% GPU (Metal)** ← CRITICAL CHECK
+  - Context size
+  - Time until unload
+- **Validation**: Vérifie si Qwen 2.5 7B est chargé ET sur GPU
 
 **5. Backend API Health** 💚
 - Test de connexion au backend FastAPI
 - Vérifie `/api/health`
 - Status, model loaded, health
+- **Note**: Backend se connecte via `host.docker.internal:11434`
 
 **6. Quick Performance Benchmark** ⚡
 - Test simple avec prompt "Hello"
@@ -248,79 +250,110 @@ Les scripts bash historiques restent disponibles mais la nouvelle suite est reco
   - Tokens générés
   - Durée (secondes)
   - Tokens/seconde (tok/s)
-- **Contexte local**: 10-15 tok/s (CPU) vs 40-60 tok/s (GPU production)
+- **Contexte local**: 7-14 tok/s (Metal GPU) vs 0.5-0.7 tok/s (Docker CPU before migration)
+- **Expected**: 100% GPU, 7-14 tok/s
 
-**7. Docker Desktop Configuration** 🐋
-- Memory limit configuré
+**7. Metal GPU Configuration** 🎮
+- Vérifie que Ollama utilise Metal GPU
 - Recommandations selon environnement
+- **Migration**: Native Ollama only (no Docker Desktop GPU)
 
 #### Exemple de sortie
 
 ```
 =====================================================================
-      Ollama Performance Monitor - Qwen 2.5 7B Q8_0
+      Ollama Performance Monitor - Qwen 2.5 7B Q8_0 (Native Metal GPU)
 =====================================================================
 
-1. Docker Container Status
+1. Native Ollama Process Status
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ Ollama container is running
-   Status: Up 2 hours (healthy)
-
-2. Docker Resource Usage
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Memory: 8.7GiB / 16GiB
+✅ Ollama process is running (native)
+   PID: 12345
+   Memory (RSS): 8.9 GB
    CPU: 5.2%
-   Network I/O: 1.2MB / 850KB
-   Block I/O: 450MB / 120MB
-   
-   ✅ Memory usage is healthy (54% of limit)
+
+2. Native Process Resource Usage
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Memory (RSS): 8.9 GB (System RAM)
+   CPU: 5.2%
+   ✅ Process is healthy
 
 3. Ollama API Status
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Ollama API is responding
-   Version: 0.1.17
+   Version: 0.12.6
 
-4. Loaded Model Information
+4. Loaded Model Information + GPU Status
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Model: qwen2.5:7b-instruct-q8_0
-   Size: 8.1 GB
-   Family: qwen2.5
-   
-   ✅ Target model (Qwen 2.5 7B Q8_0) is loaded
+✅ Models currently loaded:
+   - qwen2.5:7b-instruct-q8_0
+     Size: 8.9 GB
+     Processor: 100% GPU ← METAL GPU ACTIVE ✅
+     Context: 4096 tokens
+     Until: 5 minutes
 
-5. Backend API Health
+✅ Qwen 2.5 7B is loaded AND on Metal GPU
+
+5. Backend API Health (Docker → Native Ollama)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Backend API is healthy
-   Model: qwen2.5:7b-instruct-q8_0
    Status: healthy
+   Model: qwen2.5:7b-instruct-q8_0
+   Connection: host.docker.internal:11434 → Native Ollama
 
-6. Quick Performance Benchmark
+6. Performance Benchmark (Metal GPU)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🧪 Running quick inference test...
-   Tokens: 25
-   Duration: 2.1s
-   Performance: 11.9 tok/s
-   
-   ℹ️  Local Dev (CPU): 10-15 tok/s is NORMAL
-   🚀 Production (GPU): Target 40-60 tok/s
+   Response: "Hello! How can I assist you?"
+   Tokens: 8
+   Duration: 0.8s
+   Speed: 10.0 tok/s ✅ (Metal GPU)
 
-7. Docker Desktop Configuration
+7. Metal GPU Configuration
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   Docker Memory Limit: 16GB
-   ✅ Sufficient for Qwen 2.5 7B Q8_0 (~10GB VRAM)
+✅ Native Ollama on Mac M1 Max
+   ✅ Metal GPU: Active (100%)
+   ✅ Performance: 30-60× faster than Docker CPU
+   ✅ Migration: Nov 5, 2025 (See Devplan/251105-OLLAMA-BAREMETAL-MIGRATION.md)
+
+=====================================================================
+                     ALL SYSTEMS OPERATIONAL ✅
+=====================================================================
 ```
+
+#### Troubleshooting
+
+**❌ Ollama process not running:**
+```bash
+# Start native Ollama
+export OLLAMA_HOST=0.0.0.0:11434
+export OLLAMA_ORIGINS="*"
+ollama serve
+```
+
+**❌ Model not on GPU (shows "100% CPU" instead of "100% GPU"):**
+- **Cause**: Ollama running in Docker (can't access Metal GPU)
+- **Fix**: Use native Ollama (see Devplan/251105-OLLAMA-BAREMETAL-MIGRATION.md)
+
+**❌ Performance < 7 tok/s:**
+- **Check**: `ollama ps` → Should show "100% GPU"
+- **Expected**: 7-14 tok/s on Metal GPU
+- **Problem**: If on CPU, see migration guide
+
+**❌ Backend can't connect to Ollama:**
+- **Check**: `curl http://localhost:11434/api/version`
+- **Fix**: Ensure `OLLAMA_HOST=0.0.0.0:11434` (not 127.0.0.1)
 
 #### Quand l'utiliser
 
 - ✅ Avant de tester le RAG query
-- ✅ Pour vérifier la performance Ollama
+- ✅ Pour vérifier la performance Ollama + GPU status
 - ✅ Pour debugger des problèmes de mémoire
-- ✅ Pour valider que le bon modèle est chargé
+- ✅ Pour valider que le bon modèle est chargé ET sur GPU
 - ✅ Pour identifier des bottlenecks
 
 #### Limitations
 
-- Nécessite `curl`, `jq`, `docker`
+- Nécessite `curl`, `jq`, `ps`, `pgrep` (standard macOS)
 - Benchmark simple (pas de test RAG complet)
 - Performance locale != production (CPU vs GPU)
 
@@ -587,8 +620,9 @@ Même tests que `test_rag_query.sh` mais:
 # Backend logs
 docker logs -f rag-backend
 
-# Ollama logs
-docker logs -f rag-ollama
+# Ollama logs (Native - check serve terminal or log file)
+tail -f /tmp/ollama-serve.log  # If redirected to file
+# OR check Terminal 1 where ollama serve is running
 
 # Neo4j logs
 docker logs -f rag-neo4j
@@ -620,7 +654,7 @@ docker stats
 docker stats --no-stream
 
 # Stats specific container
-docker stats rag-ollama --no-stream
+# Native Ollama: Check with ollama ps or system monitor --no-stream
 ```
 
 ### Accès shell container
@@ -633,7 +667,7 @@ docker exec -it rag-backend bash
 docker exec -it rag-neo4j cypher-shell -u neo4j -p <password>
 
 # Ollama shell
-docker exec -it rag-ollama bash
+# Native Ollama: No container to exec into
 ```
 
 ---
@@ -670,13 +704,13 @@ docker logs -f rag-backend | grep "upload_abc123"
 
 ```bash
 # Vérifier modèles chargés
-docker exec rag-ollama ollama list
+ollama list
 
 # Test inference direct
-docker exec rag-ollama ollama run qwen2.5:7b-instruct-q8_0 "Hello"
+ollama run qwen2.5:7b-instruct-q8_0 "Hello"
 
 # Stats Docker
-docker stats rag-ollama --no-stream
+# Native Ollama: Check with ollama ps or system monitor --no-stream
 
 # Ou utiliser le script
 ./scripts/monitor_ollama.sh

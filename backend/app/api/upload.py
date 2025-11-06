@@ -15,7 +15,6 @@ Changes from v1.0.0:
 
 import os
 import uuid
-import asyncio
 import aiofiles
 from pathlib import Path
 from typing import Optional, Dict, Any
@@ -88,41 +87,41 @@ async def upload_document(
 ):
     """
     Upload document for processing
-    
+
     Uses asyncio.create_task() for background processing (ARIA pattern).
     Zero threading - single event loop.
-    
+
     Args:
         file: Uploaded file (PDF, PPT, etc.)
-        
+
     Returns:
         Upload ID and status
     """
-    
+
     logger.info("=" * 60)
     logger.info(f"📤 UPLOAD START: {file.filename}")
     print(f"\n{'='*60}")
     print(f"📤 UPLOAD START: {file.filename}")
     print(f"{'='*60}\n", flush=True)
-    
+
     try:
         # Validate file extension
         file_ext = Path(file.filename).suffix.lstrip(".")
         allowed_extensions = settings.ALLOWED_EXTENSIONS.split(",")
-        
+
         if file_ext.lower() not in allowed_extensions:
             raise HTTPException(
                 status_code=400,
                 detail=f"File type not allowed. Allowed: {', '.join(allowed_extensions)}"
             )
-        
+
         logger.info(f"✅ File extension validated: {file_ext}")
-        
+
         # Validate file size (read in chunks to avoid memory issues)
         max_size = settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024  # Convert to bytes
         total_size = 0
         chunks = []
-        
+
         # Read file
         chunk_size = 8192
         while True:
@@ -136,29 +135,29 @@ async def upload_document(
                     detail=f"File too large. Maximum size: {settings.MAX_UPLOAD_SIZE_MB}MB"
                 )
             chunks.append(chunk)
-        
+
         logger.info(f"✅ File read: {total_size} bytes ({len(chunks)} chunks)")
-        
+
         # Generate unique upload ID
         upload_id = str(uuid.uuid4())
         logger.info(f"✅ Generated upload_id: {upload_id}")
-        
+
         # Save file to upload directory
         file_path = os.path.join(settings.UPLOAD_DIR, f"{upload_id}_{file.filename}")
-        
+
         async with aiofiles.open(file_path, "wb") as f:
             for chunk in chunks:
                 await f.write(chunk)
-        
+
         logger.info(f"✅ File saved to: {file_path}")
-        
+
         # Prepare metadata
         metadata = {
             "filename": file.filename,
             "size_bytes": total_size,
             "content_type": file.content_type,
         }
-        
+
         # ═══════════════════════════════════════════════════════════
         # 🔧 NEW: Production-Ready DocumentQueue (ARIA v2.0.0)
         # ═══════════════════════════════════════════════════════════
@@ -169,31 +168,31 @@ async def upload_document(
         # - Inter-document delays (60s)
         # - SafeIngestionQueue inside processor
         # ═══════════════════════════════════════════════════════════
-        
+
         print(f"[{upload_id}] Enqueueing to DocumentQueue...", flush=True)
         logger.info(f"[{upload_id}] Adding document to queue")
-        
+
         # Get global queue singleton
         queue = get_document_queue()
-        
+
         # Enqueue document (async processing handled by queue)
         queue_entry = queue.enqueue(
             file_path=file_path,
             upload_id=upload_id,
             metadata=metadata
         )
-        
+
         logger.info(f"[{upload_id}] ✅ Document enqueued")
         logger.info(f"   Queue position: {queue_entry['queue_position']}")
         logger.info(f"   Queue size: {len(queue.queue)}")
         print(f"[{upload_id}] ✅ Enqueued (position: {queue_entry['queue_position']})", flush=True)
-        
+
         # ═══════════════════════════════════════════════════════════
         # Initialize status dict for immediate status endpoint response
         # ═══════════════════════════════════════════════════════════
         from app.core.processor import processing_status
         from datetime import datetime
-        
+
         processing_status[upload_id] = {
             "status": "queued",  # ← Changed from "processing" to "queued"
             "stage": "queued",
@@ -212,9 +211,9 @@ async def upload_document(
                 "filename": file.filename
             }
         }
-        
+
         logger.info(f"[{upload_id}] ✅ Status dict initialized (queued)")
-        
+
         return JSONResponse(content={
             "upload_id": upload_id,
             "filename": file.filename,
@@ -222,7 +221,7 @@ async def upload_document(
             "queue_position": queue_entry['queue_position'],
             "message": f"Document uploaded and queued for processing (position: {queue_entry['queue_position']})"
         })
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -233,41 +232,41 @@ async def upload_document(
 def _sanitize_for_json(obj):
     """
     Recursively sanitize object for JSON serialization.
-    
+
     Handles:
     - datetime objects → isoformat()
     - method/function objects → string representation
     - custom objects → string representation
     - nested dicts and lists
-    
+
     Args:
         obj: Object to sanitize
-        
+
     Returns:
         JSON-serializable version of obj
     """
     from datetime import datetime, date
-    
+
     if obj is None or isinstance(obj, (str, int, float, bool)):
         # Primitive types are already JSON-serializable
         return obj
-    
+
     elif isinstance(obj, (datetime, date)):
         # Convert datetime to ISO format string
         return obj.isoformat()
-    
+
     elif isinstance(obj, dict):
         # Recursively sanitize dict values
         return {key: _sanitize_for_json(value) for key, value in obj.items()}
-    
+
     elif isinstance(obj, (list, tuple)):
         # Recursively sanitize list/tuple items
         return [_sanitize_for_json(item) for item in obj]
-    
+
     elif callable(obj):
         # Methods, functions, lambdas → string representation
         return f"<{obj.__class__.__name__}: {obj.__name__ if hasattr(obj, '__name__') else 'anonymous'}>"
-    
+
     else:
         # For any other object type, try str() or repr()
         try:
@@ -280,13 +279,13 @@ def _sanitize_for_json(obj):
 async def get_upload_status(upload_id: str):
     """
     Get processing status for uploaded document (Enhanced with real-time progress)
-    
+
     Args:
         upload_id: Upload identifier
-        
+
     Returns:
         Processing status with real-time ingestion_progress, entity/relation counts
-        
+
     Status Structure:
         - status: "processing" | "completed" | "failed"
         - stage: Current processing stage
@@ -298,22 +297,22 @@ async def get_upload_status(upload_id: str):
         - durations: Time spent in each stage
         - started_at, completed_at/failed_at: Timestamps
     """
-    
+
     status = get_processing_status(upload_id)
-    
+
     if not status:
         raise HTTPException(
             status_code=404,
             detail=f"Upload ID not found: {upload_id}"
         )
-    
+
     # Sanitize status dict to ensure JSON serializability
     sanitized_status = _sanitize_for_json(status)
-    
+
     # Pre-serialize to JSON to ensure no errors
     import json as json_module
     from starlette.responses import Response
-    
+
     try:
         json_str = json_module.dumps(sanitized_status, indent=2)
         return Response(content=json_str, media_type="application/json")
@@ -334,21 +333,21 @@ async def get_upload_logs(
 ):
     """
     Get structured logs for a specific upload
-    
+
     Args:
         upload_id: Upload identifier
         limit: Maximum number of log entries to return (default: 100)
         level: Minimum log level (DEBUG, INFO, WARNING, ERROR)
-        
+
     Returns:
         List of log entries with timestamps, levels, stages, and metrics
-        
+
     Note:
         This endpoint reads from structured JSON logs.
         In production, this would query a centralized logging system (e.g., ELK, Datadog).
         For MVP, we return logs from memory (if available).
     """
-    
+
     # Check if upload exists
     status = get_processing_status(upload_id)
     if not status:
@@ -356,13 +355,13 @@ async def get_upload_logs(
             status_code=404,
             detail=f"Upload ID not found: {upload_id}"
         )
-    
+
     # 🔧 FIX: Return accurate status from processing_status dict
     # Don't hardcode "failed" when still processing
     current_status = status.get("status", "unknown")
     current_stage = status.get("stage", "unknown")
     sub_stage = status.get("sub_stage", "")
-    
+
     # Build log entries from status information
     logs = [
         {
@@ -372,7 +371,7 @@ async def get_upload_logs(
             "message": "Processing started"
         }
     ]
-    
+
     # Add current stage info if processing
     if current_status == "processing" and current_stage != "initialization":
         logs.append({
@@ -382,7 +381,7 @@ async def get_upload_logs(
             "sub_stage": sub_stage,
             "message": f"Currently processing: {current_stage}"
         })
-    
+
     # Add completion/error log if done
     if current_status == "completed":
         logs.append({
@@ -398,7 +397,7 @@ async def get_upload_logs(
             "stage": "error",
             "message": status.get("error", "Processing failed")
         })
-    
+
     # TODO: In production, query centralized logging system
     # For MVP, return logs built from status dict
     return JSONResponse(content={
@@ -420,7 +419,7 @@ async def get_upload_logs(
 async def get_queue_status():
     """
     Get document processing queue status.
-    
+
     Returns detailed information about:
     - Queue size (number of documents waiting)
     - Current processing state
@@ -428,10 +427,10 @@ async def get_queue_status():
     - Completed/failed document counts
     - List of queued documents with positions
     - Statistics (success rate, total enqueued)
-    
+
     Returns:
         Queue status dict
-        
+
     Example Response:
         {
             "queue_size": 3,
@@ -461,7 +460,7 @@ async def get_queue_status():
     """
     queue = get_document_queue()
     status = queue.get_status()
-    
+
     return JSONResponse(content=status)
 
 
@@ -469,18 +468,18 @@ async def get_queue_status():
 async def clear_queue_history():
     """
     Clear completed and failed document history from queue.
-    
+
     Note:
         - Does NOT clear active queue (documents waiting)
         - Does NOT stop current processing
         - Only clears historical data (completed/failed lists)
-    
+
     Returns:
         Confirmation message
     """
     queue = get_document_queue()
     queue.clear_history()
-    
+
     return JSONResponse(content={
         "message": "Queue history cleared",
         "status": "success"

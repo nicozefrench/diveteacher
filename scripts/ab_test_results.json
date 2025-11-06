@@ -1,0 +1,421 @@
+{
+  "test_date": "2025-11-05T10:51:37.780716",
+  "total_queries": 20,
+  "summary": {
+    "baseline": {
+      "avg_precision": 6.0,
+      "avg_duration": 2.6554824709892273
+    },
+    "enhanced": {
+      "avg_precision": 7.0,
+      "avg_duration": 2.6248810410499575
+    },
+    "improvement": {
+      "absolute": 1.0,
+      "relative": 16.666666666666664,
+      "duration_overhead": -0.030601429939269842
+    }
+  },
+  "detailed_results": [
+    {
+      "query_id": "CT-001",
+      "category": "connaissance_theorique",
+      "question": "Quelle profondeur maximum pour la remontée en expiration contrôlée au niveau 1 ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 4.038606882095337
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.243779182434082,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "CT-002",
+      "category": "connaissance_theorique",
+      "question": "Quelles sont les trois techniques de compensation mentionnées pour éviter les barotraumatismes de l'oreille ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.276581048965454
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.226288080215454,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "CT-003",
+      "category": "connaissance_theorique",
+      "question": "Dans quel délai maximum doit-on acquérir toutes les compétences du niveau 1 ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.1459927558898926
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.1277151107788086,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "CT-004",
+      "category": "connaissance_theorique",
+      "question": "Quelle distance en apnée expiratoire est demandée pour la familiarisation à la panne d'air ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.6564161777496338
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.693263053894043,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "CT-005",
+      "category": "connaissance_theorique",
+      "question": "Combien de plongées en milieu naturel sont requises après une certification en milieu artificiel ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.6732478141784668
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.802284002304077,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "EE-001",
+      "category": "evoluer_dans_eau",
+      "question": "Quelles sont les deux techniques d'immersion à maîtriser en scaphandre et en plongée libre ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 3.6943180561065674
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 3.5743560791015625,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "EE-002",
+      "category": "evoluer_dans_eau",
+      "question": "Quelle distance est évaluée pour le palmage en capelé lors de l'évaluation du N1 ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.547847032546997
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.8823730945587158,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "EE-003",
+      "category": "evoluer_dans_eau",
+      "question": "Quelle distance est évaluée pour le palmage PMT lors de l'évaluation du N1 ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.8452141284942627
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.7304000854492188,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "EE-004",
+      "category": "evoluer_dans_eau",
+      "question": "À quelle profondeur faut-il rechercher l'équilibre lors de l'immersion ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.9015412330627441
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 4.391984224319458,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "EE-005",
+      "category": "evoluer_dans_eau",
+      "question": "Quelle est la tolérance de variation de profondeur lors de l'évaluation de l'équilibrage ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.07633113861084
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.641455888748169,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "ED-001",
+      "category": "equiper_desequiper",
+      "question": "Quels sont les trois éléments principaux à gréer pour l'équipement scaphandre ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.7185730934143066
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.3154850006103516,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "ED-002",
+      "category": "equiper_desequiper",
+      "question": "Quelles vérifications doit faire le plongeur avant utilisation de son équipement ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 3.993088960647583
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 4.670316934585571,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "ED-003",
+      "category": "equiper_desequiper",
+      "question": "Quels sont les deux types d'environnement mentionnés pour adapter le lestage ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 40.0,
+        "duration": 1.5281310081481934
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 40.0,
+        "duration": 1.7580013275146484,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0.0
+      }
+    },
+    {
+      "query_id": "ED-004",
+      "category": "equiper_desequiper",
+      "question": "Quelles règles d'hygiène du matériel sont mentionnées dans le manuel ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.8062191009521484
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.7454071044921875,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "ED-005",
+      "category": "equiper_desequiper",
+      "question": "Où doit-on être capable de s'équiper selon les modalités d'évaluation ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 20.0,
+        "duration": 6.22350001335144
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 40.0,
+        "duration": 3.945251703262329,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 20.0,
+        "relative": 100.0
+      }
+    },
+    {
+      "query_id": "PC-001",
+      "category": "prerogatives_conditions",
+      "question": "Quelle est la profondeur maximale autorisée pour un plongeur niveau 1 ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 4.120588064193726
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 3.967758893966675,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "PC-002",
+      "category": "prerogatives_conditions",
+      "question": "Quel est l'âge minimum pour entrer en formation niveau 1 ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.416677951812744
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.4705772399902344,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "PC-003",
+      "category": "prerogatives_conditions",
+      "question": "Qui encadre le plongeur niveau 1 pendant les plongées d'exploration ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 60.0,
+        "duration": 3.6266391277313232
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 60.0,
+        "duration": 2.6962239742279053,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0.0
+      }
+    },
+    {
+      "query_id": "PC-004",
+      "category": "prerogatives_conditions",
+      "question": "Quelles qualifications peuvent délivrer le brevet N1 avec l'autorisation du président ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.170632839202881
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.49460768699646,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    },
+    {
+      "query_id": "PC-005",
+      "category": "prerogatives_conditions",
+      "question": "Dans quelle zone de profondeur s'effectue l'enseignement et la validation des compétences par un E1 ?",
+      "baseline": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 1.6495029926300049
+      },
+      "enhanced": {
+        "num_facts": 5,
+        "precision": 0.0,
+        "duration": 2.1200921535491943,
+        "reranked": true
+      },
+      "improvement": {
+        "absolute": 0.0,
+        "relative": 0
+      }
+    }
+  ]
+}
