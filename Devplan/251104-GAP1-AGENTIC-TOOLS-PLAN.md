@@ -9,6 +9,29 @@
 
 ---
 
+## 🌿 GIT BRANCH STRATEGY
+
+**Development Branch:** `feat/gap1-agentic-tools`  
+**Created:** November 6, 2025  
+**Base:** `main` (after Gap #2 + Gap #3 merge)
+
+**Why Feature Branch:**
+- ✅ Isolate 5 weeks of development work
+- ✅ Allow parallel work if needed
+- ✅ Clean merge when Phase 1 complete
+- ✅ Easy rollback if issues arise
+- ✅ Lesson learned: Gap #2 branch worked well!
+
+**Merge Strategy:**
+- Work on `feat/gap1-agentic-tools` for entire Phase 1
+- Regular commits (daily or per task)
+- Merge back to `main` when Phase 1 complete (Day 20-25)
+- Delete feature branch after merge
+
+**Important:** DO NOT forget to develop on this branch! Check with `git branch` before coding!
+
+---
+
 ## 🔥 REVISION NOTES (Nov 6, 2025)
 
 **What Changed from Original Plan:**
